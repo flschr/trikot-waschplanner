@@ -1,3 +1,4 @@
+<?php
 // functions.php
 
 // Funktion zum Einlesen einer CSV-Datei
@@ -70,3 +71,4 @@ function removePlayer($spieler, $name) {
     }
     return $spieler; // Spieler nicht gefunden
 }
+?>
