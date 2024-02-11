@@ -1,148 +1,72 @@
-<?php
-// Functions.php
+// functions.php
 
-// Function to load players from spieler.csv file
-function loadPlayers() {
-    $players = [];
-    $file = fopen('spieler.csv', 'r');
-    while (($line = fgetcsv($file)) !== FALSE) {
-        $players[] = $line;
+// Funktion zum Einlesen einer CSV-Datei
+function readCSV($filename) {
+    $data = [];
+    if (($handle = fopen($filename, "r")) !== FALSE) {
+        while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            $data[] = $row;
+        }
+        fclose($handle);
     }
-    fclose($file);
-    return $players;
+    return $data;
 }
 
-// Function to load appointments from termine.csv file
-function loadTermine() {
-    $termine = [];
-    $file = fopen('termine.csv', 'r');
-    while (($line = fgetcsv($file)) !== FALSE) {
-        $termine[] = $line;
+// Funktion zum Schreiben in eine CSV-Datei
+function writeCSV($filename, $data) {
+    if (($handle = fopen($filename, "w")) !== FALSE) {
+        foreach ($data as $row) {
+            fputcsv($handle, $row);
+        }
+        fclose($handle);
     }
-    fclose($file);
+}
+
+// Funktion zum Sortieren eines Arrays nach dem ersten Element
+function sortByFirstElement($a, $b) {
+    return strtotime($a[0]) - strtotime($b[0]);
+}
+
+// Funktion zum Hinzufügen eines Termins
+function addAppointment($termine, $termin, $player = "") {
+    foreach ($termine as $index => $row) {
+        if ($row[0] === $termin) {
+            return false; // Termin bereits vorhanden
+        }
+    }
+    $termine[] = [$termin, $player];
     return $termine;
 }
 
-// Function to save appointments to termine.csv file
-function saveTermine($termine) {
-    $file = fopen('termine.csv', 'w');
-    foreach ($termine as $termin) {
-        fputcsv($file, $termin);
-    }
-    fclose($file);
-}
-
-// Function to save a player to spieler.csv file
-function savePlayer($player, $count) {
-    $players = loadPlayers();
-    $found = false;
-    foreach ($players as &$row) {
-        if ($row[0] === $player) {
-            $row[1] = $count;
-            $found = true;
-            break;
+// Funktion zum Entfernen eines Termins
+function removeAppointment($termine, $termin) {
+    foreach ($termine as $index => $row) {
+        if ($row[0] === $termin) {
+            unset($termine[$index]);
+            return array_values($termine);
         }
     }
-    if (!$found) {
-        $players[] = [$player, $count];
-    }
-    $file = fopen('spieler.csv', 'w');
-    foreach ($players as $player) {
-        fputcsv($file, $player);
-    }
-    fclose($file);
+    return $termine; // Termin nicht gefunden
 }
 
-// Function to get the wash count for a player
-function getPlayerWashes($player) {
-    $players = loadPlayers();
-    foreach ($players as $row) {
-        if ($row[0] === $player) {
-            return $row[1];
+// Funktion zum Hinzufügen eines Spielers
+function addPlayer($spieler, $name) {
+    foreach ($spieler as $row) {
+        if ($row[0] === $name) {
+            return false; // Spieler bereits vorhanden
         }
     }
-    return 0;
+    $spieler[] = [$name, 0];
+    return $spieler;
 }
 
-// Function to display appointments table
-function displayAppointmentsTable() {
-    $output = "<table border='1'>";
-    $output .= "<tr><th>Termin</th><th>Wer wäscht?</th><th>Termin freigeben</th></tr>";
-    $termine = loadTermine();
-    if (!empty($termine)) {
-        foreach ($termine as $index => $termin) {
-            $output .= "<tr>";
-            $output .= "<td>{$termin[0]}</td>";
-            $output .= "<td>";
-            if (empty($termin[1])) {
-                $output .= generatePlayerSelect($index);
-            } else {
-                $output .= "{$termin[1]}";
-            }
-            $output .= "</td>";
-            $output .= "<td>";
-            if (!empty($termin[1])) {
-                $output .= generateReleaseForm($index);
-            }
-            $output .= "</td>";
-            $output .= "</tr>";
+// Funktion zum Entfernen eines Spielers
+function removePlayer($spieler, $name) {
+    foreach ($spieler as $index => $row) {
+        if ($row[0] === $name) {
+            unset($spieler[$index]);
+            return array_values($spieler);
         }
-    } else {
-        $output .= "<tr><td colspan='3'>Keine Termine vorhanden.</td></tr>";
     }
-    $output .= "</table>";
-    return $output;
+    return $spieler; // Spieler nicht gefunden
 }
-
-// Function to generate player select dropdown
-function generatePlayerSelect($index) {
-    $players = loadPlayers();
-    usort($players, function($a, $b) {
-        return strcmp($a[0], $b[0]); 
-    });
-    $output = "<form method='post'>";
-    $output .= "<select name='spieler' data-index='$index'>";
-    $output .= "<option value=''>Bitte wählen</option>";
-    foreach ($players as $player) {
-        $output .= "<option value='{$player[0]}'>{$player[0]}</option>";
-    }
-    $output .= "</select>";
-    $output .= "<input type='hidden' name='termin_index' value='$index'>";
-    $output .= "<input type='submit' name='submit' value='Buchen' onclick='return validateSelection($index)'>";
-    $output .= "</form>";
-    return $output;
-}
-
-// Function to generate release form
-function generateReleaseForm($index) {
-    $output = "<form method='post'>";
-    $output .= "<input type='checkbox' name='release_check[$index]' value='1' id='releaseCheck-$index'>";
-    $output .= "<input type='hidden' name='termin_index' value='$index'>";
-    $output .= "<input type='submit' name='release' value='Freigeben' id='releaseButton-$index' disabled>";
-    $output .= "</form>";
-    $output .= "<script>
-                document.getElementById('releaseCheck-$index').addEventListener('change', function() {
-                    document.getElementById('releaseButton-$index').disabled = !this.checked;
-                });
-            </script>";
-    return $output;
-}
-
-// Function to display wash statistics table
-function displayWashStatisticsTable() {
-    $output = "<table border='1'>";
-    $output .= "<tr><th>Name</th><th>Vollwaschladungen</th></tr>";
-    $players = loadPlayers();
-    usort($players, function($a, $b) {
-        return $b[1] - $a[1]; 
-    });
-    foreach ($players as $player) {
-        $output .= "<tr>";
-        $output .= "<td>{$player[0]}</td>";
-        $output .= "<td>{$player[1]}</td>";
-        $output .= "</tr>";
-    }
-    $output .= "</table>";
-    return $output;
-}
-?>
