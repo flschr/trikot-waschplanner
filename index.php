@@ -104,9 +104,15 @@ sort($spieler);
                     <td>
                         <?php if (!empty($row[1])): ?>
                             <form method="post">
+                                <input type="checkbox" id="releaseCheckbox" name="releaseCheckbox">
                                 <input type="hidden" name="releaseAppointment" value="<?php echo $row[0]; ?>">
-                                <button type="submit">Termin freigeben</button>
+                                <button type="submit" id="releaseButton" disabled>Termin freigeben</button>
                             </form>
+                            <script>
+                                document.getElementById('releaseCheckbox').addEventListener('change', function() {
+                                    document.getElementById('releaseButton').disabled = !this.checked;
+                                });
+                            </script>
                         <?php endif; ?>
                     </td>
                 </tr>
