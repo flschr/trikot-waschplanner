@@ -77,7 +77,7 @@ sort($spieler);
         <thead>
             <tr>
                 <th>Termin</th>
-                <th>Buchen</th>
+                <th>Buchung</th>
                 <th>Termin freigeben</th>
             </tr>
         </thead>
@@ -86,16 +86,20 @@ sort($spieler);
                 <tr>
                     <td><?php echo $row[0]; ?></td>
                     <td>
-                        <form method="post">
-                            <select name="player">
-                                <option>Please select</option>
-                                <?php foreach ($spieler as $player): ?>
-                                    <option><?php echo $player[0]; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <input type="hidden" name="bookAppointment" value="<?php echo $row[0]; ?>">
-                            <button type="submit">Buchen</button>
-                        </form>
+                        <?php if (!empty($row[1])): ?>
+                            <?php echo $row[1]; ?>
+                        <?php else: ?>
+                            <form method="post">
+                                <select name="player">
+                                    <option selected disabled>Bitte auswählen</option>
+                                    <?php foreach ($spieler as $player): ?>
+                                        <option><?php echo $player[0]; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <input type="hidden" name="bookAppointment" value="<?php echo $row[0]; ?>">
+                                <button type="submit">Buchen</button>
+                            </form>
+                        <?php endif; ?>
                     </td>
                     <td>
                         <?php if (!empty($row[1])): ?>
