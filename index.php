@@ -1,65 +1,131 @@
 <?php
+// index.php
 include 'functions.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['submit'])) {
-        if (isset($_POST['spieler']) && isset($_POST['termin_index'])) {
-            $selectedPlayer = $_POST['spieler'];
-            $terminIndex = $_POST['termin_index'];
-            $termine = loadTermine();
-            $termine[$terminIndex][1] = $selectedPlayer;
-            saveTermine($termine);
-            savePlayer($selectedPlayer, getPlayerWashes($selectedPlayer) + 1);
-        } else {
-            echo "Error: Selected player or termin index not set.";
-        }
-    } elseif (isset($_POST['release'])) {
-        // Release logic here
-    }
+$termine = [];
+$spieler = [];
 
-    // Redirect to avoid resubmitting the form
-    header("Location: {$_SERVER['REQUEST_URI']}");
-    exit;
+if (file_exists('termine.csv')) {
+    $termine = readCSV('termine.csv');
 }
+
+if (file_exists('spieler.csv')) {
+    $spieler = readCSV('spieler.csv');
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Handle booking appointment
+    if (isset($_POST["bookAppointment"])) {
+        $termin = $_POST["bookAppointment"];
+        $player = $_POST["player"];
+        if ($player === "Bitte auswählen") {
+            echo "<script>alert('Bitte einen Namen auswählen');</script>";
+        } else {
+            foreach ($termine as &$row) {
+                if ($row[0] === $termin) {
+                    $row[1] = $player;
+                    break;
+                }
+            }
+            foreach ($spieler as &$row) {
+                if ($row[0] === $player) {
+                    $row[1]++;
+                    break;
+                }
+            }
+            writeCSV('termine.csv', $termine);
+            writeCSV('spieler.csv', $spieler);
+        }
+    } elseif (isset($_POST["releaseAppointment"])) {
+        $termin = $_POST["releaseAppointment"];
+        foreach ($termine as &$row) {
+            if ($row[0] === $termin) {
+                $player = $row[1];
+                $row[1] = "";
+                break;
+            }
+        }
+        foreach ($spieler as &$row) {
+            if ($row[0] === $player) {
+                $row[1]--;
+                break;
+            }
+        }
+        writeCSV('termine.csv', $termine);
+        writeCSV('spieler.csv', $spieler);
+    }
+}
+
+// Sortieren der Termine nach Datum
+usort($termine, 'sortByFirstElement');
+
+// Sortieren der Spieler nach Namen
+sort($spieler);
+
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trikot-Waschküche</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Termine und Buchungen</title>
 </head>
 <body>
+    <h2>Termine und Buchungen</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Termin</th>
+                <th>Buchen</th>
+                <th>Termin freigeben</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($termine as $row): ?>
+                <tr>
+                    <td><?php echo $row[0]; ?></td>
+                    <td>
+                        <form method="post">
+                            <select name="player">
+                                <option>Please select</option>
+                                <?php foreach ($spieler as $player): ?>
+                                    <option><?php echo $player[0]; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <input type="hidden" name="bookAppointment" value="<?php echo $row[0]; ?>">
+                            <button type="submit">Buchen</button>
+                        </form>
+                    </td>
+                    <td>
+                        <?php if (!empty($row[1])): ?>
+                            <form method="post">
+                                <input type="hidden" name="releaseAppointment" value="<?php echo $row[0]; ?>">
+                                <button type="submit">Termin freigeben</button>
+                            </form>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 
-<h1>Trikot-Waschküche</h1>
-<h2>Die nächsten Spieltermine</h2>
-
-<?php echo displayAppointmentsTable(); ?>
-
-<p class='hinweis'>Um für einen Spieltag die Trikotwäsche zu übernehmen, in der Tabelle den gewünschten Termin auswählen und mit einem Klick auf Buchen bestätigen. Sollte ein bereits gebuchter Termin nicht übernommen werden können, kann er über die Funktion 'Termin freigeben' zur erneuten Buchung für eine andere Familie verfügbar gemacht werden.</p>
-
-<br>
-
-<h2>Waschhelden Rangliste ⚽👕💪🏻‍</h2>
-<?php echo displayWashStatisticsTable(); ?>
-
-<p class='hinweis'>Die Statistik wird zum Beginn der neuen Saison zurückgesetzt.</p>
-
-<p>Waschtermine als Smartphone-Kalender <a href='webcal://trikots.gaehn.org/ical.php'>abonnieren</a>.</p>
-<p><a href='termine.php'>Terminverwaltung</a> | <a href='spieler.php'>Spielerverwaltung</a></p>
-
-<script>
-    function validateSelection(index) {
-        var selectElement = document.querySelector('select[name="spieler"][data-index="' + index + '"]');
-        if (selectElement.value === '') {
-            alert('Bitte eine Auswahl treffen.');
-            return false;
-        }
-        return true;
-    }
-</script>
-
+    <h2>Waschstatistik</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Spieler</th>
+                <th>Wäschen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($spieler as $player): ?>
+                <tr>
+                    <td><?php echo $player[0]; ?></td>
+                    <td><?php echo $player[1]; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </body>
 </html>
