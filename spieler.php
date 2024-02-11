@@ -1,75 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spieler verwalten</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<h1>Spieler verwalten</h1>
-
 <?php
+// spieler.php
 include 'functions.php';
 
-// Wenn das Formular zum Hinzufügen eines Spielers gesendet wurde
-if (isset($_POST['add_player'])) {
-    $newPlayer = $_POST['new_player'];
-    
-    // Laden der vorhandenen Spieler
-    $players = loadPlayers();
-    
-    // Hinzufügen des neuen Spielers
-    $players[] = array($newPlayer, 0); // Initialwert für die Anzahl der Wäschen ist 0
-    
-    // Speichern der aktualisierten Spielerdaten
-    savePlayers($players);
-    
-    echo "<p>Spieler '$newPlayer' wurde erfolgreich hinzugefügt.</p>";
+$spieler = [];
+
+if (file_exists('spieler.csv')) {
+    $spieler = readCSV('spieler.csv');
 }
 
-// Wenn das Formular zum Zurücksetzen der Statistik gesendet wurde
-if (isset($_POST['reset_stats'])) {
-    // Die Spielerdaten mit allen Wäschestatistiken löschen
-    $emptyPlayers = array();
-    savePlayers($emptyPlayers);
-    
-    echo "<p>Die Statistik wurde erfolgreich zurückgesetzt.</p>";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST["newPlayer"])) {
+        $name = $_POST["newPlayer"];
+        if (addPlayer($spieler, $name)) {
+            writeCSV('spieler.csv', $spieler);
+        } else {
+            echo "<script>alert('Spieler schon vorhanden');</script>";
+        }
+    } elseif (isset($_POST["deletePlayer"])) {
+        $name = $_POST["deletePlayer"];
+        $spieler = removePlayer($spieler, $name);
+        writeCSV('spieler.csv', $spieler);
+    }
 }
+
+// Sortieren der Spieler nach Namen
+sort($spieler);
 
 ?>
 
-<form method="post">
-    <label for="new_player">Neuen Spieler hinzufügen:</label>
-    <input type="text" id="new_player" name="new_player" required>
-    <input type="submit" name="add_player" value="Hinzufügen">
-</form>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spieler</title>
+</head>
+<body>
+    <h2>Neuen Spieler anlegen</h2>
+    <form method="post">
+        <input type="text" name="newPlayer" placeholder="Neuen Spieler eingeben">
+        <button type="submit">Spieler anlegen</button>
+    </form>
 
-<form method="post">
-    <input type="submit" name="reset_stats" value="Statistik zurücksetzen">
-</form>
-
-<br>
-
-<h2>Alle Spieler</h2>
-
-<table border="1">
-    <tr>
-        <th>Name</th>
-        <th>Vollwaschladungen</th>
-    </tr>
-    <?php
-    // Laden der Spieler und Anzeigen in der Tabelle
-    $players = loadPlayers();
-    foreach ($players as $player) {
-        echo "<tr>";
-        echo "<td>{$player[0]}</td>";
-        echo "<td>{$player[1]}</td>";
-        echo "</tr>";
-    }
-    ?>
-</table>
-
+    <h2>Alle Spieler</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Wäschen</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($spieler as $row): ?>
+                <tr>
+                    <td><?php echo $row[0]; ?></td>
+                    <td><?php echo $row[1]; ?></td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" name="deletePlayer" value="<?php echo $row[0]; ?>">
+                            <button type="submit">Spieler löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </body>
 </html>
