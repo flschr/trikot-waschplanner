@@ -28,6 +28,17 @@ echo "<p class='hinweis'>Die Statistik wird zum Beginn der neuen Saison zurückg
 echo "<p>Waschtermine als Smartphone-Kalender <a href='webcal://trikots.gaehn.org/ical.php'>abonnieren</a>.</p>";
 echo "<p><a href='termine.php'>Terminverwaltung</a> | <a href='spieler.php'>Spielerverwaltung</a></p>";
 
+echo "<script>
+    function validateSelection(index) {
+        var selectElement = document.querySelector('select[name=\"spieler\"][data-index=\"' + index + '\"]');
+        if (selectElement.value === '') {
+            alert('Bitte eine Auswahl treffen.');
+            return false;
+        }
+        return true;
+    }
+</script>";
+
 echo "</body>";
 echo "</html>";
 ?>
