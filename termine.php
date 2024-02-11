@@ -1,60 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Termine verwalten</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<h1>Termine verwalten</h1>
-
 <?php
 include 'functions.php';
 
-// Wenn das Formular zum Hinzufügen eines Termins gesendet wurde
-if (isset($_POST['add_termin'])) {
-    $terminName = $_POST['termin_name'];
-    
-    // Laden der vorhandenen Termine
-    $termine = loadTermine();
-    
-    // Hinzufügen des neuen Termins
-    $termine[] = array($terminName, '');
-    
-    // Speichern der aktualisierten Termine
-    saveTermine($termine);
-    
-    echo "<p>Termin '$terminName' wurde erfolgreich hinzugefügt.</p>";
+$termine = [];
+
+if (file_exists('termine.csv')) {
+    $termine = readCSV('termine.csv');
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST["newAppointment"])) {
+        $termin = $_POST["newAppointment"];
+        if (addAppointment($termine, $termin)) {
+            writeCSV('termine.csv', $termine);
+        } else {
+            echo "<script>alert('Termin schon vorhanden');</script>";
+        }
+    } elseif (isset($_POST["deleteAppointment"])) {
+        $termin = $_POST["deleteAppointment"];
+        $termine = removeAppointment($termine, $termin);
+        writeCSV('termine.csv', $termine);
+    }
+}
+
+// Sortieren der Termine nach Datum
+usort($termine, 'sortByFirstElement');
 
 ?>
 
-<form method="post">
-    <label for="termin_name">Neuen Termin hinzufügen:</label>
-    <input type="text" id="termin_name" name="termin_name" required>
-    <input type="submit" name="add_termin" value="Hinzufügen">
-</form>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termine</title>
+</head>
+<body>
+    <h2>Neuen Termin anlegen</h2>
+    <form method="post">
+        <input type="text" name="newAppointment" placeholder="Neuen Termin eingeben (dd.mm.yyyy)">
+        <button type="submit">Termin anlegen</button>
+    </form>
 
-<br>
-
-<h2>Alle Termine</h2>
-
-<table border="1">
-    <tr>
-        <th>Termin</th>
-    </tr>
-    <?php
-    // Laden der Termine und Anzeigen in der Tabelle
-    $termine = loadTermine();
-    foreach ($termine as $termin) {
-        echo "<tr>";
-        echo "<td>{$termin[0]}</td>";
-        echo "</tr>";
-    }
-    ?>
-</table>
-
+    <h2>Alle Termine</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Termin</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($termine as $row): ?>
+                <tr>
+                    <td><?php echo $row[0]; ?></td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" name="deleteAppointment" value="<?php echo $row[0]; ?>">
+                            <button type="submit">Archivieren</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post">
+                            <input type="checkbox" name="cancelAppointment" value="<?php echo $row[0]; ?>">
+                            <button type="submit">Termin absagen</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </body>
 </html>
