@@ -118,7 +118,7 @@ if (!empty($termine)) {
     echo "<tr><td colspan='3'>Keine Termine vorhanden.</td></tr>";
 }
 ?>
-</table>
+echo "</table>";
 
 echo "<p class='hinweis'>Um für einen Spieltag die Trikotwäsche zu übernehmen, in der Tabelle den gewünschten Termin auswählen und mit einem Klick auf Buchen bestätigen. Sollte ein bereits gebuchter Termin nicht übernommen werden können, kann er über die Funktion 'Termin freigeben' zur erneuten Buchung für eine andere Familie verfügbar gemacht werden.</p>";
 
