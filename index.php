@@ -1,3 +1,69 @@
+<?php
+// index.php
+include 'functions.php';
+
+$termine = [];
+$spieler = [];
+
+if (file_exists('termine.csv')) {
+    $termine = readCSV('termine.csv');
+}
+
+if (file_exists('spieler.csv')) {
+    $spieler = readCSV('spieler.csv');
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Handle booking appointment
+    if (isset($_POST["bookAppointment"])) {
+        $termin = $_POST["bookAppointment"];
+        $player = $_POST["player"];
+        if ($player === "Bitte auswählen") {
+            echo "<script>alert('Bitte einen Namen auswählen');</script>";
+        } else {
+            foreach ($termine as &$row) {
+                if ($row[0] === $termin) {
+                    $row[1] = $player;
+                    break;
+                }
+            }
+            foreach ($spieler as &$row) {
+                if ($row[0] === $player) {
+                    $row[1]++;
+                    break;
+                }
+            }
+            writeCSV('termine.csv', $termine);
+            writeCSV('spieler.csv', $spieler);
+        }
+    } elseif (isset($_POST["releaseAppointment"])) {
+        $termin = $_POST["releaseAppointment"];
+        foreach ($termine as &$row) {
+            if ($row[0] === $termin) {
+                $player = $row[1];
+                $row[1] = "";
+                break;
+            }
+        }
+        foreach ($spieler as &$row) {
+            if ($row[0] === $player) {
+                $row[1]--;
+                break;
+            }
+        }
+        writeCSV('termine.csv', $termine);
+        writeCSV('spieler.csv', $spieler);
+    }
+}
+
+// Sortieren der Termine nach Datum
+usort($termine, 'sortByFirstElement');
+
+// Sortieren der Spieler nach Namen
+sort($spieler);
+
+?>
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
