@@ -9,10 +9,13 @@
 <body>
 
 <?php
-include 'functions.php';
+require_once 'functions.php'; // Funktionen einbinden
+
+echo "<h1>Trikot-Waschküche</h1>";
+echo "<h2>Die nächsten Spieltermine</h2>";
 
 // Wenn der Buchen-Button geklickt wurde
-if (isset($_POST['submit'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     // Laden der vorhandenen Termine
     $termine = loadTermine();
     
@@ -24,14 +27,14 @@ if (isset($_POST['submit'])) {
     
     // Zähler für den ausgewählten Spieler erhöhen
     savePlayer($selectedPlayer, getPlayerWashes($selectedPlayer) + 1);
-    
+
     // Weiterleitung zur gleichen Seite, um die Tabelle neu zu rendern
     header("Location: {$_SERVER['PHP_SELF']}");
     exit;
 }
 
 // Wenn der "Termin freigeben" Button geklickt wurde
-if (isset($_POST['release'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['release'])) {
     // Laden der vorhandenen Termine
     $termine = loadTermine();
     
@@ -53,10 +56,6 @@ if (isset($_POST['release'])) {
     exit;
 }
 
-echo "<h1>Trikot-Waschküche</h1>";
-echo "<h2>Die nächsten Spieltermine</h2>";
-
-// HTML-Tabelle für die Termine beginnen
 echo "<table border='1'>";
 echo "<tr><th>Termin</th><th>Wer wäscht?</th><th>Termin freigeben</th></tr>";
 
@@ -123,7 +122,6 @@ if (!empty($termine)) {
     echo "<tr><td colspan='3'>Keine Termine vorhanden.</td></tr>";
 }
 
-// HTML-Tabelle für die Termine beenden
 echo "</table>";
 echo "<p class='hinweis'>Um für einen Spieltag die Trikotwäsche zu übernehmen, in der Tabelle den gewünschten Termin auswählen und mit einem Klick auf Buchen bestätigen. Sollte ein bereits gebuchter Termin nicht übernommen werden können, kann er über die Funktion 'Termin freigeben' zur erneuten Buchung für eine andere Familie verfügbar gemacht werden.</p>";
 
@@ -154,15 +152,15 @@ echo "</table>";
 echo "<p class='hinweis'>Die Statistik wird zum Beginn der neuen Saison zurückgesetzt.</p>";
 
 echo "<p>Waschtermine als Smartphone-Kalender <a href='webcal://trikots.gaehn.org/ical.php'>abonnieren</a>.</p>";
-echo "<p><a href='termine.php'>Terminverwaltung</a></p>";
+echo "<p><a href='termine.php'>Terminplaner verwalten</a></p>";
 
 ?>
 
 <script>
     function validateSelection(index) {
-        var selectedPlayer = document.querySelector("select[data-index='" + index + "']").value;
+        var selectedPlayer = document.querySelector("select[name='spieler']").value;
         if (selectedPlayer === '') {
-            alert("Bitte einen Spieler auswählen.");
+            alert("Bitte wählen Sie einen Spieler aus.");
             return false;
         }
         return true;
