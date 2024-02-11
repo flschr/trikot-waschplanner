@@ -1,6 +1,25 @@
 <?php
 include 'functions.php';
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    if (isset($_POST['spieler']) && isset($_POST['termin_index'])) {
+        $selectedPlayer = $_POST['spieler'];
+        $terminIndex = $_POST['termin_index'];
+        $termine = loadTermine();
+        $termine[$terminIndex][1] = $selectedPlayer;
+        saveTermine($termine);
+        savePlayer($selectedPlayer, getPlayerWashes($selectedPlayer) + 1);
+    }
+    header("Location: {$_SERVER['PHP_SELF']}");
+    exit;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['release'])) {
+    // Release logic here
+    header("Location: {$_SERVER['PHP_SELF']}");
+    exit;
+}
+
 echo "<!DOCTYPE html>";
 echo "<html lang='en'>";
 echo "<head>";
