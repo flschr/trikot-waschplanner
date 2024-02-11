@@ -1,54 +1,103 @@
 <?php
-// Funktion zum Laden der CSV-Datei in ein assoziatives Array
-function loadCsv($filename) {
-    $data = array();
-    if (($handle = fopen($filename, "r")) !== FALSE) {
-        while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            $data[] = $row;
+
+// Funktion zum Laden der Spieler aus der CSV-Datei
+function loadPlayers()
+{
+    $players = [];
+    $file = fopen("players.csv", "r");
+    if ($file) {
+        while (($line = fgetcsv($file)) !== false) {
+            $players[] = $line;
         }
-        fclose($handle);
+        fclose($file);
     }
-    return $data;
+    return $players;
 }
 
-// Funktion zum Speichern eines assoziativen Arrays in eine CSV-Datei
-function saveCsv($filename, $data) {
-    if (($handle = fopen($filename, "w")) !== FALSE) {
-        foreach ($data as $row) {
-            fputcsv($handle, $row);
-        }
-        fclose($handle);
+// Funktion zum Speichern eines Spielers in die CSV-Datei
+function savePlayer($name, $washes)
+{
+    $file = fopen("players.csv", "a");
+    if ($file) {
+        fputcsv($file, [$name, $washes]);
+        fclose($file);
     }
 }
 
-// Funktion zum Laden der Spieler aus der spieler.csv Datei
-function loadPlayers() {
-    return loadCsv('spieler.csv');
-}
-
-// Funktion zum Laden der Termine aus der termine.csv Datei
-function loadTermine() {
-    return loadCsv('termine.csv');
-}
-
-// Funktion zum Speichern der Spielerdaten in die spieler.csv Datei
-function savePlayers($players) {
-    saveCsv('spieler.csv', $players);
-}
-
-// Funktion zum Speichern der Termine in die termine.csv Datei
-function saveTermine($termine) {
-    saveCsv('termine.csv', $termine);
-}
-
-// Funktion zur Ermittlung der Anzahl der Wäschen für einen Spieler
-function getPlayerWashes($player) {
+// Funktion zum Entfernen eines Spielers aus der CSV-Datei
+function removePlayer($name)
+{
     $players = loadPlayers();
-    foreach ($players as $row) {
-        if ($row[0] === $player) {
-            return $row[1];
+    foreach ($players as $index => $player) {
+        if ($player[0] === $name) {
+            unset($players[$index]);
+            break;
+        }
+    }
+    $file = fopen("players.csv", "w");
+    if ($file) {
+        foreach ($players as $player) {
+            fputcsv($file, $player);
+        }
+        fclose($file);
+    }
+}
+
+// Funktion zum Laden der Termine aus der CSV-Datei
+function loadTermine()
+{
+    $termine = [];
+    $file = fopen("termine.csv", "r");
+    if ($file) {
+        while (($line = fgetcsv($file)) !== false) {
+            $termine[] = $line;
+        }
+        fclose($file);
+    }
+    return $termine;
+}
+
+// Funktion zum Speichern eines Termins in die CSV-Datei
+function saveTermine($termine)
+{
+    $file = fopen("termine.csv", "w");
+    if ($file) {
+        foreach ($termine as $termin) {
+            fputcsv($file, $termin);
+        }
+        fclose($file);
+    }
+}
+
+// Funktion zum Hinzufügen eines Termins
+function addTermin($name)
+{
+    $termine = loadTermine();
+    $termine[] = [$name, ''];
+    saveTermine($termine);
+}
+
+// Funktion zum Entfernen eines Termins
+function removeTermin($name)
+{
+    $termine = loadTermine();
+    foreach ($termine as $index => $termin) {
+        if ($termin[0] === $name) {
+            unset($termine[$index]);
+            break;
+        }
+    }
+    saveTermine($termine);
+}
+
+// Funktion zum Abrufen der Anzahl der Wäschen für einen Spieler
+function getPlayerWashes($name)
+{
+    $players = loadPlayers();
+    foreach ($players as $player) {
+        if ($player[0] === $name) {
+            return $player[1];
         }
     }
     return 0;
 }
-?>
