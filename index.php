@@ -1,170 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trikot-Waschküche</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
 <?php
-include 'functions.php';
+// Functions.php
 
-// Wenn der Buchen-Button geklickt wurde
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-    $selectedPlayer = $_POST['spieler'];
-    $terminIndex = $_POST['termin_index'];
-
-    // Laden der vorhandenen Termine
-    $termine = loadTermine();
-
-    // Den ausgewählten Spieler dem Termin zuordnen und in die CSV-Datei schreiben
-    $termine[$terminIndex][1] = $selectedPlayer;
-    saveTermine($termine);
-
-    // Zähler für den ausgewählten Spieler erhöhen
-    $playerWashes = getPlayerWashes($selectedPlayer);
-    savePlayer($selectedPlayer, $playerWashes + 1);
-
-    // Weiterleitung zur gleichen Seite, um die Tabelle neu zu rendern
-    header("Location: {$_SERVER['PHP_SELF']}");
-    exit;
-}
-
-// Wenn der "Termin freigeben" Button geklickt wurde
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['release'])) {
-    $terminIndex = $_POST['termin_index'];
-
-    // Laden der vorhandenen Termine
-    $termine = loadTermine();
-
-    // Löschen des Spielernamens für diesen Termin
-    $releasedPlayer = $termine[$terminIndex][1];
-    $termine[$terminIndex][1] = '';
-    saveTermine($termine);
-
-    // Zähler für den freigegebenen Spieler verringern
-    $playerWashes = getPlayerWashes($releasedPlayer);
-    if ($playerWashes > 0) {
-        savePlayer($releasedPlayer, $playerWashes - 1);
+// Function to load players from spieler.csv file
+function loadPlayers() {
+    $players = [];
+    $file = fopen('spieler.csv', 'r');
+    while (($line = fgetcsv($file)) !== FALSE) {
+        $players[] = $line;
     }
-
-    // Weiterleitung zur gleichen Seite, um die Tabelle neu zu rendern
-    header("Location: {$_SERVER['PHP_SELF']}");
-    exit;
+    fclose($file);
+    return $players;
 }
-?>
 
-<h1>Trikot-Waschküche</h1>
-<h2>Die nächsten Spieltermine</h2>
+// Function to load appointments from termine.csv file
+function loadTermine() {
+    $termine = [];
+    $file = fopen('termine.csv', 'r');
+    while (($line = fgetcsv($file)) !== FALSE) {
+        $termine[] = $line;
+    }
+    fclose($file);
+    return $termine;
+}
 
-<table border="1">
-<tr>
-    <th>Termin</th>
-    <th>Wer wäscht?</th>
-    <th>Termin freigeben</th>
-</tr>
+// Function to save appointments to termine.csv file
+function saveTermine($termine) {
+    $file = fopen('termine.csv', 'w');
+    foreach ($termine as $termin) {
+        fputcsv($file, $termin);
+    }
+    fclose($file);
+}
 
-<?php
-// Laden der vorhandenen Termine
-$termine = loadTermine();
+// Function to save a player to spieler.csv file
+function savePlayer($player, $count) {
+    $players = loadPlayers();
+    $found = false;
+    foreach ($players as &$row) {
+        if ($row[0] === $player) {
+            $row[1] = $count;
+            $found = true;
+            break;
+        }
+    }
+    if (!$found) {
+        $players[] = [$player, $count];
+    }
+    $file = fopen('spieler.csv', 'w');
+    foreach ($players as $player) {
+        fputcsv($file, $player);
+    }
+    fclose($file);
+}
 
-// Wenn ein Termin vorhanden ist
-if (!empty($termine)) {
-    // Durchgehen aller Termine
-    foreach ($termine as $index => $termin) {
-        $terminName = $termin[0];
-        $spielerName = $termin[1];
+// Function to get the wash count for a player
+function getPlayerWashes($player) {
+    $players = loadPlayers();
+    foreach ($players as $row) {
+        if ($row[0] === $player) {
+            return $row[1];
+        }
+    }
+    return 0;
+}
 
-        echo "<tr>";
-        echo "<td>$terminName</td>";
-        echo "<td>";
-
-        // Wenn kein Spielername vorhanden ist
-        if (empty($spielerName)) {
-            echo "<form method='post'>";
-            echo "<select name='spieler'>";
-            echo "<option value=''>Bitte wählen</option>";
-            // Laden aller Spieler und Sortieren alphabetisch
-            $players = loadPlayers();
-            foreach ($players as $player) {
-                echo "<option value='{$player[0]}'>{$player[0]}</option>";
+// Function to display appointments table
+function displayAppointmentsTable() {
+    $output = "<table border='1'>";
+    $output .= "<tr><th>Termin</th><th>Wer wäscht?</th><th>Termin freigeben</th></tr>";
+    $termine = loadTermine();
+    if (!empty($termine)) {
+        foreach ($termine as $index => $termin) {
+            $output .= "<tr>";
+            $output .= "<td>{$termin[0]}</td>";
+            $output .= "<td>";
+            if (empty($termin[1])) {
+                $output .= generatePlayerSelect($index);
+            } else {
+                $output .= "{$termin[1]}";
             }
-            echo "</select>";
-            echo "<input type='hidden' name='termin_index' value='$index'>";
-            echo "<input type='submit' name='submit' value='Buchen'>";
-            echo "</form>";
-        } else {
-            // Wenn ein Spielername vorhanden ist, einfach den Termin in der Tabelle ausgeben
-            echo "$spielerName";
+            $output .= "</td>";
+            $output .= "<td>";
+            if (!empty($termin[1])) {
+                $output .= generateReleaseForm($index);
+            }
+            $output .= "</td>";
+            $output .= "</tr>";
         }
-        echo "</td>";
-
-        // Spalte für "Termin freigeben"
-        echo "<td>";
-        if (!empty($spielerName)) {
-            echo "<form method='post'>";
-            echo "<input type='hidden' name='termin_index' value='$index'>";
-            echo "<input type='submit' name='release' value='Freigeben'>";
-            echo "</form>";
-        }
-        echo "</td>";
-
-        echo "</tr>";
+    } else {
+        $output .= "<tr><td colspan='3'>Keine Termine vorhanden.</td></tr>";
     }
-} else {
-    // Wenn keine Termine vorhanden sind
-    echo "<tr><td colspan='3'>Keine Termine vorhanden.</td></tr>";
-}
-?>
-echo "</table>";
-
-echo "<p class='hinweis'>Um für einen Spieltag die Trikotwäsche zu übernehmen, in der Tabelle den gewünschten Termin auswählen und mit einem Klick auf Buchen bestätigen. Sollte ein bereits gebuchter Termin nicht übernommen werden können, kann er über die Funktion 'Termin freigeben' zur erneuten Buchung für eine andere Familie verfügbar gemacht werden.</p>";
-
-
-echo "<br>";
-
-// HTML-Tabelle für die Wasch-Statistik beginnen
-echo "<h2>Waschhelden Rangliste ⚽👕💪🏻‍</h2>";
-echo "<table border='1'>";
-echo "<tr><th>Name</th><th>Vollwaschladungen</th></tr>";
-
-// Laden der Spieler und Sortieren nach Anzahl der Wäschen
-$players = loadPlayers();
-usort($players, function($a, $b) {
-    return $b[1] - $a[1]; // Sortieren absteigend nach der Anzahl der Wäschen
-});
-
-// Durchgehen aller Spieler und Anzeigen in der Tabelle
-foreach ($players as $player) {
-    echo "<tr>";
-    echo "<td>{$player[0]}</td>";
-    echo "<td>{$player[1]}</td>";
-    echo "</tr>";
+    $output .= "</table>";
+    return $output;
 }
 
-// HTML-Tabelle für die Wasch-Statistik beenden
-echo "</table>";
-
-echo "<p class='hinweis'>Die Statistik wird zum Beginn der neuen Saison zurückgesetzt.</p>";
-
-echo "<p>Waschtermine als Smartphone-Kalender <a href='webcal://trikots.gaehn.org/ical.php'>abonnieren</a>.</p>";
-echo "<p><a href='termine.php'>Terminplaner verwalten</a></p>";
-
-?>
-
-<script>
-    function validateSelection(index) {
-        var selectedPlayer = document.querySelector("select[name='spieler']").value;
-        if (selectedPlayer === '') {
-            alert("Bitte wählen Sie einen Spieler aus.");
-            return false;
-        }
-        return true;
+// Function to generate player select dropdown
+function generatePlayerSelect($index) {
+    $players = loadPlayers();
+    usort($players, function($a, $b) {
+        return strcmp($a[0], $b[0]); 
+    });
+    $output = "<form method='post'>";
+    $output .= "<select name='spieler' data-index='$index'>";
+    $output .= "<option value=''>Bitte wählen</option>";
+    foreach ($players as $player) {
+        $output .= "<option value='{$player[0]}'>{$player[0]}</option>";
     }
-</script>
+    $output .= "</select>";
+    $output .= "<input type='hidden' name='termin_index' value='$index'>";
+    $output .= "<input type='submit' name='submit' value='Buchen' onclick='return validateSelection($index)'>";
+    $output .= "</form>";
+    return $output;
+}
 
-</body>
-</html>
+// Function to generate release form
+function generateReleaseForm($index) {
+    $output = "<form method='post'>";
+    $output .= "<input type='checkbox' name='release_check[$index]' value='1' id='releaseCheck-$index'>";
+    $output .= "<input type='hidden' name='termin_index' value='$index'>";
+    $output .= "<input type='submit' name='release' value='Freigeben' id='releaseButton-$index' disabled>";
+    $output .= "</form>";
+    $output .= "<script>
+                document.getElementById('releaseCheck-$index').addEventListener('change', function() {
+                    document.getElementById('releaseButton-$index').disabled = !this.checked;
+                });
+            </script>";
+    return $output;
+}
 
+// Function to display wash statistics table
+function displayWashStatisticsTable() {
+    $output = "<table border='1'>";
+    $output .= "<tr><th>Name</th><th>Vollwaschladungen</th></tr>";
+    $players = loadPlayers();
+    usort($players, function($a, $b) {
+        return $b[1] - $a[1]; 
+    });
+    foreach ($players
