@@ -218,6 +218,8 @@ echo "<p class='hinweis'>Die Statistik wird zum Beginn der neuen Saison zurückg
 echo "<p>Waschtermine als Smartphone-Kalender <a href='webcal://trikots.gaehn.org/ical.php'>abonnieren</a>.</p>";
 echo "<p><a href='termine.php'>Terminverwaltung</a> | <a href='spieler.php'>Spielerverwaltung</a></p>";
 
+echo "<p><a href="https://github.com/flschr/trikot-waschplanner/">Dieses Projekt bei GitHub</a></p>";
+
 ?>
 <script>
     function validateSelection(index) {
