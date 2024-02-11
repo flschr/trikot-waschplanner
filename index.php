@@ -4,63 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trikot-Waschküche</title>
-	<link rel="stylesheet" href="style.css">
-	
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <?php
-// Funktion zum Laden der Spieler aus der spieler.csv Datei
-function loadPlayers() {
-    $players = [];
-    $file = fopen('spieler.csv', 'r');
-    while (($line = fgetcsv($file)) !== FALSE) {
-        $players[] = $line;
-    }
-    fclose($file);
-    return $players;
-}
-
-// Funktion zum Laden der Termine aus der termine.csv Datei
-function loadTermine() {
-    $termine = [];
-    $file = fopen('termine.csv', 'r');
-    while (($line = fgetcsv($file)) !== FALSE) {
-        $termine[] = $line;
-    }
-    fclose($file);
-    return $termine;
-}
-
-// Funktion zum Speichern der Termine in die termine.csv Datei
-function saveTermine($termine) {
-    $file = fopen('termine.csv', 'w');
-    foreach ($termine as $termin) {
-        fputcsv($file, $termin);
-    }
-    fclose($file);
-}
-
-// Funktion zum Speichern eines Spielers in die spieler.csv Datei
-function savePlayer($player, $count) {
-    $players = loadPlayers();
-    $found = false;
-    foreach ($players as &$row) {
-        if ($row[0] === $player) {
-            $row[1] = $count;
-            $found = true;
-            break;
-        }
-    }
-    if (!$found) {
-        $players[] = [$player, $count];
-    }
-    $file = fopen('spieler.csv', 'w');
-    foreach ($players as $player) {
-        fputcsv($file, $player);
-    }
-    fclose($file);
-}
+include 'functions.php';
 
 // Wenn der Buchen-Button geklickt wurde
 if (isset($_POST['submit'])) {
@@ -102,17 +51,6 @@ if (isset($_POST['release'])) {
     // Weiterleitung zur gleichen Seite, um die Tabelle neu zu rendern
     header("Location: {$_SERVER['PHP_SELF']}");
     exit;
-}
-
-// Funktion zur Ermittlung der Anzahl der Wäschen für einen Spieler
-function getPlayerWashes($player) {
-    $players = loadPlayers();
-    foreach ($players as $row) {
-        if ($row[0] === $player) {
-            return $row[1];
-        }
-    }
-    return 0;
 }
 
 echo "<h1>Trikot-Waschküche</h1>";
@@ -216,18 +154,20 @@ echo "</table>";
 echo "<p class='hinweis'>Die Statistik wird zum Beginn der neuen Saison zurückgesetzt.</p>";
 
 echo "<p>Waschtermine als Smartphone-Kalender <a href='webcal://trikots.gaehn.org/ical.php'>abonnieren</a>.</p>";
-echo "<p><a href='termine.php'>Terminverwaltung</a> | <a href='spieler.php'>Spielerverwaltung</a></p>";
+echo "<p><a href='termine.php'>Terminverwaltung</a></p>";
 
 ?>
+
 <script>
     function validateSelection(index) {
-        var selectElement = document.querySelector('select[name="spieler"][data-index="' + index + '"]');
-        if (selectElement.value === '') {
-            alert('Bitte eine Auswahl treffen.');
+        var selectedPlayer = document.querySelector("select[data-index='" + index + "']").value;
+        if (selectedPlayer === '') {
+            alert("Bitte einen Spieler auswählen.");
             return false;
         }
         return true;
     }
 </script>
+
 </body>
 </html>
