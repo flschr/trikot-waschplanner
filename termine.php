@@ -13,6 +13,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         if (!saveAppointment($new_date)) {
             echo "<script>alert('Termin schon vorhanden');</script>";
         }
+        // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
+        header("Location: ".$_SERVER['PHP_SELF']);
+        exit();
     } else {
         echo "<script>alert('Ungültiges Datumsformat');</script>";
     }
