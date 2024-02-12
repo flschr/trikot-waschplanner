@@ -72,11 +72,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
                         </form>
                     </td>
                     <td>
-                        <form id="cancel_form_<?php echo $appointment;?>" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
-							<input type="checkbox" id="cancel_<?php echo $appointment;?>" value="<?php echo $appointment;?>" onchange="toggleCancelButton('<?php echo $appointment;?>')">
+						<form id="cancel_form_<?php echo $appointment;?>" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
+							<input type="checkbox" id="cancel_checkbox_<?php echo $appointment;?>" value="<?php echo $appointment;?>" onchange="toggleCancelButton('<?php echo $appointment;?>')">
 							<input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
-							<input type="submit" value="Termin absagen" id="cancel_<?php echo $appointment;?>" name="cancel_button_<?php echo $appointment;?>" disabled>
-                        </form>
+							<input type="submit" value="Termin absagen" id="cancel_button_<?php echo $appointment;?>" name="cancel_button_<?php echo $appointment;?>" disabled>
+						</form>
                     </td>
                 </tr>
             <?php }?>
@@ -89,8 +89,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     });
 
     function toggleCancelButton(appointment) {
-        var checkbox = $('#cancel_' + appointment);
-        var button = $('#cancel_' + appointment);
+        var checkbox = $('#cancel_checkbox_' + appointment);
+        var button = $('#cancel_button_' + appointment);
         if (checkbox.prop('checked')) {
             button.prop('disabled', false);
         } else {
