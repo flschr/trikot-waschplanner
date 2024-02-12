@@ -51,7 +51,7 @@ function cancelAppointment($date) {
     $key = array_search($date, $appointments);
     if ($key !== false) {
         unset($appointments[$key]);
-        file_put_contents("termine.csv", implode(PHP_EOL, $appointments));
+        file_put_contents("termine.csv", implode(PHP_EOL, $appointments) . PHP_EOL); // Leerzeile hinzufügen
         return true;
     }
     return false;
