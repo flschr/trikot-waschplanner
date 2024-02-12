@@ -6,32 +6,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Neuen Termin hinzufügen, wenn Formular gesendet wurde
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
-    $new_date = $_POST["new_date"];
-    if (validateDate($new_date)) {
-        if (!saveAppointment($new_date)) {
-            echo "<script>alert('Termin schon vorhanden');</script>";
-        }
-        // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit();
-    } else {
-        echo "<script>alert('Ungültiges Datumsformat');</script>";
-    }
-}
-
-// Termin löschen, wenn Archivieren-Button geklickt wurde
-if (isset($_POST['archive_date'])) {
-    $date_to_archive = $_POST['archive_date'];
-    deleteAppointment($date_to_archive);
-}
-
-// Termin löschen, wenn Termin absagen-Button geklickt wurde
-if (isset($_POST['cancel_date'])) {
-    $date_to_cancel = $_POST['cancel_date'];
-    deleteAppointment($date_to_cancel);
-}
+// Verarbeitung des Formulars
+processForm();
 
 // Termine aus CSV laden
 $appointments = loadAppointments();
@@ -47,7 +23,7 @@ $appointments = loadAppointments();
 </head>
 <body>
     <h2>Neuen Termin anlegen</h2>
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <form id="new_appointment_form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
         <input type="text" id="datepicker" name="new_date" placeholder="Datum (dd.mm.yyyy)">
         <input type="submit" value="Termin anlegen">
     </form>
@@ -62,31 +38,37 @@ $appointments = loadAppointments();
             </tr>
         </thead>
         <tbody>
-			<?php foreach ($appointments as $appointment) {?>
-				<tr>
-					<td><?php echo $appointment;?></td>
-					<td>
-						<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-							<input type="hidden" name="archive_date" value="<?php echo $appointment;?>">
-							<input type="submit" value="Archivieren">
-						</form>
-					</td>
-					<td>
-						<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-							<input type="checkbox" name="cancel_checkbox" value="<?php echo $appointment;?>" onchange="this.form.submit()">
-							<input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
-							<input type="submit" value="Termin absagen" <?php if (!isset($_POST['cancel_checkbox']) || $_POST['cancel_checkbox'] != $appointment) echo 'disabled';?>>
-						</form>
-					</td>
-				</tr>
-			<?php }?>
+            <?php foreach ($appointments as $appointment) {?>
+                <tr>
+                    <td><?php echo $appointment;?></td>
+                    <td>
+                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                            <input type="hidden" name="archive_date" value="<?php echo $appointment;?>">
+                            <input type="submit" value="Archivieren">
+                        </form>
+                    </td>
+                    <td>
+                        <form id="cancel_form_<?php echo $appointment;?>" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
+                            <input type="checkbox" name="cancel_checkbox" value="<?php echo $appointment;?>" onchange="toggleCancelButton('<?php echo $appointment;?>')">
+                            <input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
+                            <input type="submit" value="Termin absagen" disabled>
+                        </form>
+                    </td>
+                </tr>
+            <?php }?>
         </tbody>
     </table>
 
     <script>
         $( function() {
             $( "#datepicker" ).datepicker({dateFormat: 'dd.mm.yy'});
-        } );
+        });
+
+        function toggleCancelButton(appointment) {
+            $('#cancel_form_' + appointment + ' input[type="submit"]').prop('disabled', function(i, v) {
+                return !v;
+            });
+        }
     </script>
 </body>
 </html>

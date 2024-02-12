@@ -48,4 +48,32 @@ function deleteAppointment($date) {
     }
     return false;
 }
+
+// Funktion zum Verarbeiten des Formulars zum Hinzufügen und Löschen von Terminen
+function processForm() {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST["new_date"])) {
+            $new_date = $_POST["new_date"];
+            if (validateDate($new_date)) {
+                if (!saveAppointment($new_date)) {
+                    echo "<script>alert('Termin schon vorhanden');</script>";
+                }
+                // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
+                header("Location: ".$_SERVER['PHP_SELF']);
+                exit();
+            } else {
+                echo "<script>alert('Ungültiges Datumsformat');</script>";
+            }
+        }
+        
+        if (isset($_POST['archive_date']) || isset($_POST['cancel_date'])) {
+            if (isset($_POST['archive_date'])) {
+                $date_to_delete = $_POST['archive_date'];
+            } else {
+                $date_to_delete = $_POST['cancel_date'];
+            }
+            deleteAppointment($date_to_delete);
+        }
+    }
+}
 ?>
