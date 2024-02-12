@@ -60,10 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         <input type="submit" value="Termin anlegen">
     </form>
     
-    <?php if (isset($error_message)) { ?>
-        <div class="error"><?php echo $error_message; ?></div>
-    <?php } ?>
-
     <h2>Termine</h2>
     <table>
         <thead>
