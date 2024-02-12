@@ -64,9 +64,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
                     </td>
                     <td>
 						<form id="cancel_form_<?php echo $appointment;?>" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
-							<input type="checkbox" name="cancel_checkbox_<?php echo $appointment;?>" value="<?php echo $appointment;?>" onchange="toggleCancelButton('<?php echo $appointment;?>')">
+							<input type="checkbox" id="cancel_checkbox_<?php echo $appointment;?>" name="cancel_checkbox_<?php echo $appointment;?>" value="<?php echo $appointment;?>" onchange="toggleCancelButton('<?php echo $appointment;?>')">
 							<input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
-							<input type="submit" value="Termin absagen" name="cancel_button_<?php echo $appointment;?>" id="cancel_button_<?php echo $appointment;?>" disabled>
+							<input type="submit" value="Termin absagen" id="cancel_button_<?php echo $appointment;?>" name="cancel_button_<?php echo $appointment;?>" disabled>
 						</form>
                     </td>
                 </tr>
@@ -75,14 +75,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     </table>
 
 <script>
-    $( function() {
+    $(function() {
         $( "#datepicker" ).datepicker({dateFormat: 'dd.mm.yy'});
     });
 
     function toggleCancelButton(appointment) {
-        $('#cancel_button_' + appointment).prop('disabled', function(i, v) {
-            return !v;
-        });
+        var checkbox = $('#cancel_checkbox_' + appointment);
+        var button = $('#cancel_button_' + appointment);
+
+        if (checkbox.prop('checked')) {
+            button.prop('disabled', false);
+        } else {
+            button.prop('disabled', true);
+        }
     }
 </script>
 
