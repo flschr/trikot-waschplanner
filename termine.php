@@ -1,6 +1,11 @@
 <?php
 include 'functions.php';
 
+// Fehlermeldungen einschalten
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Verarbeitung des Formulars
 processForm();
 

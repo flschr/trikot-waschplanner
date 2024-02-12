@@ -1,5 +1,10 @@
 <?php
 
+// Fehlermeldungen einschalten
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Funktion zum Überprüfen des Datumsformats
 function validateDate($date, $format = 'd.m.Y') {
     $d = DateTime::createFromFormat($format, $date);
