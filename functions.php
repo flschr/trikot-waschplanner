@@ -42,6 +42,17 @@ function loadAppointments() {
 function saveAppointment($date) {
     $file = "termine.csv";
     if (validateDate($date)) {
+        // Lade vorhandene Termine
+        $appointments = loadAppointments();
+        // Überprüfe, ob der Termin bereits vorhanden ist
+        foreach ($appointments as $appointment) {
+            if ($appointment[0] == $date) {
+                // Hinweismeldung ausgeben
+                echo "Der Termin am $date ist bereits vorhanden.";
+                return false;
+            }
+        }
+        // Termin speichern
         $termin = $date . "," . PHP_EOL;
         if (file_put_contents($file, $termin, FILE_APPEND | LOCK_EX) !== false) {
             return true;
