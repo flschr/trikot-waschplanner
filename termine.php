@@ -87,11 +87,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         $("#datepicker").datepicker({dateFormat: 'dd.mm.yy'});
     });
 
-    function confirmDelete(appointment) {
+	function confirmDelete(appointment) {
         var confirmation = confirm("Soll der Termin " + appointment + " gelöscht werden?");
         if (confirmation) {
             // Wenn der Benutzer Ja klickt, den Termin löschen
             window.location.href = "<?php echo $_SERVER['PHP_SELF'];?>?cancel_date=" + appointment;
+        } else {
+            // Andernfalls, wenn der Benutzer Abbrechen klickt, nichts tun
+            return false;
         }
     }
 </script>
