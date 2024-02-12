@@ -51,7 +51,7 @@ $appointments = loadAppointments();
 						<form id="cancel_form_<?php echo $appointment;?>" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
 							<input type="checkbox" name="cancel_checkbox_<?php echo $appointment;?>" value="<?php echo $appointment;?>" onchange="toggleCancelButton('<?php echo $appointment;?>')">
 							<input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
-							<input type="submit" value="Termin absagen" name="cancel_button_<?php echo $appointment;?>" disabled>
+							<input type="submit" value="Termin absagen" name="cancel_button_<?php echo $appointment;?>" id="cancel_button_<?php echo $appointment;?>" disabled>
 						</form>
                     </td>
                 </tr>
@@ -59,16 +59,17 @@ $appointments = loadAppointments();
         </tbody>
     </table>
 
-    <script>
-        $( function() {
-            $( "#datepicker" ).datepicker({dateFormat: 'dd.mm.yy'});
-        });
+<script>
+    $( function() {
+        $( "#datepicker" ).datepicker({dateFormat: 'dd.mm.yy'});
+    });
 
-        function toggleCancelButton(appointment) {
-            $('#cancel_form_' + appointment + ' input[type="submit"]').prop('disabled', function(i, v) {
-                return !v;
-            });
-        }
-    </script>
+    function toggleCancelButton(appointment) {
+        $('#cancel_button_' + appointment).prop('disabled', function(i, v) {
+            return !v;
+        });
+    }
+</script>
+
 </body>
 </html>
