@@ -25,15 +25,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Nach dem Speichern eines neuen Termins
+// Nach dem Speichern oder Versuch des Speicherns eines neuen Termins
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     $new_date = $_POST["new_date"];
-	$error_message = saveAppointment($new_date);
-            if (saveAppointment($new_date)) {
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            }
+    $error_message = saveAppointment($new_date);
+    processForm();
+    if ($error_message === true) {
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
 }
+
 ?>
 <!DOCTYPE html>
 <html>
