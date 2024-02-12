@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <td><?php echo $appointment;?></td>
                     <td>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-                            <input type="hidden" name="archive_date" value="<?php echo $appointment;?>">
+                            <input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
                             <input type="submit" value="Archivieren">
                         </form>
                     </td>
