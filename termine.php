@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     </form>
     
     <h2>Termine</h2>
-    <table>
+    <table border="1">
         <thead>
             <tr>
                 <th>Termin</th>
