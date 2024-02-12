@@ -41,27 +41,27 @@ function loadAppointments() {
 // Funktion zum Speichern eines neuen Termins in eine neue Zeile
 function saveAppointment($date) {
     $file = "termine.csv";
-    if (validateDate($date)) {
-        // Lade vorhandene Termine
-        $appointments = loadAppointments();
-        // Überprüfe, ob der Termin bereits vorhanden ist
-        foreach ($appointments as $appointment) {
-            if ($appointment[0] == $date) {
-                // Hinweismeldung ausgeben
-                echo "Der Termin am $date ist bereits vorhanden.";
-                return false;
-            }
-        }
-        // Termin speichern
-        $termin = $date . "," . PHP_EOL;
-        if (file_put_contents($file, $termin, FILE_APPEND | LOCK_EX) !== false) {
-            return true;
-        } else {
-            return false; // Fehler beim Schreiben
-        }
-    } else {
-        echo "Ungültiges Datumsformat";
+    // Überprüfe, ob das Datum ein gültiges Format hat
+    if (!validateDate($date)) {
+        echo "Ungültige Eingabe. Bitte das Datum im Format TT.MM.JJJJ erfassen.";
         return false; // Ungültiges Datumsformat
+    }
+    // Lade vorhandene Termine
+    $appointments = loadAppointments();
+    // Überprüfe, ob der Termin bereits vorhanden ist
+    foreach ($appointments as $appointment) {
+        if ($appointment[0] == $date) {
+            // Hinweismeldung ausgeben
+            echo "Der Termin am $date ist bereits vorhanden.";
+            return false;
+        }
+    }
+    // Termin speichern
+    $termin = $date . "," . PHP_EOL;
+    if (file_put_contents($file, $termin, FILE_APPEND | LOCK_EX) !== false) {
+        return true;
+    } else {
+        return false; // Fehler beim Schreiben
     }
 }
 
