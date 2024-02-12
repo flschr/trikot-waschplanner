@@ -11,6 +11,21 @@ processForm();
 
 // Termine aus CSV laden
 $appointments = loadAppointments();
+
+// Nach dem Speichern eines neuen Termins
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
+    $new_date = $_POST["new_date"];
+    if (validateDate($new_date)) {
+        if (!saveAppointment($new_date)) {
+            echo "<script>alert('Termin schon vorhanden');</script>";
+        }
+        // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
+        header("Location: ".$_SERVER['PHP_SELF']);
+        exit(); // Beenden Sie das Skript nach der Umleitung
+    } else {
+        echo "<script>alert('Ungültiges Datumsformat');</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
