@@ -1,5 +1,4 @@
 <?php
-
 // Fehlermeldungen einschalten
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -58,14 +57,19 @@ function cancelAppointment($date) {
     return false;
 }
 
+// Funktion zum Überprüfen, ob ein Termin bereits vorhanden ist
+function isAppointmentExisting($date) {
+    $appointments = loadAppointments();
+    return in_array($date, $appointments);
+}
+
 // Funktion zum Verarbeiten des Formulars zum Hinzufügen und Löschen von Terminen
 function processForm() {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST["new_date"])) {
             $new_date = $_POST["new_date"];
             if (validateDate($new_date)) {
-                $appointments = loadAppointments();
-                if (in_array($new_date, $appointments)) {
+                if (isAppointmentExisting($new_date)) {
                     echo "<script>alert('Der Termin ist bereits vorhanden');</script>";
                 } else {
                     if (!saveAppointment($new_date)) {
