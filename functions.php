@@ -79,7 +79,7 @@ function processForm() {
             } else {
                 $date_to_delete = $_POST['cancel_date'];
             }
-            deleteAppointment($date_to_delete);
+            cancelAppointment($date_to_delete); 
         }
     }
 }
