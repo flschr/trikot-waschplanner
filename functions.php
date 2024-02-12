@@ -64,12 +64,18 @@ function processForm() {
         if (isset($_POST["new_date"])) {
             $new_date = $_POST["new_date"];
             if (validateDate($new_date)) {
-                if (!saveAppointment($new_date)) {
+                $appointments = loadAppointments();
+                if (in_array($new_date, $appointments)) {
                     echo "<script>alert('Der Termin ist bereits vorhanden');</script>";
+                } else {
+                    if (!saveAppointment($new_date)) {
+                        echo "<script>alert('Ein Fehler ist aufgetreten');</script>";
+                    } else {
+                        // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
+                        header("Location: ".$_SERVER['PHP_SELF']);
+                        exit();
+                    }
                 }
-                // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
-                header("Location: ".$_SERVER['PHP_SELF']);
-                exit();
             } else {
                 echo "<script>alert('Ungültiges Datumsformat');</script>";
             }
@@ -85,4 +91,5 @@ function processForm() {
         }
     }
 }
+
 ?>
