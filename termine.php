@@ -54,7 +54,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 </head>
 <body>
 
-
+	<?php if (isset($error_message) && !isset($_POST["cancel_date"])) { ?>
+        <div class="hinweis"><?php echo $error_message; ?></div>
+    <?php } ?>
 
     <h2>Neuen Termin anlegen</h2>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
@@ -93,10 +95,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
             <?php }?>
         </tbody>
     </table>
-	
-	    <?php if (isset($error_message) && !isset($_POST["cancel_date"])) { ?>
-        <div class="error"><?php echo $error_message; ?></div>
-    <?php } ?>
 
 <script>
     $(function() {
@@ -107,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     });
 
 	function confirmDelete(appointment) {
-		var confirmation = confirm("Soll der Termin " + appointment + " gelöscht werden?");
+		var confirmation = confirm("Soll der Termin wirklich gelöscht werden?");
 		if (!confirmation) {
 			return false; // Verhindert das Standardverhalten des Formulars
 		}
