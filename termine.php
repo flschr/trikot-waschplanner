@@ -12,21 +12,6 @@ processForm();
 // Termine aus CSV laden
 $appointments = loadAppointments();
 
-// Nach dem Speichern eines neuen Termins
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
-    $new_date = $_POST["new_date"];
-    if (validateDate($new_date)) {
-        if (!saveAppointment($new_date)) {
-            $error_message = "Termin schon vorhanden";
-        } else {
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit(); 
-        }
-    } else {
-        $error_message = "Ungültiges Datumsformat";
-    }
-}
-
 // Nach dem Absenden des Formulars und dem erfolgreichen Löschen des Termins
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Überprüfen, ob das Formular zum Archivieren oder Absagen eines Termins gesendet wurde
@@ -37,6 +22,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Umleitung auf die gleiche Seite
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
+    }
+}
+
+// Nach dem Speichern eines neuen Termins
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
+    $new_date = $_POST["new_date"];
+    if (validateDate($new_date)) {
+        if (in_array($new_date, $appointments)) {
+            $error_message = "Der Termin ist bereits vorhanden";
+        } else {
+            if (!saveAppointment($new_date)) {
+                $error_message = "Ein Fehler ist aufgetreten";
+            } else {
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit(); 
+            }
+        }
+    } else {
+        $error_message = "Ungültiges Datumsformat";
     }
 }
 ?>
