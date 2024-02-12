@@ -1,7 +1,7 @@
 <?php
 include 'functions.php';
 
-// Fehlermeldungen einschalten OK
+// Fehlermeldungen einschalten
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -83,16 +83,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         </tbody>
     </table>
 
-    <script>
-        $( function() {
-            $( "#datepicker" ).datepicker({dateFormat: 'dd.mm.yy'});
-        });
+<script>
+    $( function() {
+        $( "#datepicker" ).datepicker({dateFormat: 'dd.mm.yy'});
+    });
 
-        function toggleCancelButton(appointment) {
-            var checkbox = $('#cancel_form_' + appointment + ' input[type="checkbox"]');
-            var button = $('#cancel_form_' + appointment + ' input[type="submit"]');
-            button.prop('disabled', !checkbox.prop('checked'));
+    function toggleCancelButton(appointment) {
+        var checkbox = $('#cancel_form_' + appointment + ' input[type="checkbox"]');
+        var button = $('#cancel_button_' + appointment);
+        if (checkbox.is(':checked')) {
+            button.prop('disabled', false);
+        } else {
+            button.prop('disabled', true);
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
