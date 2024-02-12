@@ -88,9 +88,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         $("#datepicker").datepicker({dateFormat: 'dd.mm.yy'});
     });
 
-    function toggleCancelButton(appointment) {
-        var checkbox = $('#cancel_checkbox_' + appointment);
-        var button = $('#cancel_button_' + appointment);
+    function toggleCancelButton(appointmentDate) {
+        var checkbox = $('#cancel_checkbox_' + appointmentDate);
+        var button = $('#cancel_button_' + appointmentDate);
         if (checkbox.prop('checked')) {
             button.prop('disabled', false);
         } else {
