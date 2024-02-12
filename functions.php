@@ -6,33 +6,36 @@ function validateDate($date, $format = 'd.m.Y') {
     return $d && $d->format($format) === $date;
 }
 
-// Funktion zum Laden der Termine aus der CSV-Datei
+// Funktion zum Laden der Termine aus der CSV-Datei und Sortieren
 function loadAppointments() {
     $appointments = [];
     $file = "termine.csv";
-    if (file_exists($file) && ($handle = fopen($file, "r")) !== FALSE) {
-        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            if (!empty($data[0])) {
-                $appointments[] = $data[0];
+    if (file_exists($file)) {
+        $handle = fopen($file, "r");
+        if ($handle !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                if (!empty($data[0])) {
+                    $appointments[] = $data[0];
+                }
             }
+            fclose($handle);
         }
-        fclose($handle);
     }
+    // Sortiere die Termine chronologisch
+    sort($appointments);
     return $appointments;
 }
 
-// Funktion zum Speichern eines neuen Termins
+// Funktion zum Speichern eines neuen Termins in eine neue Zeile
 function saveAppointment($date) {
-    $appointments = loadAppointments();
-    if (!in_array($date, $appointments)) {
-        $appointments[] = $date;
-        $handle = fopen("termine.csv", "a");
+    $file = "termine.csv";
+    $handle = fopen($file, "a");
+    if ($handle !== FALSE) {
         fputcsv($handle, [$date]);
         fclose($handle);
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 // Funktion zum Löschen eines Termins
