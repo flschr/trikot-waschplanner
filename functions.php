@@ -57,19 +57,14 @@ function cancelAppointment($date) {
     return false;
 }
 
-// Funktion zum Überprüfen, ob ein Termin bereits vorhanden ist
-function isAppointmentExisting($date) {
-    $appointments = loadAppointments();
-    return in_array($date, $appointments);
-}
-
-// Funktion zum Verarbeiten des Formulars zum Hinzufügen und Löschen von Terminen
+// Funktion zum Schreiben eines Termins in die termine.csv
 function processForm() {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST["new_date"])) {
             $new_date = $_POST["new_date"];
             if (validateDate($new_date)) {
-                if (isAppointmentExisting($new_date)) {
+                $appointments = loadAppointments();
+                if (in_array($new_date, $appointments)) {
                     echo "<script>alert('Der Termin ist bereits vorhanden');</script>";
                 } else {
                     if (!saveAppointment($new_date)) {
