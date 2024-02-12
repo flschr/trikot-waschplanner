@@ -40,7 +40,7 @@ function saveAppointment($date) {
 }
 
 // Funktion zum Löschen eines Termins
-function deleteAppointment($date) {
+function cancelAppointment($date) {
     $appointments = loadAppointments();
     $key = array_search($date, $appointments);
     if ($key !== false) {
