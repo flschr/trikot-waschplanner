@@ -9,9 +9,12 @@ function validateDate($date, $format = 'd.m.Y') {
 // Funktion zum Laden der Termine aus der CSV-Datei
 function loadAppointments() {
     $appointments = [];
-    if (($handle = fopen("termine.csv", "r")) !== FALSE) {
+    $file = "termine.csv";
+    if (file_exists($file) && ($handle = fopen($file, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            $appointments[] = $data[0];
+            if (!empty($data[0])) {
+                $appointments[] = $data[0];
+            }
         }
         fclose($handle);
     }
