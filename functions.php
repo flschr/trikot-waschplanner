@@ -29,9 +29,10 @@ function loadAppointments() {
 // Funktion zum Speichern eines neuen Termins in eine neue Zeile
 function saveAppointment($date) {
     $file = "termine.csv";
-    $handle = fopen($file, "a");
+    $handle = fopen($file, "a"); // Ändern Sie dies in "w", um im Schreibmodus zu öffnen
     if ($handle !== FALSE) {
-        fputcsv($handle, [$date]);
+        // Stellen Sie sicher, dass der Zeilenumbruch korrekt eingefügt wird
+        fwrite($handle, $date . PHP_EOL);
         fclose($handle);
         return true;
     }
