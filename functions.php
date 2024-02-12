@@ -59,16 +59,18 @@ function cancelAppointment($date) {
 
 // Funktion zum Schreiben eines Termins in die termine.csv
 function processForm() {
+    global $error_message; // Zugriff auf die $error_message Variable
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST["new_date"])) {
             $new_date = $_POST["new_date"];
             if (validateDate($new_date)) {
                 $appointments = loadAppointments();
                 if (in_array($new_date, $appointments)) {
-                    echo "<script>alert('Der Termin ist bereits vorhanden');</script>";
+                    $error_message = "Der Termin ist bereits vorhanden";
                 } else {
                     if (!saveAppointment($new_date)) {
-                        echo "<script>alert('Ein Fehler ist aufgetreten');</script>";
+                        $error_message = "Ein Fehler ist aufgetreten";
                     } else {
                         // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
                         header("Location: ".$_SERVER['PHP_SELF']);
@@ -76,7 +78,7 @@ function processForm() {
                     }
                 }
             } else {
-                echo "<script>alert('Ungültiges Datumsformat');</script>";
+                $error_message = "Ungültiges Datumsformat";
             }
         }
         
