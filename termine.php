@@ -42,17 +42,17 @@ $appointments = loadAppointments();
                 <tr>
                     <td><?php echo $appointment;?></td>
                     <td>
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-                            <input type="hidden" name="archive_date" value="<?php echo $appointment;?>">
-                            <input type="submit" value="Archivieren">
-                        </form>
+						<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+							<input type="hidden" name="archive_date" value="<?php echo $appointment;?>">
+							<input type="submit" value="Archivieren">
+						</form>
                     </td>
                     <td>
-                        <form id="cancel_form_<?php echo $appointment;?>" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
-                            <input type="checkbox" name="cancel_checkbox" value="<?php echo $appointment;?>" onchange="toggleCancelButton('<?php echo $appointment;?>')">
-                            <input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
-                            <input type="submit" value="Termin absagen" name="cancel_button_<?php echo $appointment;?>" disabled>
-                        </form>
+						<form id="cancel_form_<?php echo $appointment;?>" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
+							<input type="checkbox" name="cancel_checkbox_<?php echo $appointment;?>" value="<?php echo $appointment;?>" onchange="toggleCancelButton('<?php echo $appointment;?>')">
+							<input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
+							<input type="submit" value="Termin absagen" name="cancel_button_<?php echo $appointment;?>" disabled>
+						</form>
                     </td>
                 </tr>
             <?php }?>
