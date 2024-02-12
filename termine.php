@@ -77,7 +77,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         <tbody>
             <?php foreach ($appointments as $appointment) {?>
                 <tr>
-                    <td><?php echo $appointment;?></td>
+					<td><?php echo $appointment[0];?></td> <!-- Datum -->
+					<td><?php echo $appointment[1];?></td> <!-- Name -->
                     <td>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                             <input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">

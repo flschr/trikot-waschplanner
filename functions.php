@@ -18,9 +18,10 @@ function loadAppointments() {
         $handle = fopen($file, "r");
         if ($handle !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                if (!empty($data[0])) {
-                    $appointments[] = $data[0];
-                }
+                // Überprüfe, ob ein Wert in der zweiten Spalte vorhanden ist, ansonsten setze "Nicht gebucht"
+                $appointment_info = isset($data[1]) && !empty($data[1]) ? $data[1] : "Nicht gebucht";
+                // Füge Datum und Info in das Array ein
+                $appointments[] = [$data[0], $appointment_info];
             }
             fclose($handle);
         }
