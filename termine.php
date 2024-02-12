@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 <body>
 
 	<?php if (isset($error_message) && !isset($_POST["cancel_date"])) { ?>
-        <div class="hinweis"><?php echo $error_message; ?></div>
+        <p class="hinweis"><?php echo $error_message; ?></p>
     <?php } ?>
 
     <h2>Neuen Termin anlegen</h2>
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     </form>
     
     <h2>Termine</h2>
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Termin</th>
