@@ -94,7 +94,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
             window.location.href = "<?php echo $_SERVER['PHP_SELF'];?>?cancel_date=" + appointment;
         } else {
             // Andernfalls, wenn der Benutzer Abbrechen klickt, nichts tun
-            return false;
         }
     }
 </script>
