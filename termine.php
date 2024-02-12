@@ -104,12 +104,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         });
     });
 
-    function confirmDelete(appointment) {
-        var confirmation = confirm("Soll der Termin " + appointment + " gelöscht werden?");
-        if (confirmation) {
-            window.location.href = "<?php echo $_SERVER['PHP_SELF'];?>?cancel_date=" + appointment;
-        }
-    }
+	function confirmDelete(appointment) {
+		var confirmation = confirm("Soll der Termin " + appointment + " gelöscht werden?");
+		if (confirmation) {
+			window.location.href = "<?php echo $_SERVER['PHP_SELF'];?>?cancel_date=" + appointment;
+		} else {
+			return false; // Abbruch des Löschvorgangs
+		}
+	}
 </script>
 
 </body>
