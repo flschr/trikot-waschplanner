@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Nach dem Speichern eines neuen Termins
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     $new_date = $_POST["new_date"];
+	$error_message = saveAppointment($new_date);
             if (saveAppointment($new_date)) {
                 header("Location: " . $_SERVER['PHP_SELF']);
                 exit();
@@ -45,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 </head>
 <body>
 
-	<?php if (isset($error_message) && !isset($_POST["cancel_date"])) { ?>
+    <?php if (isset($error_message) && !isset($_POST["cancel_date"])) { ?>
         <p class="hinweis"><?php echo $error_message; ?></p>
     <?php } ?>
 
