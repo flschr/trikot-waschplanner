@@ -30,10 +30,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 // Nach dem Absenden des Formulars und dem erfolgreichen Löschen des Termins
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Überprüfen, ob das Formular zum Archivieren oder Absagen eines Termins gesendet wurde
-    if (isset($_POST["archive_date"]) || isset($_POST["cancel_date"])) {
+    if (isset($_POST["cancel_date"]) || isset($_POST["cancel_date"])) {
         // Termin archivieren oder absagen
         if (isset($_POST["archive_date"])) {
-            archiveAppointment($_POST["archive_date"]);
+            cancelAppointment($_POST["cancel_date"]);
         } else {
             cancelAppointment($_POST["cancel_date"]);
         }
