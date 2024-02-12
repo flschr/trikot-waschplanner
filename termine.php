@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         $error_message = "Ungültiges Datumsformat";
     }
 }
-
+?>
 <!DOCTYPE html>
 <html>
 <head>
