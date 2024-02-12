@@ -37,14 +37,15 @@ function saveAppointment($date) {
 
 // Funktion zum Löschen eines Termins
 function deleteAppointment($date) {
-    $appointments = loadAppointments();
-    $key = array_search($date, $appointments);
-    if ($key !== false) {
-        unset($appointments[$key]);
-        file_put_contents("termine.csv", implode(PHP_EOL, $appointments));
-        return true;
-    } else {
-        return false;
+    if (isset($_POST['cancel_date']) && $_POST['cancel_date'] === $date) {
+        $appointments = loadAppointments();
+        $key = array_search($date, $appointments);
+        if ($key !== false) {
+            unset($appointments[$key]);
+            file_put_contents("termine.csv", implode(PHP_EOL, $appointments));
+            return true;
+        }
     }
+    return false;
 }
 ?>
