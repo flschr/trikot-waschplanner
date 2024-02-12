@@ -1,11 +1,6 @@
 <?php
 include 'functions.php';
 
-// Fehlermeldungen einschalten
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 // Verarbeitung des Formulars
 processForm();
 
@@ -17,26 +12,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     $new_date = $_POST["new_date"];
     if (validateDate($new_date)) {
         if (!saveAppointment($new_date)) {
-            echo "<script>alert('Termin schon vorhanden');</script>";
+            $error_message = "Termin schon vorhanden";
+        } else {
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit(); 
         }
-        // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit(); // Beenden Sie das Skript nach der Umleitung
     } else {
-        echo "<script>alert('Ungültiges Datumsformat');</script>";
+        $error_message = "Ungültiges Datumsformat";
     }
 }
 
 // Nach dem Absenden des Formulars und dem erfolgreichen Löschen des Termins
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Überprüfen, ob das Formular zum Archivieren oder Absagen eines Termins gesendet wurde
-    if (isset($_POST["cancel_date"]) || isset($_POST["cancel_date"])) {
+    if (isset($_POST["cancel_date"])) {
         // Termin archivieren oder absagen
-        if (isset($_POST["archive_date"])) {
-            cancelAppointment($_POST["cancel_date"]);
-        } else {
-            cancelAppointment($_POST["cancel_date"]);
-        }
+        cancelAppointment($_POST["cancel_date"]);
 
         // Umleitung auf die gleiche Seite
         header("Location: " . $_SERVER['PHP_SELF']);
@@ -54,20 +45,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 </head>
 <body>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Terminverwaltung</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-</head>
-<body>
     <h2>Neuen Termin anlegen</h2>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
         <input type="text" id="datepicker" name="new_date" placeholder="Datum (dd.mm.yyyy)">
         <input type="submit" value="Termin anlegen">
     </form>
+    
+    <?php if (isset($error_message)) { ?>
+        <div class="error"><?php echo $error_message; ?></div>
+    <?php } ?>
 
     <h2>Termine</h2>
     <table>
@@ -89,10 +75,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </form>
                     </td>
                     <td>
-						<form id="cancel_form_<?php echo $appointment;?>" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
-							<input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
-							<button onclick="confirmDelete('<?php echo $appointment;?>')">Termin absagen</button>
-						</form>
+                        <form id="cancel_form_<?php echo $appointment;?>" method="post" action="#" style="display:inline;">
+                            <input type="hidden" name="cancel_date" value="<?php echo $appointment;?>">
+                            <button onclick="confirmDelete('<?php echo $appointment;?>')">Termin absagen</button>
+                        </form>
                     </td>
                 </tr>
             <?php }?>
@@ -104,13 +90,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $("#datepicker").datepicker({dateFormat: 'dd.mm.yy'});
     });
 
-	function confirmDelete(appointment) {
+    function confirmDelete(appointment) {
         var confirmation = confirm("Soll der Termin " + appointment + " gelöscht werden?");
         if (confirmation) {
-            // Wenn der Benutzer Ja klickt, den Termin löschen
             window.location.href = "<?php echo $_SERVER['PHP_SELF'];?>?cancel_date=" + appointment;
-        } else {
-            // Andernfalls, wenn der Benutzer Abbrechen klickt, nichts tun
         }
     }
 </script>
