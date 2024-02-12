@@ -57,9 +57,11 @@ function saveAppointment($date) {
         if (file_put_contents($file, $termin, FILE_APPEND | LOCK_EX) !== false) {
             return true;
         } else {
+            echo "Ein Fehler ist aufgetreten.";
             return false; // Fehler beim Schreiben
         }
     } else {
+        echo "Ungültiges Datumsformat";
         return false; // Ungültiges Datumsformat
     }
 }
