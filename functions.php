@@ -1,74 +1,47 @@
 <?php
-// functions.php
 
-// Funktion zum Einlesen einer CSV-Datei
-function readCSV($filename) {
-    $data = [];
-    if (($handle = fopen($filename, "r")) !== FALSE) {
-        while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            $data[] = $row;
+// Funktion zum Überprüfen des Datumsformats
+function validateDate($date, $format = 'd.m.Y') {
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) === $date;
+}
+
+// Funktion zum Laden der Termine aus der CSV-Datei
+function loadAppointments() {
+    $appointments = [];
+    if (($handle = fopen("termine.csv", "r")) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            $appointments[] = $data[0];
         }
         fclose($handle);
     }
-    return $data;
+    return $appointments;
 }
 
-// Funktion zum Schreiben in eine CSV-Datei
-function writeCSV($filename, $data) {
-    if (($handle = fopen($filename, "w")) !== FALSE) {
-        foreach ($data as $row) {
-            fputcsv($handle, $row);
-        }
+// Funktion zum Speichern eines neuen Termins
+function saveAppointment($date) {
+    $appointments = loadAppointments();
+    if (!in_array($date, $appointments)) {
+        $appointments[] = $date;
+        $handle = fopen("termine.csv", "a");
+        fputcsv($handle, [$date]);
         fclose($handle);
+        return true;
+    } else {
+        return false;
     }
 }
 
-// Funktion zum Sortieren eines Arrays nach dem ersten Element
-function sortByFirstElement($a, $b) {
-    return strtotime($a[0]) - strtotime($b[0]);
-}
-
-// Funktion zum Hinzufügen eines Termins
-function addAppointment($termine, $termin, $player = "") {
-    foreach ($termine as $index => $row) {
-        if ($row[0] === $termin) {
-            return false; // Termin bereits vorhanden
-        }
+// Funktion zum Löschen eines Termins
+function deleteAppointment($date) {
+    $appointments = loadAppointments();
+    $key = array_search($date, $appointments);
+    if ($key !== false) {
+        unset($appointments[$key]);
+        file_put_contents("termine.csv", implode(PHP_EOL, $appointments));
+        return true;
+    } else {
+        return false;
     }
-    $termine[] = [$termin, $player];
-    return $termine;
-}
-
-// Funktion zum Entfernen eines Termins
-function removeAppointment($termine, $termin) {
-    foreach ($termine as $index => $row) {
-        if ($row[0] === $termin) {
-            unset($termine[$index]);
-            return array_values($termine);
-        }
-    }
-    return $termine; // Termin nicht gefunden
-}
-
-// Funktion zum Hinzufügen eines Spielers
-function addPlayer($spieler, $name) {
-    foreach ($spieler as $row) {
-        if ($row[0] === $name) {
-            return false; // Spieler bereits vorhanden
-        }
-    }
-    $spieler[] = [$name, 0];
-    return $spieler;
-}
-
-// Funktion zum Entfernen eines Spielers
-function removePlayer($spieler, $name) {
-    foreach ($spieler as $index => $row) {
-        if ($row[0] === $name) {
-            unset($spieler[$index]);
-            return array_values($spieler);
-        }
-    }
-    return $spieler; // Spieler nicht gefunden
 }
 ?>
