@@ -28,7 +28,12 @@ function loadAppointments() {
     }
     // Sortiere die Termine chronologisch nach dem vollständigen Datum
     usort($appointments, function($a, $b) {
-        return strtotime($a[0]) - strtotime($b[0]);
+        $dateA = strtotime($a[0]);
+        $dateB = strtotime($b[0]);
+        if ($dateA == $dateB) {
+            return 0;
+        }
+        return ($dateA < $dateB) ? -1 : 1;
     });
     return $appointments;
 }
