@@ -26,6 +26,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         echo "<script>alert('Ungültiges Datumsformat');</script>";
     }
 }
+
+// Nach dem Absenden des Formulars und dem erfolgreichen Löschen des Termins
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Überprüfen, ob das Formular zum Archivieren oder Absagen eines Termins gesendet wurde
+    if (isset($_POST["archive_date"]) || isset($_POST["cancel_date"])) {
+        // Termin archivieren oder absagen
+        if (isset($_POST["archive_date"])) {
+            archiveAppointment($_POST["archive_date"]);
+        } else {
+            cancelAppointment($_POST["cancel_date"]);
+        }
+
+        // Umleitung auf die gleiche Seite
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
