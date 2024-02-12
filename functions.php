@@ -26,24 +26,26 @@ function loadAppointments() {
             fclose($handle);
         }
     }
-    // Sortiere die Termine chronologisch
-    sort($appointments);
+    // Sortiere die Termine chronologisch nach dem vollständigen Datum
+    usort($appointments, function($a, $b) {
+        return strtotime($a[0]) - strtotime($b[0]);
+    });
     return $appointments;
 }
 
 // Funktion zum Speichern eines neuen Termins in eine neue Zeile
 function saveAppointment($date) {
     $file = "termine.csv";
-    $handle = fopen($file, "a");
-    if ($handle !== FALSE) {
-        if (fwrite($handle, $date . PHP_EOL) === FALSE) {
-            fclose($handle);
+    if (validateDate($date)) {
+        $termin = $date . "," . PHP_EOL;
+        if (file_put_contents($file, $termin, FILE_APPEND | LOCK_EX) !== false) {
+            return true;
+        } else {
             return false; // Fehler beim Schreiben
         }
-        fclose($handle);
-        return true; // Erfolgreich gespeichert
+    } else {
+        return false; // Ungültiges Datumsformat
     }
-    return false; // Fehler beim Öffnen der Datei
 }
 
 // Funktion zum Löschen eines Termins
