@@ -80,16 +80,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 					<td><?php echo $appointment[0];?></td> <!-- Datum -->
 					<td><?php echo $appointment[1];?></td> <!-- Name -->
                     <td>
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-                            <input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
+						<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+							<input type="hidden" name="archive_date" value="<?php echo $appointment[0];?>">
 							<input type="submit" value="Archivieren">
-                        </form>
+						</form>
                     </td>
                     <td>
-                        <form id="cancel_form_<?php echo $appointment;?>" method="post" action="#" style="display:inline;">
-                            <input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
-                            <button onclick="confirmDelete('<?php echo $appointment;?>')">Termin absagen</button>
-                        </form>
+						<form method="post" action="#">
+							<input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
+							<button onclick="confirmDelete('<?php echo $appointment[0];?>')">Termin absagen</button>
+						</form>
                     </td>
                 </tr>
             <?php }?>
