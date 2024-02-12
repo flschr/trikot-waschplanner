@@ -32,18 +32,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         if (in_array($new_date, $appointments)) {
             $error_message = "Der Termin ist bereits vorhanden";
         } else {
-            if (!saveAppointment($new_date)) {
-                $error_message = "Ein Fehler ist aufgetreten";
-            } else {
+            // Termin speichern und Weiterleitung durchführen
+            if (saveAppointment($new_date)) {
                 header("Location: " . $_SERVER['PHP_SELF']);
-                exit(); 
+                exit();
             }
         }
     } else {
         $error_message = "Ungültiges Datumsformat";
     }
 }
-?>
 
 <!DOCTYPE html>
 <html>
