@@ -86,9 +86,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 						</form>
                     </td>
                     <td>
-						<form method="post" action="#">
+						<form id="cancel_form_<?php echo $appointment;?>" method="post" action="#" style="display:inline;" onsubmit="return confirmDelete('<?php echo $appointment;?>')">
 							<input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
-							<button onclick="confirmDelete('<?php echo $appointment[0];?>')">Termin absagen</button>
+							<button>Termin absagen</button>
 						</form>
                     </td>
                 </tr>
@@ -106,8 +106,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 
 	function confirmDelete(appointment) {
 		var confirmation = confirm("Soll der Termin " + appointment + " gelöscht werden?");
-		if (confirmation) {
-			document.getElementById('cancel_form_' + appointment).submit(); // Formular absenden
+		if (!confirmation) {
+			return false; // Verhindert das Standardverhalten des Formulars
 		}
 	}
 </script>
