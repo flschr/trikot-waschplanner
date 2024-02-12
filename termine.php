@@ -97,7 +97,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 
 <script>
     $(function() {
-        $("#datepicker").datepicker({dateFormat: 'dd.mm.yy'});
+        $("#datepicker").datepicker({
+            dateFormat: 'dd.mm.yy',
+            firstDay: 1
+        });
     });
 
     function confirmDelete(appointment) {
