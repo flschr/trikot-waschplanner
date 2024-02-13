@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 include 'functions.php';
 
 // Fehlermeldungen einschalten
@@ -15,13 +11,6 @@ processForm();
 
 // Termine aus CSV laden
 $appointments = loadAppointments();
-
-// iCal Import
-if (isset($_POST['uploadIcal']) && isset($_FILES['icalFile'])) {
-    $filePath = $_FILES['icalFile']['tmp_name'];
-    $message = importIcalToCsv($filePath);
-    echo "<script>alert('".$message."');</script>"; // Zeigt eine Nachricht über den Importstatus an
-}
 
 // Nach dem Absenden des Formulars und dem erfolgreichen Löschen des Termins
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -79,12 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         <input type="text" id="datepicker" name="new_date" placeholder="Datum (dd.mm.yyyy)">
         <input type="submit" value="Termin anlegen">
     </form>
-	
-	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
-    <label for="icalFile">iCal-Datei hochladen:</label>
-    <input type="file" id="icalFile" name="icalFile">
-    <button type="submit" name="uploadIcal">Hochladen</button>
-	</form>
 
 	<?php if (empty($appointments)) { ?>
 		<p class="hinweis">Es sind noch keine Termine vorhanden.</p>
