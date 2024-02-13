@@ -114,9 +114,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["icsFile"])) {
     </form>
 	
 	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
-		<input type="file" name="icsFile" id="icsFile" style="display:none;" onchange="document.querySelector('form').submit();">
-		<button id="uploadBtn">ICS-Datei hochladen</button>
+		<input type="file" name="icsFile" id="icsFile" style="display:none;" onchange="this.form.submit();">
+		<label for="icsFile" class="upload-button">ICS-Datei hochladen</label>
 	</form>
+
 
 	<?php if (empty($appointments)) { ?>
 		<p class="hinweis">Es sind noch keine Termine vorhanden.</p>
@@ -212,12 +213,6 @@ $(document).on('change', '.hide-checkbox', function() {
         }
     });
 });
-
-//ICS Upload Button
-document.getElementById('uploadBtn').addEventListener('click', function() {
-    document.getElementById('icsFile').click(); // Löst den Klick-Event auf das input-Element aus
-});
-
 </script>
 
 
