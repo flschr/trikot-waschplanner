@@ -133,18 +133,19 @@ $(document).ready(function() {
         });
     });
 
-    $('.hide-checkbox').change(function() {
-        var date = $(this).data('date');
-        var isChecked = $(this).is(':checked') ? 'true' : 'false';
-        $.ajax({
-            type: "POST",
-            url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
-            data: { action: 'hide', date: date, hide_checkbox: isChecked },
-            success: function(response) {
-                alert(response);
-            }
-        });
-    });
+	$('.hide-checkbox').change(function() {
+		var date = $(this).data('date');
+		var isChecked = $(this).is(':checked') ? 'true' : 'false';
+		$.ajax({
+			type: "POST",
+			url: "/termine.php",
+			data: { action: 'hide', date: date, hide_checkbox: isChecked },
+			success: function(response) {
+				var data = JSON.parse(response); 
+				alert(data.message);
+			}
+		});
+	});
 });
 </script>
 
