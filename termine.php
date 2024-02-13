@@ -109,8 +109,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["icsFile"])) {
 
     <h2>Neuen Termin anlegen</h2>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-        <input type="text" id="datepicker" name="new_date" placeholder="Datum (dd.mm.yyyy)">
-        <button>"Termin anlegen"</button>
+        <input type="text" id="datepicker" name="new_date" placeholder="23.06.2021">
+        <button>Termin anlegen</button>
     </form>
 	
 	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
