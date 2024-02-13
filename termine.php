@@ -74,12 +74,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["icsFile"])) {
         $fileType = strtolower(pathinfo($name, PATHINFO_EXTENSION));
         if ($fileType == "ics") {
             // Aufrufen der Funktion zum Einlesen und Verarbeiten der ICS-Datei
-            $appointments = parseIcsFile($tmp_name);
+            processUploadedFile($csvFilePath); // Diese Zeile wurde hinzugefügt
 
-            // Hier könnten Sie die extrahierten Termine weiterverarbeiten, z.B. in einer Datenbank speichern
-            // Beispiel: saveAppointments($appointments);
-
-            $_SESSION['feedback'] = 'ICS-Datei erfolgreich verarbeitet.';
+            $_SESSION['feedback'] = 'ICS-Datei erfolgreich verarbeitet und Termine hinzugefügt.';
         } else {
             $_SESSION['feedback'] = 'Falscher Dateityp. Bitte laden Sie eine ICS-Datei hoch.';
         }
