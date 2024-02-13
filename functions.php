@@ -20,8 +20,10 @@ function loadAppointments() {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 // Überprüfe, ob ein Wert in der zweiten Spalte vorhanden ist, ansonsten setze "Nicht gebucht"
                 $appointment_info = isset($data[1]) && !empty($data[1]) ? $data[1] : "Nicht gebucht";
-                // Füge Datum und Info in das Array ein
-                $appointments[] = [$data[0], $appointment_info];
+                // Überprüfe, ob ein Wert in der dritten Spalte vorhanden ist, ansonsten setze 0
+                $hide_value = isset($data[2]) ? intval($data[2]) : 0;
+                // Füge Datum, Info und Ausblenden-Wert in das Array ein
+                $appointments[] = [$data[0], $appointment_info, $hide_value];
             }
             fclose($handle);
         }
