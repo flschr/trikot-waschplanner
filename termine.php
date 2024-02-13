@@ -6,8 +6,27 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Verarbeitung des Formulars
-processForm();
+// Funktion zum Verarbeiten des Formulars
+function processForm() {
+    global $error_message; // Zugriff auf die $error_message Variable
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['archive_date']) || isset($_POST['cancel_date'])) {
+            if (isset($_POST['archive_date'])) {
+                $date_to_delete = $_POST['archive_date'];
+            } else {
+                $date_to_delete = $_POST['cancel_date'];
+            }
+            // Zuerst die verbleibenden Termine speichern
+            saveAppointments(loadAppointments());
+            // Dann den Termin löschen
+            cancelAppointment($date_to_delete);
+            // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
+            header("Location: ".$_SERVER['PHP_SELF']);
+            exit();
+        }
+    }
+}
 
 // Termine aus CSV laden
 $appointments = loadAppointments();
