@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form action="auth.php" method="post">
         Benutzername: <input type="text" name="username"><br>
         Passwort: <input type="password" name="password"><br>
-        <input type="submit" value="Login">
+        <button>Login</button>
     </form>
 </body>
 </html>
