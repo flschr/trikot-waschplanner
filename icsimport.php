@@ -42,16 +42,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES['icsFile'])) {
 function parseIcsFile($filePath) {
     $events = [];
     $fileContent = file_get_contents($filePath);
+    // Entferne neue Zeilen, die als Fortsetzung einer vorherigen Zeile dienen
+    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
-    $startDate = '';
 
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART') !== false) {
             $startDate = substr($line, strpos($line, ':') + 1);
-            // Verarbeitung für UTC-Zeiten
-            $date = DateTime::createFromFormat('Ymd\THis\Z', $startDate, new DateTimeZone('UTC'));
-            $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Konvertiere in lokale Zeitzone, falls nötig
-            $events[] = $date->format('d.m.Y');
+            // Berücksichtigt verschiedene Formate, einschließlich möglicher Zeitzone
+            $formats = ['Ymd\THis\Z', 'Ymd\THis'];
+            foreach ($formats as $format) {
+                $date = DateTime::createFromFormat($format, $startDate);
+                if ($date) {
+                    $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassung an die gewünschte Zeitzone
+                    $events[] = $date->format('d.m.Y');
+                    break; // Beendet die Schleife, sobald ein gültiges Datum gefunden wurde
+                }
+            }
         }
     }
 
