@@ -98,19 +98,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     </table>
 
 <script>
-    $(function() {
+    $(function () {
         $("#datepicker").datepicker({
             dateFormat: 'dd.mm.yy',
             firstDay: 1
         });
+
+        $(".hide-checkbox").change(function () {
+            var date = $(this).data('date');
+            var isChecked = $(this).is(":checked");
+
+            $.ajax({
+                type: "POST",
+                url: "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>",
+                data: {hide_date: date, hide_checkbox: isChecked},
+                success: function () {
+                    location.reload();
+                }
+            });
+        });
     });
 
-	function confirmDelete(appointment) {
-		var confirmation = confirm("Soll der Termin wirklich gelöscht werden?");
-		if (!confirmation) {
-			return false; // Verhindert das Standardverhalten des Formulars
-		}
-	}
+    function confirmDelete(appointment) {
+        var confirmation = confirm("Soll der Termin wirklich gelöscht werden?");
+        if (!confirmation) {
+            return false; // Verhindert das Standardverhalten des Formulars
+        }
+    }
 </script>
 
 </body>
