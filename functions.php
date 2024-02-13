@@ -56,7 +56,7 @@ function saveAppointment($date) {
         }
     }
     // Termin speichern
-    $termin = $date . ",," . PHP_EOL; // Hier werden leere Werte für die zweite und dritte Spalte eingefügt
+    $termin = $date . ",,1" . PHP_EOL; // Hier werden leere Werte für die zweite und dritte Spalte eingefügt
     if (file_put_contents($file, $termin, FILE_APPEND | LOCK_EX) !== false) {
         return true;
     } else {
