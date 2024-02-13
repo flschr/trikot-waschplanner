@@ -35,7 +35,7 @@ function saveAppointments($date) {
         }
     }
     $file = "termine.csv";
-    $termin = [$date, "", "0"]; // Angepasst, um mit der Array-Struktur konsistent zu sein
+    $termin = [$date, "", "1"]; 
     $handle = fopen($file, "a");
     fputcsv($handle, $termin);
     fclose($handle);
