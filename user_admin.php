@@ -33,18 +33,22 @@ function deleteUser($username) {
     saveUsers($users);
 }
 
-$message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $action = $_POST['action'] ?? '';
 
-    if ($action === 'save' && !empty($username)) {
-        $password = $_POST['password'] ?? '';
-        updateUser($username, $password);
-        $message = "Benutzer '$username' angelegt/aktualisiert.";
-    } elseif ($action === 'delete' && !empty($username)) {
-        deleteUser($username);
-        $message = "Benutzer '$username' gelöscht.";
+    if (($action === 'save' && !empty($username) && !empty($_POST['password'])) || ($action === 'delete' && !empty($username))) {
+        if($action === 'save') {
+            updateUser($username, $_POST['password']);
+            $_SESSION['message'] = "Benutzer '$username' angelegt/aktualisiert.";
+        } else {
+            deleteUser($username);
+            $_SESSION['message'] = "Benutzer '$username' gelöscht.";
+        }
+
+        // Umleitung zur selben Seite, um das PRG-Muster zu implementieren
+        header('Location: user_admin.php');
+        exit;
     }
 }
 
