@@ -23,7 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (authenticate($username, $password)) {
         $_SESSION['authenticated'] = true;
-        header('Location: protected_page.php');
+        
+        // Weiterleitung zur ursprünglich angeforderten Seite, falls vorhanden
+        $redirect_url = $_SESSION['redirect_url'] ?? 'index.php'; 
+        unset($_SESSION['redirect_url']);
+        header('Location: ' . $redirect_url);
         exit;
     } else {
         $error_message = 'Login fehlgeschlagen.';

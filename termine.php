@@ -2,6 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // Speichern der aktuellen URL
+    $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
     header('Location: auth.php');
     exit;
 }
