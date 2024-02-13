@@ -71,9 +71,12 @@ function cancelAppointment($date) {
     foreach ($appointments as $key => $appointment) {
         if ($appointment[0] == $date) {
             unset($appointments[$key]);
-            file_put_contents("termine.csv", implode(PHP_EOL, array_map(function($appointment) {
-                return implode(",", $appointment);
-            }, $appointments)) . PHP_EOL);
+            // Speichere die verbleibenden Termine
+            saveAppointments($appointments);
+            // Überprüfe, ob keine Termine mehr vorhanden sind, und lösche die CSV-Datei
+            if (count($appointments) === 0) {
+                unlink("termine.csv");
+            }
             return true;
         }
     }
