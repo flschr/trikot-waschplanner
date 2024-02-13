@@ -110,12 +110,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["icsFile"])) {
     <h2>Neuen Termin anlegen</h2>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
         <input type="text" id="datepicker" name="new_date" placeholder="Datum (dd.mm.yyyy)">
-        <input type="submit" value="Termin anlegen">
+        <button>"Termin anlegen"</button>
     </form>
 	
 	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
 		<input type="file" name="icsFile" id="icsFile" onchange="this.form.submit();" style="display:none;">
-		<label for="icsFile" class="upload-button">ICS-Datei hochladen</label>
+		<button>ICS-Datei hochladen</button>
 	</form>
 
 	<?php if (empty($appointments)) { ?>
