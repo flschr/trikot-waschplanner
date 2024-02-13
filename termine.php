@@ -74,9 +74,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["icsFile"])) {
         $fileType = strtolower(pathinfo($name, PATHINFO_EXTENSION));
         if ($fileType == "ics") {
             // Aufrufen der Funktion zum Einlesen und Verarbeiten der ICS-Datei
-            processUploadedFile($csvFilePath); // Diese Zeile wurde hinzugefügt
+            processUploadedFile($csvFilePath);
 
-            $_SESSION['feedback'] = 'ICS-Datei erfolgreich verarbeitet und Termine hinzugefügt.';
+            $_SESSION['feedback'] = 'Kalender-Import erfolgreich verarbeitet und alle neuen Termine hinzugefügt.';
         } else {
             $_SESSION['feedback'] = 'Falscher Dateityp. Bitte laden Sie eine ICS-Datei hoch.';
         }
