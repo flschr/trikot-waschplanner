@@ -68,11 +68,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         <input type="text" id="datepicker" name="new_date" placeholder="Datum (dd.mm.yyyy)">
         <input type="submit" value="Termin anlegen">
     </form>
-    
-    <h2>Termine</h2>
+
 	<?php if (empty($appointments)) { ?>
 		<p class="hinweis">Es sind noch keine Termine vorhanden.</p>
-	<?php } else { ?>
+	<?php } else { ?>    
+    <h2>Termine</h2>
     <table>
         <thead>
             <tr>
