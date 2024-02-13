@@ -66,9 +66,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 </head>
 <body>
 
-    <?php if (isset($error_message) && !isset($_POST["cancel_date"])) { ?>
-        <p class="hinweis"><?php echo $error_message; ?></p>
-    <?php } ?>
+	<?php if (isset($_SESSION['feedback'])) { ?>
+		<p class="hinweis"><?php echo $_SESSION['feedback']; ?></p>
+		<?php unset($_SESSION['feedback']); // Wichtig: Feedback-Nachricht aus der Session entfernen ?>
+	<?php } ?>
+
 
     <h2>Neuen Termin anlegen</h2>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
