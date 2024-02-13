@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 include 'functions.php';
 
 // Fehlermeldungen einschalten
@@ -36,15 +38,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Nach dem Speichern oder Versuch des Speicherns eines neuen Termins
+// Termin speichern
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     $new_date = $_POST["new_date"];
     $error_message = saveAppointments($new_date);
-    processForm();
+    
     if ($error_message === true) {
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+        $_SESSION['feedback'] = 'Termin erfolgreich angelegt.';
+    } else {
+        $_SESSION['feedback'] = $error_message; // $error_message enthält den Fehlertext
     }
+
+    // Umleitung nach der Verarbeitung, um PRG-Muster anzuwenden
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
 }
 
 ?>
