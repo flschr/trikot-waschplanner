@@ -158,36 +158,53 @@ function processForm() {
 function importIcalToCsv($filePath) {
     $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     if (!$lines) {
-        echo "Fehler beim Lesen der Datei.";
-        return;
+        return "Fehler beim Lesen der Datei.";
     }
 
+    $newAppointments = [];
     $eventStarted = false;
     $event = [];
-	foreach ($lines as $line) {
-		if (strpos($line, 'BEGIN:VEVENT') === 0) {
-			$eventStarted = true;
-			$event = []; // Neues Event starten
-		} elseif ($eventStarted && strpos($line, 'DTSTART') === 0) {
-			$startLine = explode(':', $line);
-			$startDate = trim(end($startLine));
-			$dateTime = DateTime::createFromFormat('Ymd\THis', $startDate);
-			$event['start'] = $dateTime ? $dateTime->format('d.m.Y') : '';
-		} elseif ($eventStarted && strpos($line, 'SUMMARY') === 0) {
-			$summaryLine = explode(':', $line, 2); // Achtung auf den Split bei nur dem ersten Vorkommen
-			$event['summary'] = trim(end($summaryLine));
-		} elseif ($eventStarted && strpos($line, 'END:VEVENT') === 0) {
-			if (!empty($event['start'])) {
-				$summary = isset($event['summary']) ? $event['summary'] : "";
-				$message = saveAppointments($event['start'], $summary);
-				if ($message !== true) {
-					echo "Nicht gespeichert: " . $event['start'] . " - " . $message . "<br>";
-				}
-			}
-			$eventStarted = false; // Event-Verarbeitung beenden
-		}
-	}
-    echo "iCal-Daten wurden erfolgreich importiert.";
+    foreach ($lines as $line) {
+        if (strpos($line, 'BEGIN:VEVENT') === 0) {
+            $eventStarted = true;
+        } elseif ($eventStarted && strpos($line, 'DTSTART') === 0) {
+            $startLine = explode(':', $line);
+            $startDate = trim(end($startLine));
+            $dateTime = DateTime::createFromFormat('Ymd\THis', $startDate);
+            $event['start'] = $dateTime ? $dateTime->format('d.m.Y') : '';
+        } elseif ($eventStarted && strpos($line, 'SUMMARY') === 0) {
+            $summaryLine = explode(':', $line, 2);
+            $event['summary'] = trim(end($summaryLine));
+        } elseif ($eventStarted && strpos($line, 'END:VEVENT') === 0) {
+            if (!empty($event['start'])) {
+                $newAppointments[] = $event;
+            }
+            $eventStarted = false;
+        }
+    }
+
+    // Bestehende Termine laden
+    $existingAppointments = loadAppointments();
+
+    // Duplikate vermeiden
+    foreach ($newAppointments as $newAppointment) {
+        $isDuplicate = false;
+        foreach ($existingAppointments as $existingAppointment) {
+            if ($existingAppointment[0] == $newAppointment['start']) {
+                $isDuplicate = true;
+                break;
+            }
+        }
+        if (!$isDuplicate) {
+            // Nicht sichtbar setzen mit "1"
+            $existingAppointments[] = [$newAppointment['start'], $newAppointment['summary'], "1"];
+        }
+    }
+
+    // Alles in CSV schreiben
+    overwriteAppointments($existingAppointments);
+
+    return "iCal-Daten wurden erfolgreich importiert.";
 }
 
 ?>
