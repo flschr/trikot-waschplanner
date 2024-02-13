@@ -59,6 +59,7 @@ $users = loadUsers();
 <html>
 <head>
     <title>Benutzerverwaltung</title>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
     <?php if (!empty($message)): ?>
