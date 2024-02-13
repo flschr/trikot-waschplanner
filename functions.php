@@ -72,7 +72,7 @@ function cancelAppointment($date) {
         if ($appointment[0] == $date) {
             unset($appointments[$key]);
             // Speichere die verbleibenden Termine
-            saveAppointments($appointments);
+            saveAppointment($appointments);
             // Überprüfe, ob keine Termine mehr vorhanden sind, und lösche die CSV-Datei
             if (count($appointments) === 0) {
                 unlink("termine.csv");
