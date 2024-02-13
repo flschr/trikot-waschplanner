@@ -163,44 +163,41 @@ function importIcalToCsv($filePath) {
 
     $newAppointments = [];
     $eventStarted = false;
-    $event = [];
     foreach ($lines as $line) {
         if (strpos($line, 'BEGIN:VEVENT') === 0) {
             $eventStarted = true;
+            $event = []; // Initialisiere das Array für jedes neue Event
         } elseif ($eventStarted && strpos($line, 'DTSTART') === 0) {
             $startLine = explode(':', $line);
             $startDate = trim(end($startLine));
-			
-			$dateTime = DateTime::createFromFormat('Ymd\THis', $startDate, new DateTimeZone('UTC'));
-			$event['start'] = $dateTime ? $dateTime->format('d.m.Y') : '';
-			echo "Konvertiertes Datum: " . $event['start'] . "<br>"; // Temporäre Debug-Ausgabe
-
+            // Konvertierung des Datums von YYYYMMDDT in TT.MM.JJJJ
+            $dateTime = DateTime::createFromFormat('Ymd\THis', $startDate, new DateTimeZone('UTC'));
+            if ($dateTime) {
+                $event['start'] = $dateTime->format('d.m.Y');
+            }
         } elseif ($eventStarted && strpos($line, 'SUMMARY') === 0) {
             $summaryLine = explode(':', $line, 2);
             $event['summary'] = trim(end($summaryLine));
         } elseif ($eventStarted && strpos($line, 'END:VEVENT') === 0) {
             if (!empty($event['start'])) {
-                $newAppointments[] = $event;
+                $newAppointments[] = [$event['start'], $event['summary'], "1"]; // "1" für nicht sichtbar
             }
             $eventStarted = false;
         }
     }
 
-    // Bestehende Termine laden
+    // Bestehende Termine laden und Duplikate vermeiden
     $existingAppointments = loadAppointments();
-
-    // Duplikate vermeiden
     foreach ($newAppointments as $newAppointment) {
         $isDuplicate = false;
         foreach ($existingAppointments as $existingAppointment) {
-            if ($existingAppointment[0] == $newAppointment['start']) {
+            if ($existingAppointment[0] == $newAppointment[0]) {
                 $isDuplicate = true;
                 break;
             }
         }
         if (!$isDuplicate) {
-            // Nicht sichtbar setzen mit "1"
-            $existingAppointments[] = [$newAppointment['start'], $newAppointment['summary'], "1"];
+            $existingAppointments[] = $newAppointment;
         }
     }
 
@@ -209,5 +206,6 @@ function importIcalToCsv($filePath) {
 
     return "iCal-Daten wurden erfolgreich importiert.";
 }
+
 
 ?>
