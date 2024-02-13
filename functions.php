@@ -83,7 +83,7 @@ function cancelAppointment($date) {
     return false;
 }
 
-// Funktion zum Schreiben eines Termins in die termine.csv
+// Funktion zum Verarbeiten des Formulars
 function processForm() {
     global $error_message; // Zugriff auf die $error_message Variable
 
@@ -94,6 +94,9 @@ function processForm() {
             } else {
                 $date_to_delete = $_POST['cancel_date'];
             }
+            // Zuerst die verbleibenden Termine speichern
+            saveAppointments(loadAppointments());
+            // Dann den Termin löschen
             cancelAppointment($date_to_delete);
             // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
             header("Location: ".$_SERVER['PHP_SELF']);
