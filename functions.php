@@ -24,7 +24,7 @@ function loadAppointments() {
     return $appointments;
 }
 
-function saveAppointments($date) {
+function saveAppointments($date, $summary = "") {
     if (!validateDate($date)) {
         return "Ungültige Eingabe. Bitte das Datum im Format TT.MM.JJJJ erfassen.";
     }
@@ -35,7 +35,7 @@ function saveAppointments($date) {
         }
     }
     $file = "termine.csv";
-    $termin = [$date, "", "1"]; 
+    $termin = [$date, $summary, "1"]; // "1" für nicht sichtbar
     $handle = fopen($file, "a");
     fputcsv($handle, $termin);
     fclose($handle);
@@ -174,9 +174,9 @@ function importIcalToCsv($filePath) {
             $dateTime = DateTime::createFromFormat('Ymd\THis', $startDate);
             $event['start'] = $dateTime ? $dateTime->format('d.m.Y') : '';
         } elseif ($eventStarted && strpos($line, 'END:VEVENT') === 0) {
-            if (!empty($event['start'])) {
-                // Nutzt Ihre existierende Funktion, um den Termin zu speichern
-                $message = saveAppointments($event['start']);
+			if (!empty($event['start'])) {
+				$summary = isset($event['summary']) ? $event['summary'] : "";
+				$message = saveAppointments($event['start'], $summary);
                 if ($message !== true) {
                     echo "Nicht gespeichert: " . $event['start'] . " - " . $message . "<br>";
                 }
