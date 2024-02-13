@@ -92,8 +92,7 @@ $users = loadUsers();
                         <input type="hidden" name="action" value="delete">
                         <input type="submit" value="Löschen">
                     </form>
-                    <!-- Passwort-Änderung kann durch Hinzufügen eines weiteren Formulars hier implementiert werden -->
-                </td>
+                 </td>
             </tr>
             <?php endforeach; ?>
         </tbody>

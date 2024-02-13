@@ -23,9 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (authenticate($username, $password)) {
         $_SESSION['authenticated'] = true;
-        
         // Weiterleitung zur ursprünglich angeforderten Seite, falls vorhanden
-        $redirect_url = $_SESSION['redirect_url'] ?? 'index.php'; 
+        $redirect_url = $_SESSION['redirect_url']; 
         unset($_SESSION['redirect_url']);
         header('Location: ' . $redirect_url);
         exit;
