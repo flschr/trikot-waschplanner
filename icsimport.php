@@ -1,15 +1,8 @@
 <?php
 
-// Der Pfad zur CSV-Datei
 $csvFilePath = 'termine.csv';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES['icsFile'])) {
-    processUploadedFile($csvFilePath);
-} else {
-    displayUploadForm();
-}
-
-function processUploadedFile($csvFilePath) {
     $icsFile = $_FILES['icsFile'];
 
     if ($icsFile['error'] === UPLOAD_ERR_OK) {
@@ -17,45 +10,45 @@ function processUploadedFile($csvFilePath) {
         $events = parseIcsFile($tmpName);
 
         if (!file_exists($csvFilePath)) {
-            // Erstelle die Datei, falls sie noch nicht existiert
             touch($csvFilePath);
         }
 
-        // Lese vorhandene Termine aus der CSV
-        $existingDates = array_map(function ($entry) {
-            return str_getcsv($entry)[0];
-        }, file($csvFilePath));
+        $existingDates = file_exists($csvFilePath) ? array_map(function ($entry) { return str_getcsv($entry)[0]; }, file($csvFilePath)) : [];
 
-        // Verhindere Duplikate
         $newEvents = array_filter($events, function ($event) use ($existingDates) {
             return !in_array($event, $existingDates);
         });
 
-        // Füge neue Termine zur CSV hinzu
-        $csvFile = fopen($csvFilePath, 'a');
-        foreach ($newEvents as $event) {
-            fputcsv($csvFile, [$event]);
+        if (!empty($newEvents)) {
+            $csvFile = fopen($csvFilePath, 'a');
+            foreach ($newEvents as $event) {
+                fputcsv($csvFile, [$event]);
+            }
+            fclose($csvFile);
+            echo "Die ICS-Datei wurde erfolgreich verarbeitet und aktualisiert.";
+        } else {
+            echo "Keine neuen Termine zum Hinzufügen gefunden.";
         }
-        fclose($csvFile);
-
-        echo "Die ICS-Datei wurde erfolgreich verarbeitet und aktualisiert.";
     } else {
         echo "Es gab einen Fehler beim Hochladen der Datei.";
     }
+} else {
+    displayUploadForm();
 }
 
 function parseIcsFile($filePath) {
     $events = [];
     $fileContent = file_get_contents($filePath);
     $lines = explode("\n", $fileContent);
+    $startDate = '';
 
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART') !== false) {
             $startDate = substr($line, strpos($line, ':') + 1);
-            $date = DateTime::createFromFormat('Ymd', $startDate);
-            if ($date) {
-                $events[] = $date->format('d.m.Y');
-            }
+            // Verarbeitung für UTC-Zeiten
+            $date = DateTime::createFromFormat('Ymd\THis\Z', $startDate, new DateTimeZone('UTC'));
+            $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Konvertiere in lokale Zeitzone, falls nötig
+            $events[] = $date->format('d.m.Y');
         }
     }
 
