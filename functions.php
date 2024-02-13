@@ -41,7 +41,7 @@ function loadAppointments() {
 }
 
 // Funktion zum Speichern eines neuen Termins in eine neue Zeile
-function saveAppointment($date) {
+function saveAppointments($date) {
     $file = "termine.csv";
     // Überprüfe, ob das Datum ein gültiges Format hat
     if (!validateDate($date)) {
