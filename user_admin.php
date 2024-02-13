@@ -33,22 +33,22 @@ function deleteUser($username) {
     saveUsers($users);
 }
 
-// Verarbeitet das Formular
+$message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['action'])) {
-        $action = $_POST['action'];
-        $username = $_POST['username'] ?? '';
-        $password = $_POST['password'] ?? '';
+    $username = $_POST['username'] ?? '';
+    $action = $_POST['action'] ?? '';
 
-        if ($action === 'create' && !empty($username) && !empty($password)) {
-            updateUser($username, $password);
-            $message = "Benutzer '$username' angelegt/aktualisiert.";
-        } elseif ($action === 'delete' && !empty($username)) {
-            deleteUser($username);
-            $message = "Benutzer '$username' gelöscht.";
-        }
+    if ($action === 'save' && !empty($username)) {
+        $password = $_POST['password'] ?? '';
+        updateUser($username, $password);
+        $message = "Benutzer '$username' angelegt/aktualisiert.";
+    } elseif ($action === 'delete' && !empty($username)) {
+        deleteUser($username);
+        $message = "Benutzer '$username' gelöscht.";
     }
 }
+
+$users = loadUsers();
 ?>
 
 <!DOCTYPE html>
@@ -65,15 +65,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="post">
         Benutzername: <input type="text" name="username" required><br>
         Passwort: <input type="password" name="password" required><br>
-        <input type="hidden" name="action" value="create">
+        <input type="hidden" name="action" value="save">
         <input type="submit" value="Speichern">
     </form>
 
-    <h2>Benutzer löschen</h2>
-    <form method="post">
-        Benutzername: <input type="text" name="username" required><br>
-        <input type="hidden" name="action" value="delete">
-        <input type="submit" value="Löschen">
-    </form>
+    <?php if (count($users) > 0): ?>
+    <h2>Vorhandene Benutzer</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Benutzername</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($users as $username => $passwordHash): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($username); ?></td>
+                <td>
+                    <form method="post" style="display: inline;">
+                        <input type="hidden" name="username" value="<?php echo htmlspecialchars($username); ?>">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="submit" value="Löschen">
+                    </form>
+                    <!-- Passwort-Änderung kann durch Hinzufügen eines weiteren Formulars hier implementiert werden -->
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php endif; ?>
 </body>
 </html>
