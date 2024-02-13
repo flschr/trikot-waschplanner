@@ -48,26 +48,19 @@ function processUploadedFile($csvFilePath) {
 function parseIcsFile($filePath) {
     $events = [];
     $fileContent = file_get_contents($filePath);
-    // Entfernen von Zeilenumbrüchen innerhalb von VEVENT
-    $fileContent = preg_replace("/\r\n\s+/", " ", $fileContent);
+    // Bereinige den Inhalt von Zeilenfortsetzungen
+    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
 
     foreach ($lines as $line) {
-        if (strpos($line, 'DTSTART') !== false) {
-            $startDate = substr($line, strpos($line, ':') + 1);
-            // Versuche, das Datum mit und ohne Z zu parsen, für den Fall, dass die Zeitzone variiert
-            $date = DateTime::createFromFormat('Ymd\THis\Z', $startDate, new DateTimeZone('UTC')) ?: DateTime::createFromFormat('Ymd\THis', $startDate);
-            if (!$date) {
-                echo "Fehler beim Parsen des Datums: $startDate<br>";
-                continue;
-            }
-            $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassen, falls erforderlich
-            $events[] = $date->format('d.m.Y');
+        if (strpos($line, 'DTSTART') === 0) { // Prüft, ob die Zeile mit 'DTSTART' beginnt
+            $dateStr = substr($line, 8, 8); // Extrahiert das Datum (erste 8 Zeichen nach 'DTSTART:')
+            $year = substr($dateStr, 0, 4);
+            $month = substr($dateStr, 4, 2);
+            $day = substr($dateStr, 6, 2);
+            $formattedDate = $day . '.' . $month . '.' . $year; // Format: dd.mm.yyyy
+            $events[] = $formattedDate;
         }
-    }
-
-    if (empty($events)) {
-        echo "Keine Termine aus der ICS-Datei extrahiert.<br>";
     }
 
     return $events;
