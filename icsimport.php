@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 $csvFilePath = 'termine.csv';
 
-// Funktion zum Verarbeiten der hochgeladenen Datei
+// Verarbeitet die hochgeladene ICS-Datei und aktualisiert die CSV-Datei
 function processUploadedFile($csvFilePath) {
     $icsFile = $_FILES['icsFile'];
 
@@ -17,11 +17,18 @@ function processUploadedFile($csvFilePath) {
             touch($csvFilePath);
         }
 
-        $existingDates = file_exists($csvFilePath) ? array_map(function ($entry) { return trim($entry[0]); }, array_map('str_getcsv', file($csvFilePath))) : [];
+        $existingDates = file_exists($csvFilePath) ? array_map(function ($entry) { 
+            return trim($entry[0]); 
+        }, array_map('str_getcsv', file($csvFilePath))) : [];
 
         $newEvents = array_filter($events, function ($eventDate) use ($existingDates) {
             return !in_array($eventDate, $existingDates);
         });
+
+        echo "Extrahierte Termine:<br/>";
+        print_r($events);
+        echo "<br/>Vorhandene Termine in CSV:<br/>";
+        print_r($existingDates);
 
         if (!empty($newEvents)) {
             $csvFile = fopen($csvFilePath, 'a');
@@ -29,14 +36,15 @@ function processUploadedFile($csvFilePath) {
                 fputcsv($csvFile, [$eventDate]);
             }
             fclose($csvFile);
-            echo "Neue Termine erfolgreich hinzugefügt.<br/>";
+            echo "<br/>Neue Termine erfolgreich hinzugefügt.<br/>";
         } else {
-            echo "Keine neuen Termine zum Hinzufügen gefunden.<br/>";
+            echo "<br/>Keine neuen Termine zum Hinzufügen gefunden.<br/>";
         }
     } else {
-        echo "Es gab einen Fehler beim Hochladen der Datei.<br/>";
+        echo "<br/>Es gab einen Fehler beim Hochladen der Datei.<br/>";
     }
 }
+
 
 // Funktion zum Parsen der ICS-Datei
 function parseIcsFile($filePath) {
