@@ -151,6 +151,28 @@ $(document).ready(function() {
         }
     });
 });
+
+// Event-Handler für die Änderung des Zustands der Sichtbarkeits-Checkbox
+$(document).on('change', '.hide-checkbox', function() {
+    var date = $(this).data('date'); // Datum des Termins
+    var hide_value = $(this).is(':checked') ? 'true' : 'false'; // Sichtbarkeitsstatus basierend auf Checkbox-Zustand
+
+    // AJAX-Anfrage, um den Sichtbarkeitsstatus zu aktualisieren
+    $.ajax({
+        type: "POST",
+        url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
+        data: {
+            action: 'hide',
+            date: date,
+            hide_checkbox: hide_value
+        },
+        success: function(response) {
+            console.log(response); // Response vom Server, für Debugging-Zwecke
+            // Optional: Feedback an den Benutzer oder Aktualisieren der Seite
+        }
+    });
+});
+
 </script>
 
 
