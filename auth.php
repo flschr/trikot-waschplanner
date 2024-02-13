@@ -1,49 +1,48 @@
 <?php
 session_start();
 
-// Benutzername und Passwort
-$username = 'BENUTZERNAME';
-$password = 'KENNWORT';
+// Pfad zur JSON-Datei mit Benutzerdaten
+$usersFile = 'users.json';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (
-        isset($_POST['username']) && isset($_POST['password']) &&
-        $_POST['username'] === $username && $_POST['password'] === $password
-    ) {
+// Einfache Funktion zum Überprüfen von Benutzernamen und Passwort
+function authenticate($username, $password) {
+    global $usersFile;
+    $users = json_decode(file_get_contents($usersFile), true);
+    
+    foreach ($users as $user) {
+        if ($user['username'] === $username && password_verify($password, $user['password'])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+    
+    if (authenticate($username, $password)) {
         $_SESSION['authenticated'] = true;
-        header('Location: spieler.php');
+        header('Location: protected_page.php');
         exit;
     } else {
-        $error = 'Ungültiger Benutzername oder Passwort';
+        $error_message = 'Login fehlgeschlagen.';
     }
 }
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anmeldung</title>
-	<link rel="stylesheet" href="style.css">
-	
+    <title>Login</title>
 </head>
-
 <body>
-	<div class="centered-container">
-    <h2>Bitte anmelden</h2>
-    <?php if (isset($error)) : ?>
-        <p><?= $error ?></p>
+    <?php if (!empty($error_message)): ?>
+    <p><?php echo $error_message; ?></p>
     <?php endif; ?>
-    <form method="post">
-        <label for="username">Benutzername</label><br>
-        <input type="text" name="username" required><br><br>
-        <label for="password">Passwort</label><br>
-        <input type="password" name="password" required><br><br>
-        <button type="submit">Anmelden</button>
+    <form action="auth.php" method="post">
+        Benutzername: <input type="text" name="username"><br>
+        Passwort: <input type="password" name="password"><br>
+        <input type="submit" value="Login">
     </form>
-	</div>
 </body>
-
 </html>

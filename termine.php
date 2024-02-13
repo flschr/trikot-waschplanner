@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    header('Location: auth.php');
+    exit;
+}
+
+// Geschützter Inhalt
 include 'functions.php';
 
 // Fehlermeldungen einschalten
