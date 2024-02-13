@@ -170,8 +170,11 @@ function importIcalToCsv($filePath) {
         } elseif ($eventStarted && strpos($line, 'DTSTART') === 0) {
             $startLine = explode(':', $line);
             $startDate = trim(end($startLine));
-            $dateTime = DateTime::createFromFormat('Ymd\THis', $startDate);
-            $event['start'] = $dateTime ? $dateTime->format('d.m.Y') : '';
+			
+			$dateTime = DateTime::createFromFormat('Ymd\THis', $startDate, new DateTimeZone('UTC'));
+			$event['start'] = $dateTime ? $dateTime->format('d.m.Y') : '';
+			echo "Konvertiertes Datum: " . $event['start'] . "<br>"; // Temporäre Debug-Ausgabe
+
         } elseif ($eventStarted && strpos($line, 'SUMMARY') === 0) {
             $summaryLine = explode(':', $line, 2);
             $event['summary'] = trim(end($summaryLine));
