@@ -12,11 +12,9 @@ $usersFile = 'users.json';
 function authenticate($username, $password) {
     global $usersFile;
     $users = json_decode(file_get_contents($usersFile), true);
-    
-    foreach ($users as $user) {
-        if ($user['username'] === $username && password_verify($password, $user['password'])) {
-            return true;
-        }
+
+    if (isset($users[$username]) && password_verify($password, $users[$username])) {
+        return true;
     }
     return false;
 }
