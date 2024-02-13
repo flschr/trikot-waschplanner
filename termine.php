@@ -70,6 +70,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     </form>
     
     <h2>Termine</h2>
+	<?php if (empty($appointments)) { ?>
+		<p class="hinweis">Es sind noch keine Termine vorhanden.</p>
+	<?php } else { ?>
     <table>
         <thead>
             <tr>
@@ -105,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
             <?php }?>
         </tbody>
     </table>
-
+	<?php } ?>
 <script>
     $(function () {
         $("#datepicker").datepicker({
