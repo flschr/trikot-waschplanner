@@ -56,13 +56,14 @@ function saveAppointment($date) {
         }
     }
     // Termin speichern
-    $termin = $date . "," . PHP_EOL;
+    $termin = $date . ",," . PHP_EOL; // Hier werden leere Werte für die zweite und dritte Spalte eingefügt
     if (file_put_contents($file, $termin, FILE_APPEND | LOCK_EX) !== false) {
         return true;
     } else {
         return "Fehler beim Schreiben.";
     }
 }
+
 
 // Funktion zum Löschen eines Termins
 function cancelAppointment($date) {
