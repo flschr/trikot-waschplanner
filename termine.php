@@ -62,6 +62,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     exit();
 }
 
+// Verarbeitung des ICS-Dateiuploads
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["icsFile"])) {
+    // Fehlerüberprüfung
+    if ($_FILES["icsFile"]["error"] == UPLOAD_ERR_OK) {
+        // Dateiname extrahieren
+        $tmp_name = $_FILES["icsFile"]["tmp_name"];
+        $name = $_FILES["icsFile"]["name"];
+
+        // Überprüfen der Dateierweiterung für Sicherheit
+        $fileType = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        if ($fileType == "ics") {
+            // Aufrufen der Funktion zum Einlesen und Verarbeiten der ICS-Datei
+            $appointments = parseIcsFile($tmp_name);
+
+            // Hier könnten Sie die extrahierten Termine weiterverarbeiten, z.B. in einer Datenbank speichern
+            // Beispiel: saveAppointments($appointments);
+
+            $_SESSION['feedback'] = 'ICS-Datei erfolgreich verarbeitet.';
+        } else {
+            $_SESSION['feedback'] = 'Falscher Dateityp. Bitte laden Sie eine ICS-Datei hoch.';
+        }
+    } else {
+        $_SESSION['feedback'] = 'Fehler beim Hochladen der Datei.';
+    }
+
+    // Umleitung nach der Verarbeitung, um PRG-Muster anzuwenden
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html>
