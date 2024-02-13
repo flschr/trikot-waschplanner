@@ -5,7 +5,8 @@ error_reporting(E_ALL);
 
 $csvFilePath = 'termine.csv';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES['icsFile'])) {
+// Funktion zum Verarbeiten der hochgeladenen Datei
+function processUploadedFile($csvFilePath) {
     $icsFile = $_FILES['icsFile'];
 
     if ($icsFile['error'] === UPLOAD_ERR_OK) {
@@ -16,53 +17,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES['icsFile'])) {
             touch($csvFilePath);
         }
 
-        $existingDates = file_exists($csvFilePath) ? array_map(function ($entry) { return str_getcsv($entry)[0]; }, file($csvFilePath)) : [];
+        $existingDates = file_exists($csvFilePath) ? array_map(function ($entry) { return trim($entry[0]); }, array_map('str_getcsv', file($csvFilePath))) : [];
 
-        $newEvents = array_filter($events, function ($event) use ($existingDates) {
-            return !in_array($event, $existingDates);
+        $newEvents = array_filter($events, function ($eventDate) use ($existingDates) {
+            return !in_array($eventDate, $existingDates);
         });
 
         if (!empty($newEvents)) {
             $csvFile = fopen($csvFilePath, 'a');
-            foreach ($newEvents as $event) {
-                fputcsv($csvFile, [$event]);
+            foreach ($newEvents as $eventDate) {
+                fputcsv($csvFile, [$eventDate]);
             }
             fclose($csvFile);
-            echo "Die ICS-Datei wurde erfolgreich verarbeitet und aktualisiert.";
+            echo "Neue Termine erfolgreich hinzugefügt.<br/>";
         } else {
-            echo "Keine neuen Termine zum Hinzufügen gefunden.";
+            echo "Keine neuen Termine zum Hinzufügen gefunden.<br/>";
         }
     } else {
-        echo "Es gab einen Fehler beim Hochladen der Datei.";
+        echo "Es gab einen Fehler beim Hochladen der Datei.<br/>";
     }
-} else {
-    displayUploadForm();
 }
 
+// Funktion zum Parsen der ICS-Datei
 function parseIcsFile($filePath) {
     $events = [];
     $fileContent = file_get_contents($filePath);
-    // Entferne neue Zeilen, die als Fortsetzung einer vorherigen Zeile dienen
-    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
+    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent); // Korrigiert Zeilenumbrüche und Fortsetzungen
     $lines = explode("\n", $fileContent);
 
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART') !== false) {
             $startDate = substr($line, strpos($line, ':') + 1);
-            // Berücksichtigt verschiedene Formate, einschließlich möglicher Zeitzone
-            $formats = ['Ymd\THis\Z', 'Ymd\THis'];
-            foreach ($formats as $format) {
-                $date = DateTime::createFromFormat($format, $startDate);
-                if ($date) {
-                    $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassung an die gewünschte Zeitzone
-                    $events[] = $date->format('d.m.Y');
-                    break; // Beendet die Schleife, sobald ein gültiges Datum gefunden wurde
-                }
+            $date = DateTime::createFromFormat('Ymd\THis\Z', $startDate, new DateTimeZone('UTC'));
+            if ($date) {
+                $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassung an die gewünschte Zeitzone
+                $events[] = $date->format('d.m.Y');
             }
         }
     }
 
     return $events;
+}
+
+// Zeigt das Formular an, wenn die Seite geladen wird
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES['icsFile'])) {
+    processUploadedFile($csvFilePath);
+} else {
+    displayUploadForm();
 }
 
 function displayUploadForm() {
