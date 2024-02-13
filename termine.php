@@ -8,7 +8,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     exit;
 }
 
-// Geschützter Inhalt
+// Ab hier geschützter Inhalt
 include 'functions.php';
 
 // Fehlermeldungen einschalten
@@ -85,6 +85,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         <input type="text" id="datepicker" name="new_date" placeholder="Datum (dd.mm.yyyy)">
         <input type="submit" value="Termin anlegen">
     </form>
+	
+	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
+		<input type="file" name="icsFile" id="icsFile" onchange="this.form.submit();" style="display:none;">
+		<label for="icsFile" class="upload-button">ICS-Datei hochladen</label>
+	</form>
 
 	<?php if (empty($appointments)) { ?>
 		<p class="hinweis">Es sind noch keine Termine vorhanden.</p>
