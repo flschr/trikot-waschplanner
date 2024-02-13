@@ -23,6 +23,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     }
+    // Überprüfen, ob das Formular zum Ausblenden eines Termins gesendet wurde
+    elseif (isset($_POST["hide_date"]) && isset($_POST["hide_checkbox"])) {
+        // Ausgewählten Termin ausblenden oder einblenden
+        $date_to_hide = $_POST["hide_date"];
+        $hide_checkbox_value = $_POST["hide_checkbox"] == "true" ? 1 : 0;
+        updateHideStatus($date_to_hide, $hide_checkbox_value);
+
+        // Umleitung auf die gleiche Seite
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
 }
 
 // Nach dem Speichern oder Versuch des Speicherns eines neuen Termins
@@ -74,11 +85,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
                 <tr>
 					<td><?php echo $appointment[0];?></td> <!-- Datum -->
 					<td>
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-                            <input type="hidden" name="hide_date" value="<?php echo $appointment[0];?>">
-                            <input type="checkbox" name="hide_checkbox" <?php if ($appointment[2] == 1) echo "checked"; ?>>
-                        </form>
-                    </td>
+						<input type="checkbox" class="hide-checkbox" data-date="<?php echo $appointment[0]; ?>"
+						<?php if ($appointment[2] == 1) echo "checked"; ?>>
+					</td>
 					<td><?php echo $appointment[1];?></td> <!-- Name -->
                     <td>
 						<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">

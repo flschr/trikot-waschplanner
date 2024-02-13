@@ -96,4 +96,16 @@ function processForm() {
     }
 }
 
+// Funktion zum Aktualisieren des Ausblendestatus eines Termins
+function updateHideStatus($date, $hide_value) {
+    $appointments = loadAppointments();
+    foreach ($appointments as &$appointment) {
+        if ($appointment[0] === $date) {
+            $appointment[2] = $hide_value;
+            break;
+        }
+    }
+    saveAppointments($appointments);
+}
+
 ?>
