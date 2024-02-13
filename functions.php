@@ -164,26 +164,29 @@ function importIcalToCsv($filePath) {
 
     $eventStarted = false;
     $event = [];
-    foreach ($lines as $line) {
-        if (strpos($line, 'BEGIN:VEVENT') === 0) {
-            $eventStarted = true;
-            $event = []; // Neues Event starten
-        } elseif ($eventStarted && strpos($line, 'DTSTART') === 0) {
-            $startLine = explode(':', $line);
-            $startDate = trim(end($startLine));
-            $dateTime = DateTime::createFromFormat('Ymd\THis', $startDate);
-            $event['start'] = $dateTime ? $dateTime->format('d.m.Y') : '';
-        } elseif ($eventStarted && strpos($line, 'END:VEVENT') === 0) {
+	foreach ($lines as $line) {
+		if (strpos($line, 'BEGIN:VEVENT') === 0) {
+			$eventStarted = true;
+			$event = []; // Neues Event starten
+		} elseif ($eventStarted && strpos($line, 'DTSTART') === 0) {
+			$startLine = explode(':', $line);
+			$startDate = trim(end($startLine));
+			$dateTime = DateTime::createFromFormat('Ymd\THis', $startDate);
+			$event['start'] = $dateTime ? $dateTime->format('d.m.Y') : '';
+		} elseif ($eventStarted && strpos($line, 'SUMMARY') === 0) {
+			$summaryLine = explode(':', $line, 2); // Achtung auf den Split bei nur dem ersten Vorkommen
+			$event['summary'] = trim(end($summaryLine));
+		} elseif ($eventStarted && strpos($line, 'END:VEVENT') === 0) {
 			if (!empty($event['start'])) {
 				$summary = isset($event['summary']) ? $event['summary'] : "";
 				$message = saveAppointments($event['start'], $summary);
-                if ($message !== true) {
-                    echo "Nicht gespeichert: " . $event['start'] . " - " . $message . "<br>";
-                }
-            }
-            $eventStarted = false; // Event-Verarbeitung beenden
-        }
-    }
+				if ($message !== true) {
+					echo "Nicht gespeichert: " . $event['start'] . " - " . $message . "<br>";
+				}
+			}
+			$eventStarted = false; // Event-Verarbeitung beenden
+		}
+	}
     echo "iCal-Daten wurden erfolgreich importiert.";
 }
 
