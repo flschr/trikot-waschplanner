@@ -45,23 +45,29 @@ function processUploadedFile($csvFilePath) {
     }
 }
 
-
-// Funktion zum Parsen der ICS-Datei
 function parseIcsFile($filePath) {
     $events = [];
     $fileContent = file_get_contents($filePath);
-    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent); // Korrigiert Zeilenumbrüche und Fortsetzungen
+    // Entfernen von Zeilenumbrüchen innerhalb von VEVENT
+    $fileContent = preg_replace("/\r\n\s+/", " ", $fileContent);
     $lines = explode("\n", $fileContent);
 
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART') !== false) {
             $startDate = substr($line, strpos($line, ':') + 1);
-            $date = DateTime::createFromFormat('Ymd\THis\Z', $startDate, new DateTimeZone('UTC'));
-            if ($date) {
-                $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassung an die gewünschte Zeitzone
-                $events[] = $date->format('d.m.Y');
+            // Versuche, das Datum mit und ohne Z zu parsen, für den Fall, dass die Zeitzone variiert
+            $date = DateTime::createFromFormat('Ymd\THis\Z', $startDate, new DateTimeZone('UTC')) ?: DateTime::createFromFormat('Ymd\THis', $startDate);
+            if (!$date) {
+                echo "Fehler beim Parsen des Datums: $startDate<br>";
+                continue;
             }
+            $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassen, falls erforderlich
+            $events[] = $date->format('d.m.Y');
         }
+    }
+
+    if (empty($events)) {
+        echo "Keine Termine aus der ICS-Datei extrahiert.<br>";
     }
 
     return $events;
