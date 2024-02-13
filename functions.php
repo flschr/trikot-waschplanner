@@ -1,102 +1,64 @@
 <?php
-// Fehlermeldungen einschalten
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Funktion zum Überprüfen des Datumsformats
 function validateDate($date, $format = 'd.m.Y') {
     $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) === $date;
 }
 
-// Funktion zum Laden der Termine aus der CSV-Datei und Sortieren
 function loadAppointments() {
     $appointments = [];
     $file = "termine.csv";
     if (file_exists($file)) {
         $handle = fopen($file, "r");
-        if ($handle !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                // Überprüfe, ob ein Wert in der zweiten Spalte vorhanden ist, ansonsten setze "Nicht gebucht"
-                $appointment_info = isset($data[1]) && !empty($data[1]) ? $data[1] : ",1";
-                // Überprüfe, ob ein Wert in der dritten Spalte vorhanden ist, ansonsten setze 0
-                $hide_value = isset($data[2]) ? intval($data[2]) : 0;
-                // Füge Datum, Info und Ausblenden-Wert in das Array ein
-                $appointments[] = [$data[0], $appointment_info, $hide_value];
-            }
-            fclose($handle);
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            $appointments[] = $data;
         }
+        fclose($handle);
     }
-    // Sortiere die Termine chronologisch nach dem vollständigen Datum
     usort($appointments, function($a, $b) {
-        $dateA = strtotime($a[0]);
-        $dateB = strtotime($b[0]);
-        if ($dateA == $dateB) {
-            return 0;
-        }
-        return ($dateA < $dateB) ? -1 : 1;
+        return strtotime($a[0]) - strtotime($b[0]);
     });
     return $appointments;
 }
 
-// Funktion zum Speichern eines neuen Termins
 function saveAppointments($date) {
-    $file = "termine.csv";
-    // Überprüfe, ob das Datum ein gültiges Format hat
-    if (!is_string($date) || !validateDate($date)) {
+    if (!validateDate($date)) {
         return "Ungültige Eingabe. Bitte das Datum im Format TT.MM.JJJJ erfassen.";
     }
-    // Lade vorhandene Termine
     $appointments = loadAppointments();
-    // Überprüfe, ob der Termin bereits vorhanden ist
     foreach ($appointments as $appointment) {
         if ($appointment[0] == $date) {
             return "Der Termin am $date ist bereits vorhanden.";
         }
     }
-    // Termin speichern
-    $termin = $date . ",,1" . PHP_EOL; // Hier werden leere Werte für die zweite und dritte Spalte eingefügt
-    if (file_put_contents($file, $termin, FILE_APPEND | LOCK_EX) !== false) {
-        return true;
-    } else {
-        return "Fehler beim Schreiben.";
-    }
+    $file = "termine.csv";
+    $termin = [$date, "", "0"]; // Angepasst, um mit der Array-Struktur konsistent zu sein
+    $handle = fopen($file, "a");
+    fputcsv($handle, $termin);
+    fclose($handle);
+    return true;
 }
 
-// Funktion zum Löschen eines Termins
+function overwriteAppointments($appointments) {
+    $file = "termine.csv";
+    $handle = fopen($file, "w");
+    foreach ($appointments as $appointment) {
+        fputcsv($handle, $appointment);
+    }
+    fclose($handle);
+}
+
 function cancelAppointment($date) {
     $appointments = loadAppointments();
-    foreach ($appointments as $key => $appointment) {
-        if ($appointment[0] == $date) {
-            unset($appointments[$key]);
-            // Speichere die verbleibenden Termine
-            saveAppointments($appointments);
-            // Überprüfe, ob keine Termine mehr vorhanden sind, und lösche die CSV-Datei
-            if (count($appointments) === 0) {
-                unlink("termine.csv");
-            }
-            return true;
-        }
-    }
-    return false;
+    $appointments = array_filter($appointments, function($appointment) use ($date) {
+        return $appointment[0] !== $date;
+    });
+    overwriteAppointments(array_values($appointments));
 }
 
-// Funktion zum Verarbeiten des Formulars
-function processForm() {
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_date'])) {
-        $date_to_delete = $_POST['cancel_date'];
-        // Zuerst die verbleibenden Termine speichern
-        saveAppointments(loadAppointments());
-        // Dann den Termin löschen
-        cancelAppointment($date_to_delete);
-        // Umleitung durchführen, um eine GET-Anfrage an die gleiche Seite zu senden
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit();
-    }
-}
-
-// Funktion zum Aktualisieren des Ausblendestatus eines Termins
 function updateHideStatus($date, $hide_value) {
     $appointments = loadAppointments();
     foreach ($appointments as &$appointment) {
@@ -105,7 +67,25 @@ function updateHideStatus($date, $hide_value) {
             break;
         }
     }
-    saveAppointments($appointments);
+    overwriteAppointments($appointments);
 }
 
+function processForm() {
+    global $error_message;
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['archive_date']) || isset($_POST['cancel_date'])) {
+            if (isset($_POST['archive_date'])) {
+                $date_to_archive = $_POST['archive_date'];
+                // Archivierungslogik hier implementieren
+                cancelAppointment($date_to_archive); // Beispielhaft, anpassen nach Bedarf
+            }
+            if (isset($_POST['cancel_date'])) {
+                $date_to_cancel = $_POST['cancel_date'];
+                cancelAppointment($date_to_cancel);
+            }
+            header("Location: ".$_SERVER['PHP_SELF']);
+            exit();
+        }
+    }
+}
 ?>
