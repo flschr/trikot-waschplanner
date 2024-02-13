@@ -155,4 +155,36 @@ function processForm() {
     }
 }
 
+function importIcalToCsv($filePath) {
+    $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if (!$lines) {
+        echo "Fehler beim Lesen der Datei.";
+        return;
+    }
+
+    $eventStarted = false;
+    $event = [];
+    foreach ($lines as $line) {
+        if (strpos($line, 'BEGIN:VEVENT') === 0) {
+            $eventStarted = true;
+            $event = []; // Neues Event starten
+        } elseif ($eventStarted && strpos($line, 'DTSTART') === 0) {
+            $startLine = explode(':', $line);
+            $startDate = trim(end($startLine));
+            $dateTime = DateTime::createFromFormat('Ymd\THis', $startDate);
+            $event['start'] = $dateTime ? $dateTime->format('d.m.Y') : '';
+        } elseif ($eventStarted && strpos($line, 'END:VEVENT') === 0) {
+            if (!empty($event['start'])) {
+                // Nutzt Ihre existierende Funktion, um den Termin zu speichern
+                $message = saveAppointments($event['start']);
+                if ($message !== true) {
+                    echo "Nicht gespeichert: " . $event['start'] . " - " . $message . "<br>";
+                }
+            }
+            $eventStarted = false; // Event-Verarbeitung beenden
+        }
+    }
+    echo "iCal-Daten wurden erfolgreich importiert.";
+}
+
 ?>
