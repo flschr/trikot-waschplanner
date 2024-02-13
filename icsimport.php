@@ -14,14 +14,19 @@ function processUploadedFile($csvFilePath) {
 
         if (!file_exists($csvFilePath)) {
             touch($csvFilePath);
+        } else {
+            // Prüfe, ob das Ende der Datei ein Zeilenumbruch ist
+            $content = file_get_contents($csvFilePath);
+            if (substr($content, -1) !== "\n") {
+                // Füge einen Zeilenumbruch hinzu, wenn nicht vorhanden
+                file_put_contents($csvFilePath, "\n", FILE_APPEND);
+            }
         }
 
-        // Lese vorhandene Termine aus der CSV, falls vorhanden
-        $existingDates = file_exists($csvFilePath) ? array_map(function ($entry) { 
-            return trim($entry[0]); 
+        $existingDates = file_exists($csvFilePath) ? array_map(function ($entry) {
+            return trim($entry[0]);
         }, array_map('str_getcsv', file($csvFilePath))) : [];
 
-        // Filtere neue Termine heraus
         $newEvents = array_filter($events, function ($eventDate) use ($existingDates) {
             return !in_array($eventDate, $existingDates);
         });
@@ -29,7 +34,6 @@ function processUploadedFile($csvFilePath) {
         if (!empty($newEvents)) {
             $csvFile = fopen($csvFilePath, 'a');
             foreach ($newEvents as $eventDate) {
-                // Fügt den neuen Termin in Spalte 1 ein, lässt Spalte 2 leer und setzt Spalte 3 auf 1
                 fputcsv($csvFile, [$eventDate, '', '1']);
             }
             fclose($csvFile);
