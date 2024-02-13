@@ -100,7 +100,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
                     </td>
 					<td>
 						<input type="checkbox" class="confirm-checkbox" id="confirm_<?php echo $appointment[0]; ?>">
-						<label for="confirm_<?php echo $appointment[0]; ?>">Bestätigen</label>
 						<button class="cancel-button" data-date="<?php echo $appointment[0]; ?>" disabled>Termin absagen</button>
 					</td>
                 </tr>
@@ -137,8 +136,6 @@ $(document).ready(function() {
                     date: date
                 },
                 success: function(response) {
-                    // Verarbeitet die Antwort vom Server
-                    alert(response); // Zeigt eine Erfolgsmeldung oder Fehlermeldung an
                     location.reload(); // Lädt die Seite neu, um die aktualisierte Terminliste anzuzeigen
                 }
             });
