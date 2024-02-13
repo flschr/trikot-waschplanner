@@ -35,9 +35,8 @@ function saveAppointments($date) {
         }
     }
     $file = "termine.csv";
-    $termin = [$date, "", "0"]; // Angepasst, um mit der Array-Struktur konsistent zu sein
     $handle = fopen($file, "a");
-    fputcsv($handle, $termin);
+    fputcsv($handle, [$date, "", "0"]);
     fclose($handle);
     return true;
 }
@@ -63,29 +62,39 @@ function updateHideStatus($date, $hide_value) {
     $appointments = loadAppointments();
     foreach ($appointments as &$appointment) {
         if ($appointment[0] === $date) {
-            $appointment[2] = $hide_value;
-            break;
+            $appointment[2] = $hide_value ? "1" : "0";
         }
     }
+    unset($appointment);
     overwriteAppointments($appointments);
 }
 
 function processForm() {
-    global $error_message;
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if (isset($_POST['archive_date']) || isset($_POST['cancel_date'])) {
-            if (isset($_POST['archive_date'])) {
-                $date_to_archive = $_POST['archive_date'];
-                // Archivierungslogik hier implementieren
-                cancelAppointment($date_to_archive); // Beispielhaft, anpassen nach Bedarf
+        if (isset($_POST['action'])) {
+            switch ($_POST['action']) {
+                case 'add':
+                    if (isset($_POST['new_date'])) {
+                        echo saveAppointments($_POST['new_date']);
+                    }
+                    break;
+                case 'cancel':
+                    if (isset($_POST['date'])) {
+                        cancelAppointment($_POST['date']);
+                        echo "Termin abgesagt.";
+                    }
+                    break;
+                case 'hide':
+                    if (isset($_POST['date'], $_POST['hide_checkbox'])) {
+                        updateHideStatus($_POST['date'], $_POST['hide_checkbox'] === 'true');
+                        echo "Ausblendstatus aktualisiert.";
+                    }
+                    break;
             }
-            if (isset($_POST['cancel_date'])) {
-                $date_to_cancel = $_POST['cancel_date'];
-                cancelAppointment($date_to_cancel);
-            }
-            header("Location: ".$_SERVER['PHP_SELF']);
-            exit();
+            exit; // Beendet die Ausführung, um keine HTML-Ausgabe zu senden, wenn AJAX verwendet wird
         }
     }
 }
+
+processForm(); // Rufen Sie diese Funktion am Anfang der functions.php auf, um AJAX-Anfragen zu verarbeiten
 ?>
