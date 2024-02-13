@@ -95,15 +95,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
                     <td>
 						<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 							<input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
-							<input type="submit" value="Archivieren">
+							<button>Termin archivieren</button>
 						</form>
                     </td>
-                    <td>
-						<form id="cancel_form_<?php echo $appointment;?>" method="post" action="#" style="display:inline;" onsubmit="return confirmDelete('<?php echo $appointment;?>')">
-							<input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
-							<button>Termin absagen</button>
-						</form>
-                    </td>
+					<td>
+						<input type="checkbox" class="confirm-checkbox" id="confirm_<?php echo $appointment[0]; ?>">
+						<label for="confirm_<?php echo $appointment[0]; ?>">Bestätigen</label>
+						<button class="cancel-button" data-date="<?php echo $appointment[0]; ?>" disabled>Termin absagen</button>
+					</td>
                 </tr>
             <?php }?>
         </tbody>
@@ -112,42 +111,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 
 <script>
 $(document).ready(function() {
+    // Initialisiert den Datepicker für das Eingabefeld
     $("#datepicker").datepicker({
         dateFormat: 'dd.mm.yy',
         firstDay: 1
     });
 
-    $('#newAppointmentForm').submit(function(e) {
-        e.preventDefault();
-        var formData = $(this).serialize();
-        $.ajax({
-            type: "POST",
-            url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
-            data: formData,
-            success: function(response) {
-                alert(response);
-                if (!response.startsWith("Fehler")) {
-                    location.reload();
-                }
-            }
-        });
+    // Event-Handler für die Änderung des Zustands der Bestätigungs-Checkbox
+    $(document).on('change', '.confirm-checkbox', function() {
+        // Aktiviert oder deaktiviert den zugehörigen "Termin absagen"-Button basierend auf dem Zustand der Checkbox
+        $(this).closest('td').find('.cancel-button').prop('disabled', !this.checked);
     });
 
-	$('.hide-checkbox').change(function() {
-		var date = $(this).data('date');
-		var isChecked = $(this).is(':checked') ? 'true' : 'false';
-		$.ajax({
-			type: "POST",
-			url: "/termine.php",
-			data: { action: 'hide', date: date, hide_checkbox: isChecked },
-			success: function(response) {
-				var data = JSON.parse(response); 
-				alert(data.message);
-			}
-		});
-	});
+    // Event-Handler für den Klick auf den "Termin absagen"-Button
+    $(document).on('click', '.cancel-button', function() {
+        if (!$(this).prop('disabled')) {
+            var date = $(this).data('date');
+            // Hier können Sie eine AJAX-Anfrage einfügen, um den Termin serverseitig abzusagen
+            // Beispiel für eine AJAX-Anfrage:
+            $.ajax({
+                type: "POST",
+                url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
+                data: {
+                    action: 'cancel',
+                    date: date
+                },
+                success: function(response) {
+                    // Verarbeitet die Antwort vom Server
+                    alert(response); // Zeigt eine Erfolgsmeldung oder Fehlermeldung an
+                    location.reload(); // Lädt die Seite neu, um die aktualisierte Terminliste anzuzeigen
+                }
+            });
+        }
+    });
 });
 </script>
+
 
 </body>
 </html>

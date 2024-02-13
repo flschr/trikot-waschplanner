@@ -127,7 +127,6 @@ function processForm() {
                         $date_to_hide = $_POST['date'];
                         $hide_value = $_POST['hide_checkbox'] == 'true' ? true : false;
                         updateHideStatus($date_to_hide, $hide_value);
-                        $response = ['success' => true, 'message' => 'Ausblendstatus erfolgreich aktualisiert.'];
                     }
                     break;
                 // Hier können weitere Fälle für andere Aktionen hinzugefügt werden
