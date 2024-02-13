@@ -63,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         <thead>
             <tr>
                 <th>Termin</th>
+				<th>Termin ausblenden</th>
                 <th>Gebucht von</th>
                 <th>Termin archivieren</th>
 				<th>Termin löschen</th>
@@ -72,6 +73,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
             <?php foreach ($appointments as $appointment) {?>
                 <tr>
 					<td><?php echo $appointment[0];?></td> <!-- Datum -->
+					<td>
+                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                            <input type="hidden" name="hide_date" value="<?php echo $appointment[0];?>">
+                            <input type="checkbox" name="hide_checkbox" <?php if ($appointment[2] == 1) echo "checked"; ?>>
+                        </form>
+                    </td>
 					<td><?php echo $appointment[1];?></td> <!-- Name -->
                     <td>
 						<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
