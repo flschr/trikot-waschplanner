@@ -13,10 +13,9 @@ function validateIcsFile($filePath) {
     $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
     foreach ($lines as $line) {
-        if (strpos($line, 'DTSTART:') === 0) {
-            // Erweiterte Validierung für UTC-Zeitstempel
-            if (!preg_match('^\d{8}T\d{6}Z$', substr($line, 8))) {
-                return "Ungültiges Datumsformat in DTSTART gefunden.";
+        if (strpos($line, 'DTSTART:') === 0 || strpos($line, 'DTEND:') === 0) {
+            if (!preg_match('/^\d{8}T\d{6}Z$/', substr($line, 8))) {
+                return "Ungültiges Datumsformat in " . substr($line, 0, 7) . " gefunden.";
             }
         }
     }
