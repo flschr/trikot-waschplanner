@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $spielerListe = leseSpieler();
 $termineListe = leseTermine();
+?>
 
 <form action="index.php" method="post">
     <h2>Termine</h2>
@@ -59,4 +60,4 @@ $termineListe = leseTermine();
         <?php endforeach; ?>
     </table>
 </form>
-?>
+</body>
