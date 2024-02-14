@@ -46,7 +46,6 @@ $termineListe = leseTermine();
                 </hgroup>
                 <p>Um die Trikots Ihres Teams sauber und spielbereit zu halten, buchen Sie bitte einen Waschtermin aus der folgenden Tabelle.</p>
 <h2>Termine</h2>
-<h2>Termine</h2>
 <table>
     <thead>
         <tr>
