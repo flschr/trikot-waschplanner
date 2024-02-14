@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Ihre Seite Titel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
 <?php
 require 'index_functions.php';
 
@@ -21,3 +31,4 @@ $spielerListe = leseSpieler();
 $termineListe = leseTermine();
 
 // Anzeigen der Benutzeroberfläche und Logik für die Anzeige folgt hier...
+?>
