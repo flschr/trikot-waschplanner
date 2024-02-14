@@ -82,10 +82,13 @@ footer small a:hover {
     text-decoration: underline;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: 6fr 1fr; /* Verhältnis anpassen für schmalere Statistik */
-    gap: 20px;
+.buchungstabelle {
+    width: 70%; /* Nutzt den verfügbaren Raum voll aus */
+}
+
+.statistiktabelle {
+    width: 30%; /* Oder jede andere Breite, die Sie bevorzugen */
+    margin: 0 auto; /* Zentriert die Tabelle im verfügbaren Raum */
 }
 
 @media (max-width: 768px) {
