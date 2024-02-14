@@ -84,12 +84,11 @@ footer small a:hover {
 
 .grid {
     display: grid;
-	grid-template-columns: auto 200px;
 	gap: 20px;
 }
 
 #buchung { grid-area: buchung; }
-#statistik { grid-area: statistik; width: 200px; } /* Feste Breite für die Statistik */
+#statistik { grid-area: statistik; width: 60px; } /* Feste Breite für die Statistik */
 
 
 @media (max-width: 768px) {
