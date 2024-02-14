@@ -20,9 +20,8 @@ function leseTermine() {
     $termineListe = [];
     if (($handle = fopen("termine.csv", "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            if($data[2] == "0") { // Nur sichtbare Termine
-				$termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'zusatzinfo' => $data[3]];
-            }
+            $zusatzinfo = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
+            $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'buchungsstatus' => $zusatzinfo];
         }
         fclose($handle);
     }
@@ -42,23 +41,24 @@ function schreibeSpieler($spielerDaten) {
 function schreibeTermine($termineDaten) {
     $handle = fopen("termine.csv", "w");
     foreach ($termineDaten as $termin) {
-        fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit']]);
+        fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $termin['buchungsstatus']]);
     }
     fclose($handle);
 }
 
-// Aktualisiert die Buchung eines Termins
 function bucheTermin($datum, $spielerName) {
     $termine = leseTermine();
     $spieler = leseSpieler();
 
+    // Termin aktualisieren
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum) {
-            $termin['name'] = $spielerName;
+            $termin['buchungsstatus'] = $spielerName; // Aktualisiert den Spieler in der vierten Spalte
             break;
         }
     }
 
+    // Waschstatistik aktualisieren
     foreach ($spieler as &$spielerItem) {
         if ($spielerItem['name'] === $spielerName) {
             $spielerItem['waschstatistik'] += 1;
@@ -70,20 +70,21 @@ function bucheTermin($datum, $spielerName) {
     schreibeSpieler($spieler);
 }
 
-// Freigeben eines gebuchten Termins
 function freigebenTermin($datum) {
     $termine = leseTermine();
     $spieler = leseSpieler();
     $spielerName = "";
 
+    // Termin freigeben
     foreach ($termine as &$termin) {
-        if ($termin['datum'] === $datum) {
-            $spielerName = $termin['name'];
-            $termin['name'] = ""; // Termin freigeben
+        if ($termin['datum'] === $datum && $termin['buchungsstatus'] != '') {
+            $spielerName = $termin['buchungsstatus'];
+            $termin['buchungsstatus'] = ''; // Entfernt den Spieler aus der vierten Spalte
             break;
         }
     }
 
+    // Waschstatistik aktualisieren
     if ($spielerName !== "") {
         foreach ($spieler as &$spielerItem) {
             if ($spielerItem['name'] === $spielerName) {
