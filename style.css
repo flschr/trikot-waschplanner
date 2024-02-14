@@ -84,8 +84,9 @@ footer small a:hover {
 
 .main-grid {
     display: grid;
-    grid-template-columns: 3fr 2fr; /* 3:2 Verhältnis zwischen Buchung und Statistik */
-    gap: 20px; /* Abstand zwischen den Spalten */
+    /* Anpassung des Verhältnisses, um die Statistiktabelle schmaler zu machen */
+    grid-template-columns: 6fr 1fr; /* Oder 5fr 1fr für ein noch schmaleres Layout */
+    gap: 20px; /* Beibehaltung des Abstands zwischen den Spalten */
 }
 
 /* Stil für die Buchungs- und Statistiksektion */
