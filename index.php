@@ -61,7 +61,7 @@ $termineListe = leseTermine();
                     <?= htmlspecialchars($termin['datum']) ?><br>
                     <?= htmlspecialchars($termin['name']) ?>
                 </td>
-                <td><?= htmlspecialchars($termin['zusatzinfo']) // Angenommen, dies wurde in leseTermine() entsprechend hinzugefügt ?></td>
+				<td><?= htmlspecialchars($termin['spielerName'] ?? '') ?></td>
                 <td>
                     <?php if ($termin['name'] == ""): ?>
                         <form action="" method="post">

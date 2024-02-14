@@ -20,8 +20,8 @@ function leseTermine() {
     $termineListe = [];
     if (($handle = fopen("termine.csv", "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            $zusatzinfo = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
-            $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'buchungsstatus' => $zusatzinfo];
+            $spielerName = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
+            $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
         }
         fclose($handle);
     }
