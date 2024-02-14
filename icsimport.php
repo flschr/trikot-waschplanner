@@ -33,19 +33,15 @@ function parseIcsFile($filePath) {
     $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
 
-    $currentEvent = [];
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
             $dateStr = substr($line, 8);
-            // Verarbeitet das spezifische Datumsformat
             $formattedDate = substr($dateStr, 0, 4) . '-' . substr($dateStr, 4, 2) . '-' . substr($dateStr, 6, 2);
-            $time = substr($dateStr, 9, 2) . ':' . substr($dateStr, 11, 2) . ':' . substr($dateStr, 13, 2) . 'Z';
-            $currentEvent['start'] = $formattedDate . ' ' . $time;
+            $currentEvent = ['date' => $formattedDate]; // Setzt das Datum sofort beim Erstellen des Ereignisses
         } elseif (strpos($line, 'SUMMARY:') === 0) {
-            $summary = str_replace('\\,', ',', substr($line, 8)); // Ersetzt \, mit ,
+            $summary = str_replace('\\,', ',', substr($line, 8));
             $currentEvent['summary'] = $summary;
-            $events[] = $currentEvent; // Fügt das aktuelle Event zum Array hinzu
-            $currentEvent = []; // Reset für das nächste Event
+            $events[] = $currentEvent; // Fügt das aktuelle Event zum Array hinzu, nur wenn ein SUMMARY existiert
         }
     }
 
