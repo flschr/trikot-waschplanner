@@ -82,24 +82,14 @@ footer small a:hover {
     text-decoration: underline;
 }
 
-.main-grid {
+.grid {
     display: grid;
-    /* Anpassung des Verhältnisses, um die Statistiktabelle schmaler zu machen */
-    grid-template-columns: 4fr 1fr; /* 3:2 Verhältnis zwischen Buchung und Statistik */
-    gap: 20px; /* Beibehaltung des Abstands zwischen den Spalten */
+    grid-template-columns: 3fr 1fr; /* Verhältnis anpassen für schmalere Statistik */
+    gap: 20px;
 }
 
-/* Stil für die Buchungs- und Statistiksektion */
-#buchung, #statistik {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #eaeaea;
-    border-radius: 5px;
-}
-
-/* Stil-Anpassungen für kleinere Bildschirme */
 @media (max-width: 768px) {
-    .main-grid {
+    .grid {
         grid-template-columns: 1fr; /* Stapelt Bereiche auf kleineren Bildschirmen */
     }
 }
