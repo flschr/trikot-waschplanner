@@ -70,13 +70,14 @@ function importEventsIntoCsv($events, $csvFilePath) {
 }
 
 function displayEventsTable($events, $existingEvents) {
-    echo '<form method="post" action="icsimport.php">';
+    echo '<form method="post">';
     echo '<table border="1">';
     echo '<tr><th>Auswählen</th><th>Datum</th><th>Name des Events</th></tr>';
     foreach ($events as $event) {
-        $isChecked = array_key_exists($event['date'], $existingEvents) ? 'checked disabled' : '';
+        // Überprüft, ob der Termin bereits existiert
+        $isChecked = !array_key_exists($event['date'], $existingEvents) ? 'checked' : '';
         echo "<tr>
-                <td><input type='checkbox' name='selectedEvents[]' value='{$event['date']}' $isChecked></td>
+                <td><input type='checkbox' name='selectedEvents[]' value='{$event['date']}' {$isChecked}></td>
                 <td>{$event['date']}</td>
                 <td>{$event['summary']}</td>
               </tr>";
