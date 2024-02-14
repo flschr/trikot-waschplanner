@@ -62,33 +62,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
     exit();
 }
 
-// Verarbeitung des ICS-Dateiuploads
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["icsFile"])) {
-    // Fehlerüberprüfung
-    if ($_FILES["icsFile"]["error"] == UPLOAD_ERR_OK) {
-        // Dateiname extrahieren
-        $tmp_name = $_FILES["icsFile"]["tmp_name"];
-        $name = $_FILES["icsFile"]["name"];
-
-        // Überprüfen der Dateierweiterung für Sicherheit
-        $fileType = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-        if ($fileType == "ics") {
-            // Aufrufen der Funktion zum Einlesen und Verarbeiten der ICS-Datei
-            processUploadedFile($csvFilePath);
-
-            $_SESSION['feedback'] = 'Kalender-Import erfolgreich verarbeitet und alle neuen Termine hinzugefügt.';
-        } else {
-            $_SESSION['feedback'] = 'Falscher Dateityp. Bitte laden Sie eine ICS-Datei hoch.';
-        }
-    } else {
-        $_SESSION['feedback'] = 'Fehler beim Hochladen der Datei.';
-    }
-
-    // Umleitung nach der Verarbeitung, um PRG-Muster anzuwenden
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -112,12 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["icsFile"])) {
         <input type="text" id="datepicker" name="new_date" placeholder="23.06.2021">
         <button>Termin anlegen</button>
     </form>
-	
-	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
-		<input type="file" name="icsFile" id="icsFile" style="display:none;" onchange="this.form.submit();">
-		<label for="icsFile" class="upload-button">ICS-Datei hochladen</label>
-	</form>
-
 
 	<?php if (empty($appointments)) { ?>
 		<p class="hinweis">Es sind noch keine Termine vorhanden.</p>
