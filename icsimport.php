@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['icsFile'])) {
     importEventsIntoCsv($selectedEvents, $csvFilePath);
     $_SESSION['message'] = "Ausgewählte Termine wurden erfolgreich importiert.";
     unset($_SESSION['parsedEvents']); // Bereinige die Session-Daten
-    header('Location: scriptname.php');
+    header('Location: icsimport.php');
     exit;
 }
 
