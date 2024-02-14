@@ -82,27 +82,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['icsFile'])) {
     } else {
         echo "Kalenderdatei entspricht nicht dem unterstützten Format oder es gab einen Fehler beim Hochladen.<br/>";
     }
+} elseif (isset($_POST['import']) && !empty($_POST['selectedEvents'])) {
+    $selectedEvents = $_POST['selectedEvents'];
 
-// Importlogik mit Sortierung und spezifischem CSV-Format
-if (isset($_POST['import']) && !empty($_POST['selectedEvents'])) {
-    $selectedEvents = array_map(function($event) {
-        return explode('|', $event); // Angenommen, Datum und Zusammenfassung sind durch '|' getrennt
-    }, $_POST['selectedEvents']);
+    if (file_exists($csvFilePath)) {
+        $file = fopen($csvFilePath, 'a');
 
-    // Sortiere ausgewählte Events
-    usort($selectedEvents, function ($a, $b) {
-        return strtotime($a[0]) - strtotime($b[0]);
-    });
+        foreach ($selectedEvents as $date) {
+            fputcsv($file, [$date]);
+        }
 
-    // CSV-Datei öffnen oder erstellen und schreiben
-    $file = fopen($csvFilePath, 'a');
-    foreach ($selectedEvents as $event) {
-        fputcsv($file, [$event[0], $event[1], '1', '']); // Datum, Event Name, '1', leer
+        fclose($file);
+        echo "Ausgewählte Termine wurden erfolgreich importiert.";
     }
-    // Leerzeile am Ende der Datei hinzufügen
-    fwrite($file, PHP_EOL);
-    fclose($file);
-    echo "Ausgewählte Termine wurden erfolgreich importiert.";
+} else {
+    displayUploadForm();
 }
 
 function displayUploadForm() {
