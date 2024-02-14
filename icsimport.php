@@ -7,12 +7,15 @@ $csvFilePath = 'termine.csv';
 
 function validateIcsFile($filePath) {
     $fileContent = file_get_contents($filePath);
+    // Bereinige den Inhalt von Zeilenfortsetzungen
     $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
+
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
             $dateStr = substr($line, 8); // Extrahiert den Teil nach 'DTSTART:'
-            if (!preg_match('/^\d{8}T\d{6}Z$/', $dateStr)) { // Überprüft, ob genau 8 Zahlen folgen und das Format korrekt ist
+            // Überprüft, ob das Datum und die Uhrzeit dem erwarteten Format entsprechen
+            if (!preg_match('/^\d{8}T\d{6}Z$/', $dateStr)) {
                 return false; // Ungültiges Format
             }
         }
