@@ -91,12 +91,12 @@ footer small a:hover {
 
 /* Stil für die Buchungssektion */
 #buchung {
-    flex: 0 0 60%; /* Nutzt 70% der Breite des Elternelements */
+    flex: 0 0 50%; /* Nutzt 70% der Breite des Elternelements */
 }
 
 /* Stil für die Statistiksektion */
 #statistik {
-    flex: 0 0 40%; /* Nutzt 30% der Breite des Elternelements */
+    flex: 0 0 50%; /* Nutzt 30% der Breite des Elternelements */
 }
 
 @media (max-width: 768px) {
