@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 ini_set('display_errors', 1);
@@ -62,7 +61,7 @@ function importEventsIntoCsv($events, $csvFilePath) {
 }
 
 function displayEventsTable($events, $existingEvents) {
-    echo '<form method="post">';
+    echo '<form method="post" action="scriptname.php">';
     echo '<table border="1">';
     echo '<tr><th>Auswählen</th><th>Datum</th><th>Name des Events</th></tr>';
     foreach ($events as $event) {
@@ -79,7 +78,7 @@ function displayEventsTable($events, $existingEvents) {
 }
 
 function displayUploadForm() {
-    echo '<form action="" method="post" enctype="multipart/form-data">';
+    echo '<form action="scriptname.php" method="post" enctype="multipart/form-data">';
     echo '<label for="icsFile">ICS-Datei hochladen:</label>';
     echo '<input type="file" name="icsFile" id="icsFile" required>';
     echo '<input type="submit" name="upload" value="Hochladen">';
@@ -92,14 +91,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['icsFile'])) {
     if ($icsFile['error'] === UPLOAD_ERR_OK && $validationResult === true) {
         $events = parseIcsFile($icsFile['tmp_name']);
         $_SESSION['parsedEvents'] = $events;
-        $existingEvents = readExistingEvents($csvFilePath);
-        displayEventsTable($events, $existingEvents);
+        $_SESSION['message'] = "ICS-Datei erfolgreich verarbeitet. Bitte wählen Sie Termine zum Importieren.";
+        header('Location: scriptname.php'); // Umleitung, um Doppelsendungen zu vermeiden
+        exit;
     } else {
-        echo $validationResult;
+        $_SESSION['message'] = $validationResult;
+        header('Location: scriptname.php');
+        exit;
     }
 } elseif (isset($_POST['import']) && !empty($_POST['selectedEvents'])) {
     if (!isset($_SESSION['parsedEvents'])) {
-        echo "Fehler: Keine Termine zum Importieren gefunden.";
+        $_SESSION['message'] = "Fehler: Keine Termine zum Importieren gefunden.";
+        header('Location: scriptname.php');
         exit;
     }
     
@@ -108,9 +111,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['icsFile'])) {
         return in_array($event['date'], $selectedDates);
     });
     importEventsIntoCsv($selectedEvents, $csvFilePath);
-    echo "Ausgewählte Termine wurden erfolgreich importiert.";
-    unset($_SESSION['parsedEvents']); // Optional: Session-Daten bereinigen
-} else {
+    $_SESSION['message'] = "Ausgewählte Termine wurden erfolgreich importiert.";
+    unset($_SESSION['parsedEvents']); // Bereinige die Session-Daten
+    header('Location: scriptname.php');
+    exit;
+}
+
+if (isset($_SESSION['message'])) {
+    echo $_SESSION['message'];
+    unset($_SESSION['message']);
+}
+
+if (!isset($_POST['import']) && !isset($_FILES['icsFile'])) {
     displayUploadForm();
+    if (isset($_SESSION['parsedEvents'])) {
+        $existingEvents = readExistingEvents($csvFilePath);
+        displayEventsTable($_SESSION['parsedEvents'], $existingEvents);
+    }
 }
 ?>
