@@ -85,7 +85,7 @@ footer small a:hover {
 .main-grid {
     display: grid;
     /* Anpassung des Verhältnisses, um die Statistiktabelle schmaler zu machen */
-    grid-template-columns: 8fr 1fr; /* Oder 5fr 1fr für ein noch schmaleres Layout */
+    grid-template-columns: 4fr 1fr; /* Oder 5fr 1fr für ein noch schmaleres Layout */
     gap: 20px; /* Beibehaltung des Abstands zwischen den Spalten */
 }
 
