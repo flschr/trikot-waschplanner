@@ -84,7 +84,7 @@ footer small a:hover {
 
 .grid {
     display: grid;
-    grid-template-columns: 3fr 1fr; /* Verhältnis anpassen für schmalere Statistik */
+    grid-template-columns: 6fr 1fr; /* Verhältnis anpassen für schmalere Statistik */
     gap: 20px;
 }
 
