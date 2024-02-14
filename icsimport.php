@@ -20,20 +20,29 @@ function validateIcsFile($filePath) {
 function parseIcsFile($filePath) {
     $events = [];
     $fileContent = file_get_contents($filePath);
-    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
+    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent); // Bereinigen von Zeilenumbrüchen und Leerzeichen
     $lines = explode("\n", $fileContent);
 
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
             $dateStr = substr($line, 8, 8);
             $date = DateTime::createFromFormat('Ymd', $dateStr);
-            $formattedDate = $date->format('d.m.Y');
+            $formattedDate = $date->format('d.m.Y'); // Formatierung des Datums
             $currentEvent['date'] = $formattedDate;
         } elseif (strpos($line, 'SUMMARY:') === 0) {
+            // Entferne Escape-Zeichen und überschüssigen Text
             $summary = substr($line, 8);
+            $summary = str_replace("\\,", ",", $summary); // Entferne das Escape-Zeichen vor Kommas
+            // Anpassen und Kürzen der Event-Namen
+            $summary = preg_replace('/,\s*Meisterschaften\\b/', ', Meisterschaft', $summary);
+            $summary = preg_replace('/,\s*Freundschaftsspiele\\b/', ', Freundschaftsspiel', $summary);
+            // Entferne alles nach dem ersten Komma, wenn spezifische Textmuster nicht gefunden wurden
+            if (!preg_match('/(Meisterschaft|Freundschaftsspiel)$/', $summary)) {
+                $summary = preg_replace('/,.*$/', '', $summary);
+            }
             $currentEvent['summary'] = $summary;
-            $events[] = $currentEvent;
-            $currentEvent = [];
+            $events[] = $currentEvent; // Fügt das Event dem Array hinzu
+            $currentEvent = []; // Bereitet das Array für das nächste Event vor
         }
     }
 
