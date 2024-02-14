@@ -82,14 +82,29 @@ footer small a:hover {
     text-decoration: underline;
 }
 
-.buchungstabelle {
-    width: 70%; /* Nutzt den verfügbaren Raum voll aus */
+/* Container für Buchung und Statistik */
+.container {
+    display: flex;
+    flex-wrap: wrap; /* Ermöglicht das Umfließen auf kleineren Bildschirmen */
+    gap: 20px;
 }
 
-.statistiktabelle {
-    width: 30%; /* Oder jede andere Breite, die Sie bevorzugen */
-    margin: 0 auto; /* Zentriert die Tabelle im verfügbaren Raum */
+/* Stil für die Buchungssektion */
+#buchung {
+    flex: 0 0 70%; /* Nutzt 70% der Breite des Elternelements */
 }
+
+/* Stil für die Statistiksektion */
+#statistik {
+    flex: 0 0 30%; /* Nutzt 30% der Breite des Elternelements */
+}
+
+@media (max-width: 768px) {
+    #buchung, #statistik {
+        flex-basis: 100%; /* Beide Sektionen nehmen auf kleineren Bildschirmen die volle Breite ein */
+    }
+}
+
 
 @media (max-width: 768px) {
     .grid {
