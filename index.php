@@ -45,18 +45,23 @@ $termineListe = leseTermine();
                     <h3>Wählen Sie einen freien Termin aus</h3>
                 </hgroup>
                 <p>Um die Trikots Ihres Teams sauber und spielbereit zu halten, buchen Sie bitte einen Waschtermin aus der folgenden Tabelle.</p>
+<h2>Termine</h2>
 <table>
     <thead>
         <tr>
-            <th>Datum</th>
-            <th>Spieler</th>
+            <th>Termin</th>
+            <th>Zusätzliche Informationen</th>
             <th>Aktion</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($termineListe as $termin): ?>
             <tr>
-                <td><?= htmlspecialchars($termin['datum']) ?></td>
+                <td>
+                    <?= htmlspecialchars($termin['datum']) ?><br>
+                    <?= htmlspecialchars($termin['name']) ?>
+                </td>
+                <td><?= htmlspecialchars($termin['zusatzinfo']) // Angenommen, dies wurde in leseTermine() entsprechend hinzugefügt ?></td>
                 <td>
                     <?php if ($termin['name'] == ""): ?>
                         <form action="" method="post">
@@ -66,13 +71,10 @@ $termineListe = leseTermine();
                                     <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
                                 <?php endforeach; ?>
                             </select>
-                </td>
-                <td>
                             <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                             <button type="submit" name="buchung">Buchen</button>
                         </form>
                     <?php else: ?>
-                        <?= htmlspecialchars($termin['name']) ?>
                         <form action="" method="post">
                             <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                             <button type="submit" name="freigabe">Freigeben</button>
@@ -83,6 +85,7 @@ $termineListe = leseTermine();
         <?php endforeach; ?>
     </tbody>
 </table>
+
             </section>
 
 

@@ -21,7 +21,7 @@ function leseTermine() {
     if (($handle = fopen("termine.csv", "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
             if($data[2] == "0") { // Nur sichtbare Termine
-                $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2]];
+				$termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'zusatzinfo' => $data[3]];
             }
         }
         fclose($handle);
