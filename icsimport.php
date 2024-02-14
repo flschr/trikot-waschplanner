@@ -1,4 +1,5 @@
 <?php
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -6,19 +7,24 @@ $csvFilePath = 'termine.csv';
 
 function validateIcsFile($filePath) {
     $fileContent = file_get_contents($filePath);
+    // Überprüfung auf grundlegende ICS-Struktur
     if (strpos($fileContent, 'BEGIN:VCALENDAR') === false || strpos($fileContent, 'END:VCALENDAR') === false) {
         return "ICS-Datei beginnt oder endet nicht mit den erforderlichen VCALENDAR-Tags.";
     }
+
+    // Bereinige den Inhalt von Zeilenfortsetzungen
     $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
+
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
+            // Unterstützt vollständige Datums-/Zeitformate, einschließlich jene mit Zeitzone
             if (!preg_match('/^\d{8}T\d{6}Z?$/', substr($line, 8))) {
                 return "Ungültiges Datumsformat in DTSTART gefunden.";
             }
         }
     }
-    return true;
+    return true; // Gültiges Format
 }
 
 function parseIcsFile($filePath) {
@@ -26,36 +32,77 @@ function parseIcsFile($filePath) {
     $fileContent = file_get_contents($filePath);
     $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
-    $currentEvent = [];
+
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
             $dateStr = substr($line, 8);
             $date = DateTime::createFromFormat('Ymd', substr($dateStr, 0, 8));
             $formattedDate = $date->format('d.m.Y');
-            $currentEvent['date'] = $formattedDate;
+            $currentEvent = ['date' => $formattedDate];
         } elseif (strpos($line, 'SUMMARY:') === 0) {
             $summary = str_replace('\\,', ',', substr($line, 8));
+            // Kürzt den Eventnamen
             $summary = preg_replace('/, Freundschaftsspiele.*$/', ', Freundschaftsspiel', $summary);
             $summary = preg_replace('/, Meisterschaften.*$/', ', Meisterschaft', $summary);
             $currentEvent['summary'] = $summary;
             $events[] = $currentEvent;
-            $currentEvent = [];
         }
-    }
-    // Sortiere Events nach Datum
-    usort($events, function ($a, $b) {
+		usort($events, function ($a, $b) {
         return strtotime($a['date']) - strtotime($b['date']);
     });
+
     return $events;
 }
 
-function importEventsToCsv($csvFilePath, $events) {
-    $file = fopen($csvFilePath, 'w'); // 'a' zu 'w' geändert, um die Datei bei jedem Import zu überschreiben
-    foreach ($events as $event) {
-        fputcsv($file, [$event['date'], $event['summary'], '1', '']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['icsFile'])) {
+    $icsFile = $_FILES['icsFile'];
+
+    if ($icsFile['error'] === UPLOAD_ERR_OK && validateIcsFile($icsFile['tmp_name'])) {
+        $events = parseIcsFile($icsFile['tmp_name']);
+        $existingEvents = file_exists($csvFilePath) ? array_map('str_getcsv', file($csvFilePath)) : [];
+
+        $existingDates = array_column($existingEvents, 0);
+
+        echo "<form method='post'>";
+        echo "<table border='1'>";
+        echo "<tr><th>Select</th><th>Date</th><th>Name</th></tr>";
+
+		foreach ($events as $event) {
+			$isChecked = in_array($event['date'], $existingDates) ? '' : 'checked';
+			echo "<tr>";
+			echo "<td><input type='checkbox' name='selectedEvents[]' value='{$event['date']}' $isChecked></td>";
+			echo "<td>{$event['date']}</td>";
+			echo "<td>{$event['summary']}</td>";
+			echo "</tr>";
+        }
+
+        echo "</table>";
+        echo "<input type='submit' name='import' value='Gewählte Termine importieren'>";
+        echo "</form>";
+    } else {
+        echo "Kalenderdatei entspricht nicht dem unterstützten Format oder es gab einen Fehler beim Hochladen.<br/>";
     }
-    fwrite($file, PHP_EOL); // Fügt eine abschließende Leerzeile hinzu
+
+// Importlogik mit Sortierung und spezifischem CSV-Format
+if (isset($_POST['import']) && !empty($_POST['selectedEvents'])) {
+    $selectedEvents = array_map(function($event) {
+        return explode('|', $event); // Angenommen, Datum und Zusammenfassung sind durch '|' getrennt
+    }, $_POST['selectedEvents']);
+
+    // Sortiere ausgewählte Events
+    usort($selectedEvents, function ($a, $b) {
+        return strtotime($a[0]) - strtotime($b[0]);
+    });
+
+    // CSV-Datei öffnen oder erstellen und schreiben
+    $file = fopen($csvFilePath, 'a');
+    foreach ($selectedEvents as $event) {
+        fputcsv($file, [$event[0], $event[1], '1', '']); // Datum, Event Name, '1', leer
+    }
+    // Leerzeile am Ende der Datei hinzufügen
+    fwrite($file, PHP_EOL);
     fclose($file);
+    echo "Ausgewählte Termine wurden erfolgreich importiert.";
 }
 
 function displayUploadForm() {
@@ -73,18 +120,5 @@ function displayUploadForm() {
         </form>
     </body>
     </html>';
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['icsFile'])) {
-    $validationResult = validateIcsFile($_FILES['icsFile']['tmp_name']);
-    if ($validationResult === true) {
-        $events = parseIcsFile($_FILES['icsFile']['tmp_name']);
-        importEventsToCsv($csvFilePath, $events);
-        echo "Termine wurden erfolgreich importiert.";
-    } else {
-        echo $validationResult;
-    }
-} else {
-    displayUploadForm();
 }
 ?>
