@@ -96,7 +96,6 @@ $termineListe = leseTermine();
 
 
 			<section id="statistik" aria-label="Waschstatistik">
-				<div class="container">
                     <article>
                         <hgroup>
                             <h2>Waschstatistik</h2>
