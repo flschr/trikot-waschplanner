@@ -47,9 +47,7 @@ function parseIcsFile($filePath) {
             $currentEvent['summary'] = $summary;
             $events[] = $currentEvent;
         }
-		usort($events, function ($a, $b) {
-        return strtotime($a['date']) - strtotime($b['date']);
-    });
+    }
 
     return $events;
 }
