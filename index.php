@@ -11,6 +11,9 @@
 <?php
 require 'index_functions.php';
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 // Logik zum Verarbeiten von Buchungs- und Freigabeanfragen
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['buchung']) && isset($_POST['spieler']) && isset($_POST['datum'])) {
