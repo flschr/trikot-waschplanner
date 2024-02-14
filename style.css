@@ -1,295 +1,104 @@
-/* Standardfarben */
-:root {
-    --text: #333; /* Standard-Textfarbe */
-    --bg: #f4f4f4; /* Standard-Hintergrundfarbe */
-    --button-bg: #007bff; /* Standard-Button-Hintergrundfarbe */
-    --button-text: #fff; /* Standard-Button-Textfarbe */
-}
+/* Zusätzliches CSS für Trikotwäsche Buchungsseite */
 
-/* Nachtmodus */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --text: #fff; /* Textfarbe im Nachtmodus */
-        --bg: #333; /* Hintergrundfarbe im Nachtmodus */
-        --button-bg: #333; /* Dunkler Button-Hintergrund für Nachtmodus */
-    }
-}
-
-/* Gemeinsame Styles für alle Geräte */
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: var(--bg);
-    margin: 5px;
-    padding: 0;
-    color: var(--text);
 }
 
-/* Header Styles */
-header {
+nav ul {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    padding: 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: inherit;
+}
+
+nav .container-fluid {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+main {
+    margin-top: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+td {
+    background-color: #fafafa;
+}
+
+button {
     background-color: #007bff;
-    color: #fff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    margin-top: 3rem;
+    text-align: center;
+    padding: 2rem 0;
+    border-top: 1px solid #eee;
+}
+
+footer small a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+footer small a:hover {
+    text-decoration: underline;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr; /* 3:2 Verhältnis zwischen Buchung und Statistik */
+    gap: 20px; /* Abstand zwischen den Spalten */
+}
+
+/* Stil für die Buchungs- und Statistiksektion */
+#buchung, #statistik {
     padding: 20px;
-    text-align: center;
-}
-
-h1 {
-    font-weight: bolder;
-}
-
-h2 {
-    font-weight: lighter;
-}
-
-/* Container Styles */
-.container {
-    max-width: 960px;
-    margin: 20px auto;
-    padding: 0 20px;
-    overflow: hidden;
-}
-
-.centered-container {
-    max-width: 960px;
-    margin: 20px auto;
-    padding: 0 20px;
-    overflow: hidden;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center; /* Hier setzen Sie den Text zentriert */
-}
-
-
-/* Table Styles */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    text-align: left; 
-}
-
-table th,
-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-
-table th {
-    background-color: #007bff;
-    color: #fff;
-}
-
-/* Button Styles */
-button {
-    background-color: var(--button-bg);
-    color: var(--button-text);
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
+    background-color: #f9f9f9;
+    border: 1px solid #eaeaea;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Nachtmodus für Buttons */
-body.night-mode button {
-    background-color: var(--button-bg);
-    color: var(--button-text);
-}
-
-/* Hinweis-Stil */
-.hinweis {
-    background-color: #ffffcc; /* Hintergrundfarbe */
-    border: 1px solid #ffeb3b; /* Randfarbe */
-    padding: 10px; /* Innenabstand */
-    margin-bottom: 20px; /* Abstand nach unten */
-    color: #333; /* Textfarbe */
-    font-size: 80%;
-}
-
-/* Media Query für Geräte mit einer maximalen Breite von 768px (Tablets und Smartphones im Querformat) */
-@media only screen and (max-width: 768px) {
-    /* Hier kommen die Styles für mobile Geräte hin */
-    table {
-        font-size: 18px;
+/* Stil-Anpassungen für kleinere Bildschirme */
+@media (max-width: 768px) {
+    .main-grid {
+        grid-template-columns: 1fr; /* Stapelt Bereiche auf kleineren Bildschirmen */
     }
-
-    button {
-        display: block;
-        margin: 18px auto;
-        font-size: 18px; /* Größere Schriftgröße für Buttons auf mobilen Geräten */
-    }
-
-    select {
-        font-size: 18px; /* Größere Schriftgröße für Dropdown-Elemente auf mobilen Geräten */
-    }
-}
-/* Zusätzliches CSS für Trikotwäsche Buchungsseite */
-
-body {
-    font-family: Arial, sans-serif;
-}
-
-nav ul {
-    display: flex;
-    justify-content: space-between;
-    list-style-type: none;
-    padding: 0;
-}
-
-nav a {
-    text-decoration: none;
-    color: inherit;
-}
-
-nav .container-fluid {
-    padding: 1rem 0;
-    border-bottom: 1px solid #eee;
-}
-
-main {
-    margin-top: 2rem;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
-}
-
-th, td {
-    text-align: left;
-    padding: 8px;
-}
-
-th {
-    background-color: #f4f4f4;
-}
-
-td {
-    background-color: #fafafa;
-}
-
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-footer {
-    margin-top: 3rem;
-    text-align: center;
-    padding: 2rem 0;
-    border-top: 1px solid #eee;
-}
-
-footer small a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-footer small a:hover {
-    text-decoration: underline;
-}
-/* Zusätzliches CSS für Trikotwäsche Buchungsseite */
-
-body {
-    font-family: Arial, sans-serif;
-}
-
-nav ul {
-    display: flex;
-    justify-content: space-between;
-    list-style-type: none;
-    padding: 0;
-}
-
-nav a {
-    text-decoration: none;
-    color: inherit;
-}
-
-nav .container-fluid {
-    padding: 1rem 0;
-    border-bottom: 1px solid #eee;
-}
-
-main {
-    margin-top: 2rem;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
-}
-
-th, td {
-    text-align: left;
-    padding: 8px;
-}
-
-th {
-    background-color: #f4f4f4;
-}
-
-td {
-    background-color: #fafafa;
-}
-
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-footer {
-    margin-top: 3rem;
-    text-align: center;
-    padding: 2rem 0;
-    border-top: 1px solid #eee;
-}
-
-footer small a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-footer small a:hover {
-    text-decoration: underline;
 }
