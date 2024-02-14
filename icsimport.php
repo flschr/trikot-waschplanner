@@ -1,5 +1,3 @@
-<?php
-
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -7,24 +5,21 @@ $csvFilePath = 'termine.csv';
 
 function validateIcsFile($filePath) {
     $fileContent = file_get_contents($filePath);
-    // Überprüfung auf grundlegende ICS-Struktur
     if (strpos($fileContent, 'BEGIN:VCALENDAR') === false || strpos($fileContent, 'END:VCALENDAR') === false) {
-        return false; // Grundlegende Struktur fehlt
+        return false;
     }
 
-    // Bereinige den Inhalt von Zeilenfortsetzungen
     $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
 
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0 || strpos($line, 'DTEND:') === 0) {
-            // Unterstützt vollständige Datums-/Zeitformate, einschließlich jene mit Zeitzone
             if (!preg_match('/^\d{8}(T\d{6}(Z|[\+\-]\d{4})?)?$/', substr($line, 8))) {
-                return false; // Ungültiges Format
+                return false;
             }
         }
     }
-    return true; // Gültiges Format
+    return true;
 }
 
 function parseIcsFile($filePath) {
@@ -36,9 +31,8 @@ function parseIcsFile($filePath) {
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
             $dateStr = substr($line, 8);
-            // Verarbeitet verschiedene Datumsformate
             if (preg_match('/^(\d{4})(\d{2})(\d{2})/', $dateStr, $matches)) {
-                $formattedDate = "{$matches[1]}-{$matches[2]}-{$matches[3]}"; // Format: yyyy-mm-dd
+                $formattedDate = "{$matches[1]}-{$matches[2]}-{$matches[3]}";
                 $events[] = ['date' => $formattedDate];
             }
         } elseif (strpos($line, 'SUMMARY:') === 0) {
@@ -110,4 +104,3 @@ function displayUploadForm() {
     </body>
     </html>';
 }
-?>
