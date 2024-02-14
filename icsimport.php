@@ -26,14 +26,14 @@ function validateIcsFile($filePath) {
 function parseIcsFile($filePath) {
     $events = [];
     $fileContent = file_get_contents($filePath);
-    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
+    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent); // Entfernt Zeilenumbrüche und Leerzeichen
     $lines = explode("\n", $fileContent);
     $currentEvent = [];
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
-            $dateStr = substr($line, 8, 15); // Extrahiert das Datum ohne 'Z'
-            $date = DateTime::createFromFormat('Ymd\THis\Z', $dateStr . 'Z', new DateTimeZone('UTC'));
-            $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassung an die gewünschte Zeitzone
+            $dateStr = substr($line, 8);
+            $date = DateTime::createFromFormat('Ymd\THis\Z', $dateStr, new DateTimeZone('UTC'));
+            $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassen an gewünschte Zeitzone
             $formattedDate = $date->format('d.m.Y');
             $currentEvent['date'] = $formattedDate;
         } elseif (strpos($line, 'SUMMARY:') === 0) {
