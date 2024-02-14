@@ -46,11 +46,12 @@ $termineListe = leseTermine();
                 </hgroup>
                 <p>Um die Trikots Ihres Teams sauber und spielbereit zu halten, buchen Sie bitte einen Waschtermin aus der folgenden Tabelle.</p>
 <h2>Termine</h2>
+<h2>Termine</h2>
 <table>
     <thead>
         <tr>
             <th>Termin</th>
-            <th>Zusätzliche Informationen</th>
+            <th>Gebucht von</th>
             <th>Aktion</th>
         </tr>
     </thead>
@@ -61,16 +62,21 @@ $termineListe = leseTermine();
                     <?= htmlspecialchars($termin['datum']) ?><br>
                     <?= htmlspecialchars($termin['name']) ?>
                 </td>
-				<td><?= htmlspecialchars($termin['spielerName'] ?? '') ?></td>
                 <td>
-                    <?php if ($termin['name'] == ""): ?>
+                    <?php if (empty($termin['spielerName'])): ?>
                         <form action="" method="post">
                             <select name="spieler">
-                                <option value="Frei">Frei</option>
+                                <option value="">Termin frei</option>
                                 <?php foreach ($spielerListe as $spieler): ?>
                                     <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
                                 <?php endforeach; ?>
                             </select>
+                    <?php else: ?>
+                        <?= htmlspecialchars($termin['spielerName']) ?>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php if (empty($termin['spielerName'])): ?>
                             <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                             <button type="submit" name="buchung">Buchen</button>
                         </form>
@@ -85,6 +91,7 @@ $termineListe = leseTermine();
         <?php endforeach; ?>
     </tbody>
 </table>
+
 
             </section>
 
