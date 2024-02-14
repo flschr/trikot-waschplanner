@@ -78,7 +78,7 @@ function displayEventsTable($events, $existingEvents) {
 }
 
 function displayUploadForm() {
-    echo '<form action="scriptname.php" method="post" enctype="multipart/form-data">';
+    echo '<form action="icsimport.php" method="post" enctype="multipart/form-data">';
     echo '<label for="icsFile">ICS-Datei hochladen:</label>';
     echo '<input type="file" name="icsFile" id="icsFile" required>';
     echo '<input type="submit" name="upload" value="Hochladen">';
@@ -92,17 +92,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['icsFile'])) {
         $events = parseIcsFile($icsFile['tmp_name']);
         $_SESSION['parsedEvents'] = $events;
         $_SESSION['message'] = "ICS-Datei erfolgreich verarbeitet. Bitte wählen Sie Termine zum Importieren.";
-        header('Location: scriptname.php'); // Umleitung, um Doppelsendungen zu vermeiden
+        header('Location: icsimport.php'); // Umleitung, um Doppelsendungen zu vermeiden
         exit;
     } else {
         $_SESSION['message'] = $validationResult;
-        header('Location: scriptname.php');
+        header('Location: icsimport.php');
         exit;
     }
 } elseif (isset($_POST['import']) && !empty($_POST['selectedEvents'])) {
     if (!isset($_SESSION['parsedEvents'])) {
         $_SESSION['message'] = "Fehler: Keine Termine zum Importieren gefunden.";
-        header('Location: scriptname.php');
+        header('Location: icsimport.php');
         exit;
     }
     
