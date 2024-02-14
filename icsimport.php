@@ -26,23 +26,25 @@ function validateIcsFile($filePath) {
 function parseIcsFile($filePath) {
     $events = [];
     $fileContent = file_get_contents($filePath);
-    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent); // Entfernt Zeilenumbrüche und Leerzeichen
+    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
-    $currentEvent = [];
+
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
             $dateStr = substr($line, 8);
-            $date = DateTime::createFromFormat('Ymd\THis\Z', $dateStr, new DateTimeZone('UTC'));
-            $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassen an gewünschte Zeitzone
+            $date = DateTime::createFromFormat('Ymd', substr($dateStr, 0, 8));
             $formattedDate = $date->format('d.m.Y');
-            $currentEvent['date'] = $formattedDate;
+            $currentEvent = ['date' => $formattedDate];
         } elseif (strpos($line, 'SUMMARY:') === 0) {
             $summary = str_replace('\\,', ',', substr($line, 8));
+            // Kürzt den Eventnamen
+            $summary = preg_replace('/, Freundschaftsspiele.*$/', ', Freundschaftsspiel', $summary);
+            $summary = preg_replace('/, Meisterschaften.*$/', ', Meisterschaft', $summary);
             $currentEvent['summary'] = $summary;
             $events[] = $currentEvent;
-            $currentEvent = [];
         }
     }
+
     return $events;
 }
 
