@@ -2,9 +2,8 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Ihre Seite Titel</title>
+    <title>Waschtermin Buchung</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -21,12 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $datum = $_POST['datum'];
         if ($spieler !== "Frei") {
             bucheTermin($datum, $spieler);
+            header("Location: ".$_SERVER['PHP_SELF']); // Um Doppelbuchungen beim Neuladen der Seite zu vermeiden
+            exit;
         } else {
             echo "<script>alert('Bitte einen Namen auswählen');</script>";
         }
     } elseif (isset($_POST['freigabe']) && isset($_POST['datum'])) {
         $datum = $_POST['datum'];
         freigebenTermin($datum);
+        header("Location: ".$_SERVER['PHP_SELF']); // Um Doppelbuchungen beim Neuladen der Seite zu vermeiden
+        exit;
     }
 }
 
@@ -34,30 +37,81 @@ $spielerListe = leseSpieler();
 $termineListe = leseTermine();
 ?>
 
-<form action="index.php" method="post">
-    <h2>Termine</h2>
-    <table>
+    <main class="container">
+        <div class="grid">
+            <section id="buchung">
+                <hgroup>
+                    <h2>Buchung von Waschterminen</h2>
+                    <h3>Wählen Sie einen freien Termin aus</h3>
+                </hgroup>
+                <p>Um die Trikots Ihres Teams sauber und spielbereit zu halten, buchen Sie bitte einen Waschtermin aus der folgenden Tabelle.</p>
+<table>
+    <thead>
+        <tr>
+            <th>Datum</th>
+            <th>Spieler</th>
+            <th>Aktion</th>
+        </tr>
+    </thead>
+    <tbody>
         <?php foreach ($termineListe as $termin): ?>
             <tr>
                 <td><?= htmlspecialchars($termin['datum']) ?></td>
                 <td>
-                    <?php if ($termin['name'] === ""): ?>
-                        <select name="spieler">
-                            <option value="Frei">Frei</option>
-                            <?php foreach ($spielerListe as $spieler): ?>
-                                <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                        <button type="submit" name="buchung">Buchen</button>
+                    <?php if ($termin['name'] == ""): ?>
+                        <form action="" method="post">
+                            <select name="spieler">
+                                <option value="Frei">Frei</option>
+                                <?php foreach ($spielerListe as $spieler): ?>
+                                    <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                </td>
+                <td>
+                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+                            <button type="submit" name="buchung">Buchen</button>
+                        </form>
                     <?php else: ?>
                         <?= htmlspecialchars($termin['name']) ?>
-                        <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                        <button type="submit" name="freigabe">Freigeben</button>
+                        <form action="" method="post">
+                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+                            <button type="submit" name="freigabe">Freigeben</button>
+                        </form>
                     <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
-    </table>
-</form>
+    </tbody>
+</table>
+            </section>
+
+
+			<section id="statistik" aria-label="Waschstatistik">
+				<div class="container">
+                    <article>
+                        <hgroup>
+                            <h2>Waschstatistik</h2>
+                            <h3>Übersicht über die durchgeführten Wäschen</h3>
+                        </hgroup>
+<table>
+    <thead>
+        <tr>
+            <th>Name des Spielers</th>
+            <th>Anzahl der Wäschen</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($spielerListe as $spieler): ?>
+            <tr>
+                <td><?= htmlspecialchars($spieler['name']) ?></td>
+                <td><?= htmlspecialchars($spieler['waschstatistik']) ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+                    </article>
+                </div>
+            </section>
+
 </body>
+</html>
