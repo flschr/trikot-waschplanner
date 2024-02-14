@@ -37,9 +37,9 @@ $spielerListe = leseSpieler();
 $termineListe = leseTermine();
 ?>
 
-<main class="container">
-    <div class="main-grid">
-        <section id="buchung">
+    <main class="container">
+        <div class="grid">
+            <section id="buchung">
                 <hgroup>
                     <h2>Buchung von Waschterminen</h2>
                     <h3>Wählen Sie einen freien Termin aus</h3>
@@ -95,7 +95,8 @@ $termineListe = leseTermine();
             </section>
 
 
-        <section id="statistik" aria-label="Waschstatistik">
+            <section id="statistik" aria-label="Waschstatistik">
+                <div class="container">
                     <article>
                         <hgroup>
                             <h2>Waschstatistik</h2>
