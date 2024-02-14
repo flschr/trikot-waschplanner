@@ -4,6 +4,15 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#buchung, #statistik {
+    flex: 1;
+}
+
 nav ul {
     display: flex;
     justify-content: space-between;
@@ -82,26 +91,26 @@ footer small a:hover {
     text-decoration: underline;
 }
 
-/* Container für Buchung und Statistik */
+/* Container für Buchung und Statistik
 .container {
     display: flex;
     flex-wrap: wrap; /* Ermöglicht das Umfließen auf kleineren Bildschirmen */
     gap: 20px;
 }
 
-/* Stil für die Buchungssektion */
+/* Stil für die Buchungssektion
 #buchung {
     flex: 0 0 50%; /* Nutzt 70% der Breite des Elternelements */
 }
 
-/* Stil für die Statistiksektion */
+/* Stil für die Statistiksektion 
 #statistik {
-    flex: 0 0 50%; /* Nutzt 30% der Breite des Elternelements */
+    flex: 0 0 50%; /* Nutzt 30% der Breite des Elternelements 
 }
 
 @media (max-width: 768px) {
     #buchung, #statistik {
-        flex-basis: 100%; /* Beide Sektionen nehmen auf kleineren Bildschirmen die volle Breite ein */
+        flex-basis: 100%; /* Beide Sektionen nehmen auf kleineren Bildschirmen die volle Breite ein 
     }
 }
 

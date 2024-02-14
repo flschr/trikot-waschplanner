@@ -38,6 +38,7 @@ $termineListe = leseTermine();
 ?>
 
 <main class="container">
+    <div class="flex-container">
     <section id="buchung">
                 <hgroup>
                     <h2>Buchung von Waschterminen</h2>
