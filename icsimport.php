@@ -10,14 +10,9 @@ function validateIcsFile($filePath) {
     if (strpos($fileContent, 'BEGIN:VCALENDAR') === false || strpos($fileContent, 'END:VCALENDAR') === false) {
         return "ICS-Datei beginnt oder endet nicht mit den erforderlichen VCALENDAR-Tags.";
     }
-    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
-    $lines = explode("\n", $fileContent);
-    foreach ($lines as $line) {
-        if (strpos($line, 'DTSTART:') === 0 || strpos($line, 'DTEND:') === 0) {
-            if (!preg_match('/^\d{8}T\d{6}Z$/', substr($line, 8))) {
-                return "Ungültiges Datumsformat in " . substr($line, 0, 7) . " gefunden.";
-            }
-        }
+    // Einfache Prüfung, ob DTSTART und SUMMARY vorhanden sind
+    if (strpos($fileContent, 'DTSTART:') === false || strpos($fileContent, 'SUMMARY:') === false) {
+        return "ICS-Datei enthält nicht die erforderlichen DTSTART- oder SUMMARY-Zeilen.";
     }
     return true;
 }
@@ -25,22 +20,21 @@ function validateIcsFile($filePath) {
 function parseIcsFile($filePath) {
     $events = [];
     $fileContent = file_get_contents($filePath);
-    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
+    $fileContent = preg_replace("/\r\n\s+/", "", $fileContent); // Bereinigen von Zeilenumbrüchen und Leerzeichen
     $lines = explode("\n", $fileContent);
 
+    $currentEvent = [];
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
-            $dateStr = substr($line, 8);
-            $date = DateTime::createFromFormat('Ymd', substr($dateStr, 0, 8));
-            $formattedDate = $date->format('d.m.Y');
-            $currentEvent = ['date' => $formattedDate];
+            $dateStr = substr($line, 8, 8); // Extrahiert das Datum aus den ersten 8 Stellen
+            $date = DateTime::createFromFormat('Ymd', $dateStr);
+            $formattedDate = $date->format('d.m.Y'); // Formatierung des Datums
+            $currentEvent['date'] = $formattedDate;
         } elseif (strpos($line, 'SUMMARY:') === 0) {
-            $summary = str_replace('\\,', ',', substr($line, 8));
-            // Kürzt den Eventnamen
-            $summary = preg_replace('/, Freundschaftsspiele.*$/', ', Freundschaftsspiel', $summary);
-            $summary = preg_replace('/, Meisterschaften.*$/', ', Meisterschaft', $summary);
+            $summary = substr($line, 8); // Extrahiert den Titel des Events
             $currentEvent['summary'] = $summary;
-            $events[] = $currentEvent;
+            $events[] = $currentEvent; // Fügt das Event dem Array hinzu
+            $currentEvent = []; // Bereitet das Array für das nächste Event vor
         }
     }
 
