@@ -80,21 +80,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['icsFile'])) {
     } else {
         echo "Kalenderdatei entspricht nicht dem unterstützten Format oder es gab einen Fehler beim Hochladen.<br/>";
     }
-} elseif (isset($_POST['import']) && !empty($_POST['selectedEvents'])) {
-    $selectedEvents = $_POST['selectedEvents'];
+if (isset($_POST['import']) && !empty($_POST['selectedEvents'])) {
+    $selectedEvents = $_POST['selectedEvents']; // Annahme: enthält die ausgewählten Datumsangaben als Werte
 
     if (file_exists($csvFilePath)) {
-        $file = fopen($csvFilePath, 'a');
+        $file = fopen($csvFilePath, 'a'); // Öffnet die Datei im Anhänge-Modus
 
         foreach ($selectedEvents as $date) {
-            fputcsv($file, [$date]);
+            // Sucht das Ereignis im Array $events, um den Eventnamen zu erhalten
+            foreach ($events as $event) {
+                if ($event['date'] == $date) {
+                    $eventName = $event['summary']; // Annahme: 'summary' enthält den Eventnamen
+                    $record = [$date, $eventName, '1', '']; // Bereitet den Datensatz vor
+                    fputcsv($file, $record); // Schreibt den Datensatz in die CSV-Datei
+                    break; // Beendet die innere Schleife, sobald das passende Ereignis gefunden wurde
+                }
+            }
         }
 
-        fclose($file);
+        fclose($file); // Schließt die Datei
         echo "Ausgewählte Termine wurden erfolgreich importiert.";
     }
-} else {
-    displayUploadForm();
 }
 
 function displayUploadForm() {
