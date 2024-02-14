@@ -33,5 +33,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $spielerListe = leseSpieler();
 $termineListe = leseTermine();
 
-// Anzeigen der Benutzeroberfläche und Logik für die Anzeige folgt hier...
+<form action="index.php" method="post">
+    <h2>Termine</h2>
+    <table>
+        <?php foreach ($termineListe as $termin): ?>
+            <tr>
+                <td><?= htmlspecialchars($termin['datum']) ?></td>
+                <td>
+                    <?php if ($termin['name'] === ""): ?>
+                        <select name="spieler">
+                            <option value="Frei">Frei</option>
+                            <?php foreach ($spielerListe as $spieler): ?>
+                                <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+                        <button type="submit" name="buchung">Buchen</button>
+                    <?php else: ?>
+                        <?= htmlspecialchars($termin['name']) ?>
+                        <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+                        <button type="submit" name="freigabe">Freigeben</button>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+</form>
 ?>
