@@ -7,15 +7,19 @@ $csvFilePath = 'termine.csv';
 
 function validateIcsFile($filePath) {
     $fileContent = file_get_contents($filePath);
+    // Überprüfung auf grundlegende ICS-Struktur
+    if (strpos($fileContent, 'BEGIN:VCALENDAR') === false || strpos($fileContent, 'END:VCALENDAR') === false) {
+        return false; // Grundlegende Struktur fehlt
+    }
+
     // Bereinige den Inhalt von Zeilenfortsetzungen
     $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
 
     foreach ($lines as $line) {
-        if (strpos($line, 'DTSTART:') === 0) {
-            $dateStr = substr($line, 8); // Extrahiert den Teil nach 'DTSTART:'
-            // Überprüft, ob das Datum und die Uhrzeit dem erwarteten Format entsprechen
-            if (!preg_match('/^\d{8}T\d{6}Z$/', $dateStr)) {
+        if (strpos($line, 'DTSTART:') === 0 || strpos($line, 'DTEND:') === 0) {
+            // Unterstützt vollständige Datums-/Zeitformate, einschließlich jene mit Zeitzone
+            if (!preg_match('/^\d{8}(T\d{6}(Z|[\+\-]\d{4})?)?$/', substr($line, 8))) {
                 return false; // Ungültiges Format
             }
         }
@@ -31,12 +35,12 @@ function parseIcsFile($filePath) {
 
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
-            $dateStr = substr($line, 8, 8); // Extrahiert das Datum
-            $year = substr($dateStr, 0, 4);
-            $month = substr($dateStr, 4, 2);
-            $day = substr($dateStr, 6, 2);
-            $formattedDate = "$year-$month-$day"; // Format: yyyy-mm-dd
-            $events[] = ['date' => $formattedDate];
+            $dateStr = substr($line, 8);
+            // Verarbeitet verschiedene Datumsformate
+            if (preg_match('/^(\d{4})(\d{2})(\d{2})/', $dateStr, $matches)) {
+                $formattedDate = "{$matches[1]}-{$matches[2]}-{$matches[3]}"; // Format: yyyy-mm-dd
+                $events[] = ['date' => $formattedDate];
+            }
         } elseif (strpos($line, 'SUMMARY:') === 0) {
             $events[count($events) - 1]['summary'] = str_replace('\\', '', substr($line, 8));
         }
