@@ -61,7 +61,7 @@ function importEventsIntoCsv($events, $csvFilePath) {
 }
 
 function displayEventsTable($events, $existingEvents) {
-    echo '<form method="post" action="scriptname.php">';
+    echo '<form method="post" action="icsimport.php">';
     echo '<table border="1">';
     echo '<tr><th>Auswählen</th><th>Datum</th><th>Name des Events</th></tr>';
     foreach ($events as $event) {
