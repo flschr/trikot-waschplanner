@@ -32,16 +32,12 @@ function parseIcsFile($filePath) {
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
             $dateStr = substr($line, 8);
-            $date = DateTime::createFromFormat('Ymd', substr($dateStr, 0, 8));
-            $formattedDate = $date->format('d.m.Y');
-            $currentEvent = ['date' => $formattedDate];
+            $formattedDate = substr($dateStr, 0, 4) . '-' . substr($dateStr, 4, 2) . '-' . substr($dateStr, 6, 2);
+            $currentEvent = ['date' => $formattedDate]; // Setzt das Datum sofort beim Erstellen des Ereignisses
         } elseif (strpos($line, 'SUMMARY:') === 0) {
             $summary = str_replace('\\,', ',', substr($line, 8));
-            // Kürzt den Eventnamen
-            $summary = preg_replace('/, Freundschaftsspiele.*$/', ', Freundschaftsspiel', $summary);
-            $summary = preg_replace('/, Meisterschaften.*$/', ', Meisterschaft', $summary);
             $currentEvent['summary'] = $summary;
-            $events[] = $currentEvent;
+            $events[] = $currentEvent; // Fügt das aktuelle Event zum Array hinzu, nur wenn ein SUMMARY existiert
         }
     }
 
