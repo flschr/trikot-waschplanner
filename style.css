@@ -127,3 +127,86 @@ body.night-mode button {
         font-size: 18px; /* Größere Schriftgröße für Dropdown-Elemente auf mobilen Geräten */
     }
 }
+/* Zusätzliches CSS für Trikotwäsche Buchungsseite */
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+nav ul {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    padding: 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: inherit;
+}
+
+nav .container-fluid {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+main {
+    margin-top: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+td {
+    background-color: #fafafa;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    margin-top: 3rem;
+    text-align: center;
+    padding: 2rem 0;
+    border-top: 1px solid #eee;
+}
+
+footer small a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+footer small a:hover {
+    text-decoration: underline;
+}
