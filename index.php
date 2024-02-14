@@ -95,7 +95,7 @@ $termineListe = leseTermine();
             </section>
 
 
-			<section id="statistik" aria-label="Waschstatistik">
+        <section id="statistik" aria-label="Waschstatistik">
                     <article>
                         <hgroup>
                             <h2>Waschstatistik</h2>
@@ -118,8 +118,8 @@ $termineListe = leseTermine();
     </tbody>
 </table>
                     </article>
-                </div>
-            </section>
 
+            </section>
+                </div>
 </body>
 </html>
