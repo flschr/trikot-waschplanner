@@ -65,13 +65,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['icsFile'])) {
         echo "<table border='1'>";
         echo "<tr><th>Select</th><th>Date</th><th>Name</th></tr>";
 
-        foreach ($events as $event) {
-            $isChecked = !in_array($event['date'], $existingDates) ? '' : 'checked';
-            echo "<tr>";
-            echo "<td><input type='checkbox' name='selectedEvents[]' value='{$event['date']}' $isChecked></td>";
-            echo "<td>{$event['date']}</td>";
-            echo "<td>{$event['summary']}</td>";
-            echo "</tr>";
+		foreach ($events as $event) {
+			$isChecked = in_array($event['date'], $existingDates) ? '' : 'checked';
+			echo "<tr>";
+			echo "<td><input type='checkbox' name='selectedEvents[]' value='{$event['date']}' $isChecked></td>";
+			echo "<td>{$event['date']}</td>";
+			echo "<td>{$event['summary']}</td>";
+			echo "</tr>";
         }
 
         echo "</table>";
