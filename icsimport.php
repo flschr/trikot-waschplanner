@@ -5,21 +5,24 @@ $csvFilePath = 'termine.csv';
 
 function validateIcsFile($filePath) {
     $fileContent = file_get_contents($filePath);
+    // Überprüfung auf grundlegende ICS-Struktur
     if (strpos($fileContent, 'BEGIN:VCALENDAR') === false || strpos($fileContent, 'END:VCALENDAR') === false) {
-        return false;
+        return "ICS-Datei beginnt oder endet nicht mit den erforderlichen VCALENDAR-Tags.";
     }
 
+    // Bereinige den Inhalt von Zeilenfortsetzungen
     $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
 
     foreach ($lines as $line) {
-        if (strpos($line, 'DTSTART:') === 0 || strpos($line, 'DTEND:') === 0) {
-            if (!preg_match('/^\d{8}(T\d{6}(Z|[\+\-]\d{4})?)?$/', substr($line, 8))) {
-                return false;
+        if (strpos($line, 'DTSTART:') === 0) {
+            // Unterstützt vollständige Datums-/Zeitformate, einschließlich jene mit Zeitzone
+            if (!preg_match('/^\d{8}T\d{6}Z?$/', substr($line, 8))) {
+                return "Ungültiges Datumsformat in DTSTART gefunden.";
             }
         }
     }
-    return true;
+    return true; // Gültiges Format
 }
 
 function parseIcsFile($filePath) {
@@ -28,15 +31,19 @@ function parseIcsFile($filePath) {
     $fileContent = preg_replace("/\r\n\s+/", "", $fileContent);
     $lines = explode("\n", $fileContent);
 
+    $currentEvent = [];
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
             $dateStr = substr($line, 8);
-            if (preg_match('/^(\d{4})(\d{2})(\d{2})/', $dateStr, $matches)) {
-                $formattedDate = "{$matches[1]}-{$matches[2]}-{$matches[3]}";
-                $events[] = ['date' => $formattedDate];
-            }
+            // Verarbeitet das spezifische Datumsformat
+            $formattedDate = substr($dateStr, 0, 4) . '-' . substr($dateStr, 4, 2) . '-' . substr($dateStr, 6, 2);
+            $time = substr($dateStr, 9, 2) . ':' . substr($dateStr, 11, 2) . ':' . substr($dateStr, 13, 2) . 'Z';
+            $currentEvent['start'] = $formattedDate . ' ' . $time;
         } elseif (strpos($line, 'SUMMARY:') === 0) {
-            $events[count($events) - 1]['summary'] = str_replace('\\', '', substr($line, 8));
+            $summary = str_replace('\\,', ',', substr($line, 8)); // Ersetzt \, mit ,
+            $currentEvent['summary'] = $summary;
+            $events[] = $currentEvent; // Fügt das aktuelle Event zum Array hinzu
+            $currentEvent = []; // Reset für das nächste Event
         }
     }
 
