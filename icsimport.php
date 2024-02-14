@@ -14,7 +14,8 @@ function validateIcsFile($filePath) {
     $lines = explode("\n", $fileContent);
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
-            if (!preg_match('/^\d{8}T\d{6}Z?$/', substr($line, 8))) {
+            // Erweiterte Validierung für UTC-Zeitstempel
+            if (!preg_match('/^\d{8}T\d{6}Z$/', substr($line, 8))) {
                 return "Ungültiges Datumsformat in DTSTART gefunden.";
             }
         }
@@ -30,8 +31,9 @@ function parseIcsFile($filePath) {
     $currentEvent = [];
     foreach ($lines as $line) {
         if (strpos($line, 'DTSTART:') === 0) {
-            $dateStr = substr($line, 8);
-            $date = DateTime::createFromFormat('Ymd', substr($dateStr, 0, 8));
+            $dateStr = substr($line, 8, 15); // Extrahiert das Datum ohne 'Z'
+            $date = DateTime::createFromFormat('Ymd\THis\Z', $dateStr . 'Z', new DateTimeZone('UTC'));
+            $date->setTimezone(new DateTimeZone('Europe/Berlin')); // Anpassung an die gewünschte Zeitzone
             $formattedDate = $date->format('d.m.Y');
             $currentEvent['date'] = $formattedDate;
         } elseif (strpos($line, 'SUMMARY:') === 0) {
