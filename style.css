@@ -8,6 +8,7 @@
 .flex-container {
     display: flex;
     flex-direction: column;
+    gap: 20px; /* Fügt einen Abstand zwischen Flex-Items hinzu */
 }
 
 table {
@@ -75,5 +76,6 @@ section {
     .flex-container {
         flex-direction: row;
         justify-content: space-between;
+        gap: 20px; /* Stellt sicher, dass auch in horizontaler Ausrichtung ein Abstand besteht */
     }
 }
