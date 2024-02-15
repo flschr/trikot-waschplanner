@@ -12,6 +12,12 @@ function leseSpieler() {
         }
         fclose($handle);
     }
+
+    // Sortiere die Spielerliste absteigend nach ihrer Waschstatistik
+    usort($spielerListe, function($a, $b) {
+        return $b['waschstatistik'] - $a['waschstatistik'];
+    });
+
     return $spielerListe;
 }
 
