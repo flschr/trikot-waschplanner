@@ -59,6 +59,16 @@ button {
 .buchen-button {
     background-color: #0056b3; /* Blau */
     color: white;
+    padding: 10px 20px; /* Bestimmt den inneren Abstand */
+    width: 100px; /* Feste Breite */
+    height: 40px; /* Feste Höhe */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center; /* Zentriert den Text im Button */
+    line-height: 20px; /* Passt die Zeilenhöhe an, um den Text vertikal zu zentrieren, falls nötig */
+    display: inline-block; /* Erlaubt die Breiten- und Höhenfestlegung */
+    box-sizing: border-box; /* Stellt sicher, dass Padding und Border innerhalb der festgelegten Breite und Höhe bleiben */	
 }
 
 .buchen-button:hover {

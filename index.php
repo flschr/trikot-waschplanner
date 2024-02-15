@@ -52,7 +52,7 @@ $termineListe = leseTermine();
     <thead>
         <tr>
             <th>Termin</th>
-            <th>Gebucht von</th>
+            <th>Gebucht</th>
             <th>Aktion</th>
         </tr>
     </thead>
@@ -108,8 +108,8 @@ $termineListe = leseTermine();
 <table>
     <thead>
         <tr>
-            <th>Name des Spielers</th>
-            <th>Anzahl der Wäschen</th>
+            <th>Name</th>
+            <th>Wäschen</th>
         </tr>
     </thead>
     <tbody>
