@@ -52,11 +52,10 @@ function schreibeTermine($termineDaten) {
     $handle = fopen("termine.csv", "w");
     if (!$handle) {
         error_log("Fehler beim Öffnen der Datei termine.csv zum Schreiben");
-        return;
+        return; // Frühzeitiger Abbruch bei Fehlschlag
     }
     foreach ($termineDaten as $termin) {
-        $buchungsstatus = isset($termin['buchungsstatus']) ? $termin['buchungsstatus'] : '';
-        fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $buchungsstatus]);
+        fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $termin['spielerName']]);
     }
     fclose($handle);
 }
@@ -64,13 +63,16 @@ function schreibeTermine($termineDaten) {
 function bucheTermin($datum, $spielerName) {
     $termine = leseTermine();
 
-    // Termin aktualisieren
+    $terminGefunden = false;
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum) {
-            $termin['buchungsstatus'] = $spielerName;
+            $termin['spielerName'] = $spielerName;
+            $terminGefunden = true;
             break;
         }
     }
+    schreibeTermine($termine);
+}
 
     // Waschstatistik aktualisieren
     foreach ($spieler as &$spielerItem) {
