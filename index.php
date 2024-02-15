@@ -154,7 +154,8 @@ $(document).ready(function() {
     $(".freigabe-button").click(function() {
         var button = $(this);
         var datum = button.data('datum');
-        var spielerName = button.closest('tr').find('.spieler').text(); // Spielername aus dem Tabelleneintrag
+        // Hier wird angenommen, dass der Spielername im gleichen <td> wie der Freigabe-Button, aber in einem anderen Element angezeigt wird
+        var spielerName = button.closest('tr').find('td:nth-child(2)').text().trim(); // Sucht den Text im zweiten <td> der Reihe
         var message = "Soll der " + datum + ", gebucht von " + spielerName + " freigegeben werden?";
         // Sicherheitsabfrage, bevor die Aktion durchgeführt wird
         if (confirm(message)) {
@@ -169,7 +170,6 @@ $(document).ready(function() {
         }
     });
 });
-
 </script>
 
 </body>
