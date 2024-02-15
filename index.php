@@ -60,7 +60,7 @@ $termineListe = leseTermine();
         <?php foreach ($termineListe as $termin): ?>
             <tr>
                 <td>
-                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span>
+                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
                     <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
                 </td>
                 <td>
