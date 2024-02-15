@@ -47,7 +47,6 @@ tbody tr td {
     text-align: left;
     padding: 8px;
     margin: 2px;
-    vertical-align: middle;
 }
 
 button {
@@ -115,6 +114,7 @@ section {
 
 .matchdate {
 	font-weight: bolder;
+	margin-top: 20px;
 }
 
 /* Responsives Verhalten der Tabellen */
