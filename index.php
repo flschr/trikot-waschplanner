@@ -67,7 +67,7 @@ usort($spielerListeDropdown, function($a, $b) {
                             <tr>
                                 <td>
                                     <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
-									<span class="matchname"><?= htmlspecialchars($termin['name']) ?></span><br>
+									<span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span><br>
                                 </td>
                                 <td>
                                     <?php if (empty($termin['spielerName'])): ?>

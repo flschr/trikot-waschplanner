@@ -108,8 +108,8 @@ section {
 }
 
 .matchtitle {
-    font-size: 0.8em;
-    display: block;
+    font-size: 0.4em;
+/*    display: block;*/
     margin-top: -0.15em;
 }
 
