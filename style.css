@@ -47,7 +47,7 @@ tbody tr td {
     text-align: left;
     padding: 8px;
     margin: 2px;
-	padding-top: 5px;
+    vertical-align: middle;
 }
 
 button {
