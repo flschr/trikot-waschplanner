@@ -87,8 +87,9 @@ section {
 }
 
 .matchtitle {
-    font-size: 0.8em; /* Oder die gewünschte Größe */
-	margin-top: 0; /* Setzen Sie den oberen Abstand auf 0, um näher zu rücken */
+    font-size: 0.8em;
+    display: block;
+    margin-top: -0.25em;
 }
 
 .matchdate {
