@@ -60,8 +60,8 @@ $termineListe = leseTermine();
         <?php foreach ($termineListe as $termin): ?>
             <tr>
                 <td>
-                    <?= htmlspecialchars($termin['datum']) ?><br>
-                    <font size="1px"><?= htmlspecialchars($termin['name']) ?></font>
+                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span>
+                    <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
                 </td>
                 <td>
                     <?php if (empty($termin['spielerName'])): ?>

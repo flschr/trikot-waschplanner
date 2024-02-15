@@ -2,10 +2,10 @@
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    background-color: var(--bg);
+    background-color: fff;
     margin: 5px;
     padding: 0;
-    color: var(--text);
+    color: fff;
 }
 
 .container {
@@ -45,7 +45,7 @@ thead th {
 tbody tr {
     border-bottom: 1px solid #ddd;
 	text-align: left;
-    padding: 100px;
+    padding: 10px;
 	margin: 2px;
 }
 
@@ -84,6 +84,15 @@ section {
     border-radius: 8px;
     padding: 20px;
     margin-top: 20px;
+}
+
+.matchtitle {
+	font-size: 5px;
+}
+
+.matchdate {
+	font-size: 10px;
+	font-weight: bolder;
 }
 
 /* Responsives Verhalten der Tabellen */
