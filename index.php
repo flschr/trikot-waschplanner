@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['buchung']) && isset($_POST['spieler']) && isset($_POST['datum'])) {
         $spieler = $_POST['spieler'];
         $datum = $_POST['datum'];
-        if ($spieler !== "Frei") {
+        if ($spieler !== "") {
             bucheTermin($datum, $spieler);
             echo "Termin erfolgreich gebucht.";
             exit;
@@ -79,16 +79,15 @@ usort($spielerListeDropdown, function($a, $b) {
                                                     <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
                                                 <?php endforeach; ?>
                                             </select>
+                                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+                                            <button type="submit" class="buchen-button">Buchen</button>
+                                        </form>
                                     <?php else: ?>
                                         <?= htmlspecialchars($termin['spielerName']) ?>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if (empty($termin['spielerName'])): ?>
-                                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                                            <button type="submit" class="buchen-button">Buchen</button>
-                                        </form>
-                                    <?php else: ?>
+                                    <?php if (!empty($termin['spielerName'])): ?>
                                         <form class="freigabe-form">
                                             <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                                             <button type="submit" class="freigabe-button">Freigeben</button>
