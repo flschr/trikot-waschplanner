@@ -33,8 +33,17 @@ table {
     margin-bottom: 20px; /* Stellt sicher, dass Abstand zwischen Tabellen hinzugefügt wird */
 }
 
-th, td {
-    border-bottom: 1px solid #ddd;
+/* Stil für die Kopfzeile der Tabelle */
+thead th {
+    border-bottom: 3px solid #ddd;
+	text-align: left;
+    padding: 8px;
+
+}
+
+/* Stil für die Zeilen im Körper der Tabelle */
+tbody tr {
+    border-bottom: 1px solid #ddd; /* Dünner als die Kopfzeile */
 	text-align: left;
     padding: 8px;
 }
