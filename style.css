@@ -77,5 +77,11 @@ section {
         flex-direction: row;
         justify-content: space-between;
         gap: 20px; /* Stellt sicher, dass auch in horizontaler Ausrichtung ein Abstand besteht */
+		align-items: flex-start; /* Ausrichtung der Items am Anfang */
     }
+	
+	    section h2 {
+        margin-top: 0; /* Entfernt den oberen Rand der Überschrift, falls vorhanden */
+    }
+	
 }
