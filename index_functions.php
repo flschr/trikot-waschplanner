@@ -3,14 +3,16 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Liest Spielerdaten aus spieler.csv
 function leseSpieler() {
     $spielerListe = [];
-    if (($handle = fopen("spieler.csv", "r")) !== FALSE) {
+    $filePath = "spieler.csv";
+    if (($handle = fopen($filePath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $spielerListe[] = ['name' => $data[0], 'waschstatistik' => (int)$data[1]];
         }
         fclose($handle);
+    } else {
+        throw new Exception("Failed to open $filePath for reading.");
     }
     usort($spielerListe, function($a, $b) {
         return $b['waschstatistik'] - $a['waschstatistik'];
@@ -18,42 +20,47 @@ function leseSpieler() {
     return $spielerListe;
 }
 
-// Liest Termindaten aus termine.csv
 function leseTermine() {
     $termineListe = [];
-    if (($handle = fopen("termine.csv", "r")) !== FALSE) {
+    $filePath = "termine.csv";
+    if (($handle = fopen($filePath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $spielerName = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
             $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
         }
         fclose($handle);
+    } else {
+        throw new Exception("Failed to open $filePath for reading.");
     }
     return $termineListe;
 }
 
-// Schreibt aktualisierte Spielerdaten in spieler.csv
 function schreibeSpieler($spielerDaten) {
     $filePath = 'spieler.csv';
     $handle = fopen($filePath, "w");
     if (!$handle) {
-        error_log("Failed to open $filePath for writing. Check file permissions.");
-        return false; // Indicate failure
+        throw new Exception("Failed to open $filePath for writing. Check file permissions.");
     }
     foreach ($spielerDaten as $spieler) {
         if (!fputcsv($handle, [$spieler['name'], $spieler['waschstatistik']])) {
-            error_log("Failed to write to $filePath.");
-            // Optional: You might want to close the file and return here if a write fails
+            fclose($handle); // Ensure file is closed before throwing exception
+            throw new Exception("Failed to write to $filePath.");
         }
     }
     fclose($handle);
-    return true; // Indicate success
 }
 
-// Schreibt aktualisierte Termindaten in termine.csv
 function schreibeTermine($termineDaten) {
-    $handle = fopen("termine.csv", "w");
+    $filePath = "termine.csv";
+    $handle = fopen($filePath, "w");
+    if (!$handle) {
+        throw new Exception("Failed to open $filePath for writing.");
+    }
     foreach ($termineDaten as $termin) {
-        fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $termin['spielerName']]);
+        if (!fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $termin['spielerName']])) {
+            fclose($handle); // Ensure file is closed before throwing exception
+            throw new Exception("Failed to write to $filePath.");
+        }
     }
     fclose($handle);
 }
@@ -70,7 +77,7 @@ function bucheTermin($datum, $spielerName) {
         }
     }
     if (!$found) {
-        // Handle error or add new termin logic here if necessary
+        throw new Exception("Termin nicht gefunden.");
     }
     schreibeTermine($termine);
 
@@ -86,17 +93,22 @@ function bucheTermin($datum, $spielerName) {
 function freigebenTermin($datum) {
     $termine = leseTermine();
     $spieler = leseSpieler();
+    $spielerName = "";
 
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum) {
             $spielerName = $termin['spielerName'];
-            $termin['spielerName'] = ''; // Clear the booking
-            foreach ($spieler as &$spielerItem) {
-                if ($spielerItem['name'] === $spielerName) {
-                    $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
-                    break;
-                }
-            }
+            $termin['spielerName'] = ''; // Termin freigeben
+            break;
+        }
+    }
+    if ($spielerName === "") {
+        throw new Exception("Termin nicht gefunden oder bereits frei.");
+    }
+
+    foreach ($spieler as &$spielerItem) {
+        if ($spielerItem['name'] === $spielerName) {
+            $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
             break;
         }
     }
