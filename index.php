@@ -61,7 +61,7 @@ $termineListe = leseTermine();
             <tr>
                 <td>
                     <?= htmlspecialchars($termin['datum']) ?><br>
-                    <font size="2px"><?= htmlspecialchars($termin['name']) ?></font>
+                    <font size="1px"><?= htmlspecialchars($termin['name']) ?></font>
                 </td>
                 <td>
                     <?php if (empty($termin['spielerName'])): ?>
