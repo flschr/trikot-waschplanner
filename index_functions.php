@@ -34,6 +34,11 @@ function leseTermine() {
 // Schreibt aktualisierte Spielerdaten in spieler.csv
 function schreibeSpieler($spielerDaten) {
     $handle = fopen("spieler.csv", "w");
+    if (!$handle) {
+        // Log the error or handle it as appropriate
+        error_log("Unable to open spieler.csv for writing. Check file permissions.");
+        return; // Exit the function to avoid further errors
+    }
     foreach ($spielerDaten as $spieler) {
         fputcsv($handle, [$spieler['name'], $spieler['waschstatistik']]);
     }
