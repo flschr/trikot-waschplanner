@@ -14,6 +14,9 @@
 table {
     width: 100%;
     border-collapse: collapse;
+    border-spacing: 0;
+    margin: 20px 0;
+    box-shadow: none; /* Entfernt vorhandene Schatten */
 }
 
 .table-responsive {
@@ -21,18 +24,20 @@ table {
     margin-bottom: 20px; /* Stellt sicher, dass Abstand zwischen Tabellen hinzugefügt wird */
 }
 
-table, th, td {
-    border: 1px solid #ddd;
-}
-
 th, td {
-    text-align: left;
+    border-bottom: 1px solid #ddd;
+	text-align: left;
     padding: 8px;
 }
 
+/* Entfernt die Linien um die Zellen und Kopfzeile */
+th, td {
+    border: none;
+}
+
 th {
-    background-color: #0056b3;
-    color: white;
+    background-color: transparent;
+    color: #000;
 }
 
 button {
@@ -64,6 +69,14 @@ section {
     margin-bottom: 20px; /* Stellt Abstand zwischen den Sektionen sicher */
 }
 
+.statistik {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
 /* Responsives Verhalten der Tabellen */
 @media (max-width: 768px) {
     .table-responsive {
@@ -77,11 +90,5 @@ section {
         flex-direction: row;
         justify-content: space-between;
         gap: 20px; /* Stellt sicher, dass auch in horizontaler Ausrichtung ein Abstand besteht */
-		align-items: flex-start; /* Ausrichtung der Items am Anfang */
     }
-	
-	    section h2 {
-        margin-top: 0; /* Entfernt den oberen Rand der Überschrift, falls vorhanden */
-    }
-	
 }

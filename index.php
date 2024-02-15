@@ -42,7 +42,7 @@ $termineListe = leseTermine();
     <div class="flex-container">
     <section id="buchung">
                 <hgroup>
-                    <h2>Buchung von Waschterminen</h2>
+                    <h1>Trikot-Waschküche</h1>
                     <h3>Wählen Sie einen freien Termin aus</h3>
                 </hgroup>
                 <p>Um die Trikots Ihres Teams sauber und spielbereit zu halten, buchen Sie bitte einen Waschtermin aus der folgenden Tabelle.</p>
@@ -97,7 +97,7 @@ $termineListe = leseTermine();
 
             </section>
 
-
+<div class="statistik">
     <section id="statistik" aria-label="Waschstatistik">
                     <article>
                         <hgroup>
@@ -126,5 +126,6 @@ $termineListe = leseTermine();
 
             </section>
                 </div>
+				</div>
 </body>
 </html>
