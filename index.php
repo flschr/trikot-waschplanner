@@ -78,14 +78,18 @@ usort($spielerListeDropdown, function($a, $b) {
                                                 <?php endforeach; ?>
                                             </select>
                                             <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                                            <button type="submit" class="buchen-button">Buchen</button>
                                         </form>
                                     <?php else: ?>
                                         <?= htmlspecialchars($termin['spielerName']) ?>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if (!empty($termin['spielerName'])): ?>
+                                    <?php if (empty($termin['spielerName'])): ?>
+                                        <form class="buchung-form">
+                                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+                                            <button type="submit" class="buchen-button">Buchen</button>
+                                        </form>
+                                    <?php else: ?>
                                         <form class="freigabe-form">
                                             <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                                             <button type="submit" class="freigabe-button">Freigeben</button>
