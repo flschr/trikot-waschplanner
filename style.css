@@ -32,21 +32,33 @@ th, td {
 }
 
 th {
-    background-color: #04AA6D;
+    background-color: #345D9D;
     color: white;
 }
 
 button {
     padding: 10px 20px;
-    background-color: #04AA6D;
-    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #037F5B;
+.buchen-button {
+    background-color: #007BFF; /* Blau */
+    color: white;
+}
+
+.buchen-button:hover {
+    background-color: #0056b3;
+}
+
+.freigabe-button {
+    background-color: #FFA500; /* Orange */
+    color: white;
+}
+
+.freigabe-button:hover {
+    background-color: #cc8400;
 }
 
 /* Responsives Verhalten der Tabellen */

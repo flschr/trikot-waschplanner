@@ -79,12 +79,13 @@ $termineListe = leseTermine();
                 <td>
                     <?php if (empty($termin['spielerName'])): ?>
                             <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                            <button type="submit" name="buchung">Buchen</button>
+							<button type="submit" name="buchung" class="buchen-button">Buchen</button>
+
                         </form>
                     <?php else: ?>
                         <form action="" method="post">
                             <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                            <button type="submit" name="freigabe">Freigeben</button>
+							<button type="submit" name="freigabe" class="freigabe-button">Freigeben</button>
                         </form>
                     <?php endif; ?>
                 </td>
