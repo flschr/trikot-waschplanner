@@ -59,16 +59,16 @@ button {
 .buchen-button {
     background-color: #0056b3; /* Blau */
     color: white;
-    padding: 10px 20px; /* Bestimmt den inneren Abstand */
-    width: 100px; /* Feste Breite */
-    height: 40px; /* Feste Höhe */
+    padding: 10px 20px;
+    width: 100px;
+    height: 50px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    text-align: center; /* Zentriert den Text im Button */
-    line-height: 20px; /* Passt die Zeilenhöhe an, um den Text vertikal zu zentrieren, falls nötig */
-    display: inline-block; /* Erlaubt die Breiten- und Höhenfestlegung */
-    box-sizing: border-box; /* Stellt sicher, dass Padding und Border innerhalb der festgelegten Breite und Höhe bleiben */	
+    text-align: center;
+    line-height: 20px;
+    display: inline-block;
+    box-sizing: border-box;
 }
 
 .buchen-button:hover {
@@ -78,6 +78,17 @@ button {
 .freigabe-button {
     background-color: #FFA500; /* Orange */
     color: white;
+    color: white;
+    padding: 10px 20px;
+    width: 100px;
+    height: 50px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 20px;
+    display: inline-block;
+    box-sizing: border-box;	
 }
 
 .freigabe-button:hover {
