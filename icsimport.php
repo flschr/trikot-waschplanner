@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Ihre Seite Titel</title>
-    <!-- Einbinden des CSS-Stylesheets -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
@@ -41,16 +40,13 @@ function parseIcsFile($filePath) {
             $formattedDate = $date->format('d.m.Y'); // Formatierung des Datums
             $currentEvent['date'] = $formattedDate;
         } elseif (strpos($line, 'SUMMARY:') === 0) {
-            // Entferne Escape-Zeichen und überschüssigen Text
             $summary = substr($line, 8);
             $summary = str_replace("\\,", ",", $summary); // Entferne das Escape-Zeichen vor Kommas
-            // Anpassen und Kürzen der Event-Namen
-            $summary = preg_replace('/,\s*Meisterschaften\\b/', ', Meisterschaft', $summary);
-            $summary = preg_replace('/,\s*Freundschaftsspiele\\b/', ', Freundschaftsspiel', $summary);
-            // Entferne alles nach dem ersten Komma, wenn spezifische Textmuster nicht gefunden wurden
-            if (!preg_match('/(Meisterschaft|Freundschaftsspiel)$/', $summary)) {
-                $summary = preg_replace('/,.*$/', '', $summary);
-            }
+            $summary = str_replace("TSV Pliening/Landsham", "TSV Pliening", $summary); // Spezifische Ersetzung
+
+            // Entferne alles nach dem ersten Spiel-Namen und behalte nur Team-Namen und "U14"
+            $summary = preg_replace('/\\,.*/', '', $summary); // Entfernt Details nach dem ersten Komma
+
             $currentEvent['summary'] = $summary;
             $events[] = $currentEvent; // Fügt das Event dem Array hinzu
             $currentEvent = []; // Bereitet das Array für das nächste Event vor
