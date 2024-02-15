@@ -25,7 +25,6 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
     margin: 20px 0;
-    box-shadow: none; /* Entfernt vorhandene Schatten */
 }
 
 .table-responsive {
@@ -38,19 +37,15 @@ thead th {
     border-bottom: 3px solid #ddd;
 	text-align: left;
     padding: 8px;
-
+    background-color: transparent;
+    color: #000;
 }
 
-/* Stil für die Zeilen im Körper der Tabelle 
+/* Stil für die Zeilen im Körper der Tabelle */
 tbody tr {
     border-bottom: 1px solid #ddd;
 	text-align: left;
-    padding: 8px;
-}*/
-
-th {
-    background-color: transparent;
-    color: #000;
+    padding: 10px;
 }
 
 button {
