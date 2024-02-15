@@ -154,7 +154,7 @@ $(document).ready(function() {
     $(".freigabe-button").click(function() {
         var button = $(this);
         var datum = button.data('datum');
-        var spielerName = button.closest('tr').find('.matchtitle').text(); // Spielername aus dem Tabelleneintrag
+        var spielerName = button.closest('tr').find('.spieler').text(); // Spielername aus dem Tabelleneintrag
         var message = "Soll der " + datum + ", gebucht von " + spielerName + " freigegeben werden?";
         // Sicherheitsabfrage, bevor die Aktion durchgeführt wird
         if (confirm(message)) {
