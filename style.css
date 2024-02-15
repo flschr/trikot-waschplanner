@@ -14,6 +14,8 @@
     .flex-container {
         flex-direction: row;
         justify-content: space-between;
+		margin-bottom: 0;
+
     }
 }
 
@@ -59,6 +61,10 @@ button {
 
 .freigabe-button:hover {
     background-color: #cc8400;
+}
+
+section {
+    margin-bottom: 20px; /* Stellt Abstand zwischen den Sektionen sicher */
 }
 
 /* Responsives Verhalten der Tabellen */
