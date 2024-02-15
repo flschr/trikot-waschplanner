@@ -49,7 +49,7 @@ usort($spielerListeDropdown, function($a, $b) {
         <section id="buchung">
             <hgroup>
                 <h1>Trikot-Waschküche</h1>
-                <p>Hier dreht sich alles um Teamgeist – gemeinsam sorgen wir dafür, dass unsere Kicker immer in sauberen Trikots aufs Feld laufen! In der folgenden Übersicht der folgenden Spieltermine könnt ihr die Termine für das Waschen der Trikots buchen und im Fall der Fälle auch wieder freigeben.</p>
+                <p>Hier dreht sich alles um Teamgeist – gemeinsam sorgen wir dafür, dass unsere Kicker immer in sauberen Trikots aufs Feld laufen! In der folgenden Übersicht der nächsten Spieltermine könnt ihr die Termine für das Waschen der Trikots buchen und im Fall der Fälle auch wieder freigeben.</p>
             </hgroup>
 
             <div class="table-responsive">
@@ -102,7 +102,7 @@ usort($spielerListeDropdown, function($a, $b) {
                 <article>
                     <hgroup>
                         <h2>Waschstatistik</h2>
-                        <p>Die Rangliste unserer Waschhelden in der aktuellen Fußballsaison.</p>
+                        <p>Ehre wem Ehre gebührt! Die Rangliste unserer Waschhelden in der aktuellen Saison.</p>
                     </hgroup>
                     <div class="table-responsive">
                         <table>
