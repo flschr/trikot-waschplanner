@@ -7,14 +7,7 @@
 
 .flex-container {
     display: flex;
-    flex-direction: column; /* Standardmäßig untereinander */
-}
-
-@media (min-width: 768px) {
-    .flex-container {
-        flex-direction: row;
-        justify-content: space-between;
-    }
+    flex-direction: column; /* Standardmäßig untereinander für alle Geräte */
 }
 
 table {
@@ -50,10 +43,9 @@ button:hover {
 }
 
 /* Für größere Bildschirme */
-@media (min-width: 768px) { 
+@media (min-width: 768px) {
     .flex-container {
-        flex-direction: row; /* Nebeneinander, wenn genügend Platz vorhanden ist */
-        justify-content: space-between;
+        flex-direction: row; /* Nebeneinander, nur wenn der Bildschirm breit genug ist */
     }
 }
 
