@@ -44,6 +44,17 @@ usort($spielerListeDropdown, function($a, $b) {
 });
 ?>
 
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>Trikotwäsche Buchung</strong></li>
+        </ul>
+        <ul>
+            <li><a href="#buchung">Buchung</a></li>
+            <li><a href="#statistik">Statistik</a></li>
+            <li><a href="#" role="button">Kontakt</a></li>
+        </ul>
+    </nav>
+
 <div class="container">
     <div class="flex-container">
         <section id="buchung">
