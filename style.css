@@ -30,10 +30,10 @@ th, td {
     padding: 8px;
 }
 
-/* Entfernt die Linien um die Zellen und Kopfzeile */
+/* Entfernt die Linien um die Zellen und Kopfzeile 
 th, td {
     border: none;
-}
+}*/
 
 th {
     background-color: transparent;
