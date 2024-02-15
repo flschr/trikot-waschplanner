@@ -42,11 +42,11 @@ thead th {
 }
 
 /* Stil für die Zeilen im Körper der Tabelle */
-tbody tr {
+tbody tr td {
     border-bottom: 1px solid #ddd;
-	text-align: left;
-    padding: 10px;
-	margin: 2px;
+    text-align: left;
+    padding: 20px;
+    margin: 2px;
 }
 
 button {
