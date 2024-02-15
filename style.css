@@ -32,7 +32,7 @@ th, td {
 }
 
 th {
-    background-color: #345D9D;
+    background-color: #0056b3;
     color: white;
 }
 
@@ -44,12 +44,12 @@ button {
 }
 
 .buchen-button {
-    background-color: #007BFF; /* Blau */
+    background-color: #0056b3; /* Blau */
     color: white;
 }
 
 .buchen-button:hover {
-    background-color: #0056b3;
+    background-color: #007BFF;
 }
 
 .freigabe-button {
