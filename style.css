@@ -121,7 +121,11 @@ section {
 @media (max-width: 768px) {
     .table-responsive {
         overflow-x: auto;
+        width: auto;
         margin-bottom: 20px; /* Fügt einen unteren Abstand zwischen den Tabellen hinzu */
+    }
+	    tbody tr td {
+        padding: 8px; /* Reduziert den Innenabstand auf kleineren Bildschirmen */
     }
 }
 
