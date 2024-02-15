@@ -17,7 +17,7 @@ table {
 
 .table-responsive {
     overflow-x: auto;
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* Stellt sicher, dass Abstand zwischen Tabellen hinzugefügt wird */
 }
 
 table, th, td {
@@ -68,16 +68,12 @@ section {
     .table-responsive {
         overflow-x: auto;
         margin-bottom: 20px; /* Fügt einen unteren Abstand zwischen den Tabellen hinzu */
-}
+    }
 }
 
 @media (min-width: 768px) {
     .flex-container {
         flex-direction: row;
         justify-content: space-between;
-		margin-bottom: 0;
-		 .table-responsive {
-        margin-bottom: 20px; /* Bestätigt, dass der untere Rand für größere Bildschirme erhalten bleibt */
     }
-}
 }
