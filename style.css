@@ -92,6 +92,7 @@ section {
 
 .matchdate {
 	font-weight: bolder;
+	margin-bottom: -5px;
 }
 
 /* Responsives Verhalten der Tabellen */
