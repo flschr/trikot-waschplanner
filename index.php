@@ -22,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $datum = $_POST['datum'];
         if ($spieler !== "") {
             bucheTermin($datum, $spieler);
-            echo "Termin erfolgreich gebucht.";
             exit;
         } else {
             echo "Bitte einen Namen auswählen.";
@@ -31,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (isset($_POST['freigabe']) && isset($_POST['datum'])) {
         $datum = $_POST['datum'];
         freigebenTermin($datum);
-        echo "Termin erfolgreich freigegeben.";
         exit;
     }
 }
@@ -144,8 +142,7 @@ usort($spielerListeDropdown, function($a, $b) {
                 type: "POST",
                 url: "<?php echo $_SERVER['PHP_SELF']; ?>",
                 data: { buchung: true, datum: datum, spieler: spieler },
-                success: function(response) {
-                    alert(response);
+                success: function() {
                     location.reload();
                 }
             });
@@ -160,8 +157,7 @@ usort($spielerListeDropdown, function($a, $b) {
                 type: "POST",
                 url: "<?php echo $_SERVER['PHP_SELF']; ?>",
                 data: { freigabe: true, datum: datum },
-                success: function(response) {
-                    alert(response);
+                success: function() {
                     location.reload();
                 }
             });
