@@ -3,6 +3,7 @@
     max-width: 1200px;
     margin: auto;
     padding: 20px;
+	color: black;
 }
 
 .flex-container {
@@ -29,11 +30,6 @@ th, td {
 	text-align: left;
     padding: 8px;
 }
-
-/* Entfernt die Linien um die Zellen und Kopfzeile 
-th, td {
-    border: none;
-}*/
 
 th {
     background-color: transparent;
