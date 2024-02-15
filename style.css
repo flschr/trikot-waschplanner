@@ -37,16 +37,16 @@ table {
 thead th {
     border-bottom: 3px solid #ddd;
 	text-align: left;
-/*    padding: 8px;*/
+    padding: 8px;
 
 }
 
-/* Stil für die Zeilen im Körper der Tabelle */
+/* Stil für die Zeilen im Körper der Tabelle 
 tbody tr {
-    border-bottom: 1px solid #ddd; /* Dünner als die Kopfzeile */
+    border-bottom: 1px solid #ddd;
 	text-align: left;
     padding: 8px;
-}
+}*/
 
 th {
     background-color: transparent;
