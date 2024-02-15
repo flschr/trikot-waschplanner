@@ -37,6 +37,10 @@ function leseTermine() {
 // Schreibt aktualisierte Spielerdaten in spieler.csv
 function schreibeSpieler($spielerDaten) {
     $handle = fopen("spieler.csv", "w");
+    if (!$handle) {
+        error_log("Fehler beim Öffnen der Datei spieler.csv zum Schreiben");
+        return;
+    }
     foreach ($spielerDaten as $spieler) {
         fputcsv($handle, [$spieler['name'], $spieler['waschstatistik']]);
     }
@@ -46,20 +50,24 @@ function schreibeSpieler($spielerDaten) {
 // Schreibt aktualisierte Termindaten in termine.csv
 function schreibeTermine($termineDaten) {
     $handle = fopen("termine.csv", "w");
+    if (!$handle) {
+        error_log("Fehler beim Öffnen der Datei termine.csv zum Schreiben");
+        return;
+    }
     foreach ($termineDaten as $termin) {
-        fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $termin['buchungsstatus']]);
+        $buchungsstatus = isset($termin['buchungsstatus']) ? $termin['buchungsstatus'] : '';
+        fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $buchungsstatus]);
     }
     fclose($handle);
 }
 
 function bucheTermin($datum, $spielerName) {
     $termine = leseTermine();
-    $spieler = leseSpieler();
 
     // Termin aktualisieren
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum) {
-            $termin['buchungsstatus'] = $spielerName; // Aktualisiert den Spieler in der vierten Spalte
+            $termin['buchungsstatus'] = $spielerName;
             break;
         }
     }
