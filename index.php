@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Waschtermin Buchung</title>
     <link rel="stylesheet" href="style.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -21,15 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $datum = $_POST['datum'];
         if ($spieler !== "Frei") {
             bucheTermin($datum, $spieler);
-            header("Location: ".$_SERVER['PHP_SELF']); // Um Doppelbuchungen beim Neuladen der Seite zu vermeiden
+            echo "Termin erfolgreich gebucht.";
             exit;
         } else {
-            echo "<script>alert('Bitte einen Namen auswählen');</script>";
+            echo "Bitte einen Namen auswählen.";
+            exit;
         }
     } elseif (isset($_POST['freigabe']) && isset($_POST['datum'])) {
         $datum = $_POST['datum'];
         freigebenTermin($datum);
-        header("Location: ".$_SERVER['PHP_SELF']); // Um Doppelbuchungen beim Neuladen der Seite zu vermeiden
+        echo "Termin erfolgreich freigegeben.";
         exit;
     }
 }
@@ -42,61 +44,6 @@ $spielerListeDropdown = $spielerListe;
 usort($spielerListeDropdown, function($a, $b) {
     return strcmp($a['name'], $b['name']);
 });
-?>
-
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Waschtermin Buchung</title>
-    <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // AJAX-Funktion für Buchung
-            $(".buchen-button").click(function(e) {
-                e.preventDefault(); // Verhindern des Standardverhaltens des Formulars
-                var datum = $(this).siblings('input[name="datum"]').val();
-                var spieler = $(this).siblings('select[name="spieler"]').val();
-                $.ajax({
-                    type: "POST",
-                    url: "ajax_handler.php", // Hier die URL zum Handler-Skript einfügen
-                    data: { buchung: true, datum: datum, spieler: spieler },
-                    success: function(response) {
-                        alert(response); // Zeige die Antwortmeldung an
-                        location.reload(); // Lade die Seite neu, um die Änderungen anzuzeigen
-                    }
-                });
-            });
-
-            // AJAX-Funktion für Freigabe
-            $(".freigabe-button").click(function(e) {
-                e.preventDefault();
-                var datum = $(this).siblings('input[name="datum"]').val();
-                $.ajax({
-                    type: "POST",
-                    url: "ajax_handler.php", // Hier die URL zum Handler-Skript einfügen
-                    data: { freigabe: true, datum: datum },
-                    success: function(response) {
-                        alert(response);
-                        location.reload();
-                    }
-                });
-            });
-        });
-    </script>
-</head>
-<body>
-
-<?php
-require 'index_functions.php';
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-$spielerListe = leseSpieler();
-$termineListe = leseTermine();
 ?>
 
 <div class="container">
@@ -125,16 +72,16 @@ $termineListe = leseTermine();
                                 </td>
                                 <td>
                                     <?php if (empty($termin['spielerName'])): ?>
-                                        <form>
+                                        <form class="buchung-form">
                                             <select name="spieler">
                                                 <option value="">Termin frei</option>
-                                                <?php foreach ($spielerListe as $spieler): ?>
+                                                <?php foreach ($spielerListeDropdown as $spieler): ?>
                                                     <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
                                                 <?php endforeach; ?>
                                             </select>
-                                        <?php else: ?>
-                                            <?= htmlspecialchars($termin['spielerName']) ?>
-                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <?= htmlspecialchars($termin['spielerName']) ?>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php if (empty($termin['spielerName'])): ?>
@@ -142,7 +89,7 @@ $termineListe = leseTermine();
                                             <button type="submit" class="buchen-button">Buchen</button>
                                         </form>
                                     <?php else: ?>
-                                        <form>
+                                        <form class="freigabe-form">
                                             <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                                             <button type="submit" class="freigabe-button">Freigeben</button>
                                         </form>
@@ -185,5 +132,43 @@ $termineListe = leseTermine();
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // AJAX-Funktion für Buchung
+        $(".buchung-form").submit(function(e) {
+            e.preventDefault(); // Verhindern des Standardverhaltens des Formulars
+            var form = $(this);
+            var datum = form.find('input[name="datum"]').val();
+            var spieler = form.find('select[name="spieler"]').val();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $_SERVER['PHP_SELF']; ?>",
+                data: { buchung: true, datum: datum, spieler: spieler },
+                success: function(response) {
+                    alert(response);
+                    location.reload();
+                }
+            });
+        });
+
+        // AJAX-Funktion für Freigabe
+        $(".freigabe-form").submit(function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var datum = form.find('input[name="datum"]').val();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $_SERVER['PHP_SELF']; ?>",
+                data: { freigabe: true, datum: datum },
+                success: function(response) {
+                    alert(response);
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
