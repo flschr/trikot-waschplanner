@@ -87,12 +87,12 @@ section {
 }
 
 .matchtitle {
-	font-size: 12px;
+    font-size: 0.8em; /* Oder die gewünschte Größe */
+	margin-top: 0; /* Setzen Sie den oberen Abstand auf 0, um näher zu rücken */
 }
 
 .matchdate {
 	font-weight: bolder;
-	margin-bottom: -5px;
 }
 
 /* Responsives Verhalten der Tabellen */
