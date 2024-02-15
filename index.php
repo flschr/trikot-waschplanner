@@ -37,7 +37,7 @@ $spielerListe = leseSpieler();
 $termineListe = leseTermine();
 ?>
 
-<main class="container">
+<div class="container">
     <div class="flex-container">
     <section id="buchung">
                 <hgroup>

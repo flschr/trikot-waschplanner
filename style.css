@@ -1,43 +1,25 @@
-/* Zusätzliches CSS für Trikotwäsche Buchungsseite */
-
-body {
-    font-family: Arial, sans-serif;
+/* Grundlegende Styles */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
 }
 
 .flex-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 }
 
-#buchung, #statistik {
-    flex: 1;
-}
-
-nav ul {
-    display: flex;
-    justify-content: space-between;
-    list-style-type: none;
-    padding: 0;
-}
-
-nav a {
-    text-decoration: none;
-    color: inherit;
-}
-
-nav .container-fluid {
-    padding: 1rem 0;
-    border-bottom: 1px solid #eee;
-}
-
-main {
-    margin-top: 2rem;
+@media (min-width: 768px) {
+    .flex-container {
+        flex-direction: row;
+        justify-content: space-between;
+    }
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
 }
 
 table, th, td {
@@ -50,73 +32,26 @@ th, td {
 }
 
 th {
-    background-color: #f4f4f4;
-}
-
-td {
-    background-color: #fafafa;
+    background-color: #04AA6D;
+    color: white;
 }
 
 button {
-    background-color: #007bff;
+    padding: 10px 20px;
+    background-color: #04AA6D;
     color: white;
     border: none;
-    padding: 8px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    transition: background-color 0.3s ease;
+    border-radius: 5px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #037F5B;
 }
 
-footer {
-    margin-top: 3rem;
-    text-align: center;
-    padding: 2rem 0;
-    border-top: 1px solid #eee;
-}
-
-footer small a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-footer small a:hover {
-    text-decoration: underline;
-}
-
-/* Container für Buchung und Statistik
-.container {
-    display: flex;
-    flex-wrap: wrap; /* Ermöglicht das Umfließen auf kleineren Bildschirmen */
-    gap: 20px;
-}
-
-/* Stil für die Buchungssektion
-#buchung {
-    flex: 0 0 50%; /* Nutzt 70% der Breite des Elternelements */
-}
-
-/* Stil für die Statistiksektion 
-#statistik {
-    flex: 0 0 50%; /* Nutzt 30% der Breite des Elternelements 
-}
-
+/* Responsives Verhalten der Tabellen */
 @media (max-width: 768px) {
-    #buchung, #statistik {
-        flex-basis: 100%; /* Beide Sektionen nehmen auf kleineren Bildschirmen die volle Breite ein 
-    }
-}
-
-
-@media (max-width: 768px) {
-    .grid {
-        grid-template-columns: 1fr; /* Stapelt Bereiche auf kleineren Bildschirmen */
+    .table-responsive {
+        overflow-x: auto;
     }
 }
