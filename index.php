@@ -36,6 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $spielerListe = leseSpieler();
 $termineListe = leseTermine();
+
+// Sortieren der Spielerliste alphabetisch nach Namen
+usort($spielerListe, function($a, $b) {
+    return strcmp($a['name'], $b['name']);
+});
 ?>
 
 <div class="container">
