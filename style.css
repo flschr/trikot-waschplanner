@@ -7,7 +7,14 @@
 
 .flex-container {
     display: flex;
-    flex-direction: column; /* Standardmäßig untereinander für alle Geräte */
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .flex-container {
+        flex-direction: row;
+        justify-content: space-between;
+    }
 }
 
 table {
@@ -42,13 +49,9 @@ button:hover {
     background-color: #037F5B;
 }
 
-/* Für größere Bildschirme */
-@media (min-width: 768px) {
-    .flex-container {
-        flex-direction: row; /* Nebeneinander, nur wenn der Bildschirm breit genug ist */
+/* Responsives Verhalten der Tabellen */
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
     }
-}
-
-.table-responsive {
-    overflow-x: auto; /* Ermöglicht das Scrollen innerhalb der Tabelle auf kleinen Bildschirmen */
 }
