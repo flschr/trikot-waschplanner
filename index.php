@@ -37,8 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $spielerListe = leseSpieler();
 $termineListe = leseTermine();
 
-// Sortieren der Spielerliste alphabetisch nach Namen
-usort($spielerListe, function($a, $b) {
+// Sortieren der Spielerliste
+$spielerListeDropdown = $spielerListe;
+usort($spielerListeDropdown, function($a, $b) {
     return strcmp($a['name'], $b['name']);
 });
 ?>
@@ -73,9 +74,9 @@ usort($spielerListe, function($a, $b) {
                         <form action="" method="post">
                             <select name="spieler">
                                 <option value="">Termin frei</option>
-                                <?php foreach ($spielerListe as $spieler): ?>
-                                    <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
-                                <?php endforeach; ?>
+										<?php foreach ($spielerListeDropdown as $spieler): ?>
+                                            <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
+										<?php endforeach; ?>
                             </select>
                     <?php else: ?>
                         <?= htmlspecialchars($termin['spielerName']) ?>
