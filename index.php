@@ -102,7 +102,7 @@ usort($spielerListeDropdown, function($a, $b) {
                 <article>
                     <hgroup>
                         <h2>Waschstatistik</h2>
-                        <p>Ehre wem Ehre gebührt! Die Rangliste unserer Waschhelden in der aktuellen Saison.</p>
+                        <p>Ehre wem Ehre gebührt! Hier ist die Rangliste unserer Waschhelden in der aktuellen Saison.</p>
                     </hgroup>
                     <div class="table-responsive">
                         <table>
