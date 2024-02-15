@@ -46,6 +46,7 @@ $termineListe = leseTermine();
                 </hgroup>
                 <p>Um die Trikots Ihres Teams sauber und spielbereit zu halten, buchen Sie bitte einen Waschtermin aus der folgenden Tabelle.</p>
 <h2>Termine</h2>
+<div class="table-responsive">
 <table>
     <thead>
         <tr>
@@ -90,7 +91,7 @@ $termineListe = leseTermine();
         <?php endforeach; ?>
     </tbody>
 </table>
-
+</div>
 
             </section>
 
@@ -101,7 +102,7 @@ $termineListe = leseTermine();
                             <h2>Waschstatistik</h2>
                             <h3>Übersicht über die durchgeführten Wäschen</h3>
                         </hgroup>
-
+<div class="table-responsive">
 <table>
     <thead>
         <tr>
@@ -118,7 +119,8 @@ $termineListe = leseTermine();
         <?php endforeach; ?>
     </tbody>
 </table>
-                    </article>
+            </div>
+			</article>
 
             </section>
                 </div>
