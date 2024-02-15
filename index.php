@@ -130,30 +130,34 @@ usort($spielerListeDropdown, function($a, $b) {
 </div>
 
 <script>
-    $(document).ready(function() {
-        // AJAX-Funktion für Buchung
-        $(".buchen-button").click(function() {
-            var button = $(this);
-            var datum = button.data('datum');
-            var spieler = button.closest('tr').find('select[name="spieler"]').val();
-            if (spieler !== "") {
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo $_SERVER['PHP_SELF']; ?>",
-                    data: { buchung: true, datum: datum, spieler: spieler },
-                    success: function() {
-                        location.reload();
-                    }
-                });
-            } else {
-                alert("Bitte einen Namen auswählen.");
-            }
-        });
+$(document).ready(function() {
+    // AJAX-Funktion für Buchung
+    $(".buchen-button").click(function() {
+        var button = $(this);
+        var datum = button.data('datum');
+        var spieler = button.closest('tr').find('select[name="spieler"]').val();
+        if (spieler !== "") {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $_SERVER['PHP_SELF']; ?>",
+                data: { buchung: true, datum: datum, spieler: spieler },
+                success: function() {
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Bitte einen Namen auswählen.");
+        }
+    });
 
-        // AJAX-Funktion für Freigabe
-        $(".freigabe-button").click(function() {
-            var button = $(this);
-            var datum = button.data('datum');
+    // Angepasste AJAX-Funktion für Freigabe mit Sicherheitsabfrage
+    $(".freigabe-button").click(function() {
+        var button = $(this);
+        var datum = button.data('datum');
+        var spielerName = button.closest('tr').find('.matchtitle').text(); // Spielername aus dem Tabelleneintrag
+        var message = "Soll der " + datum + ", gebucht von " + spielerName + " freigegeben werden?";
+        // Sicherheitsabfrage, bevor die Aktion durchgeführt wird
+        if (confirm(message)) {
             $.ajax({
                 type: "POST",
                 url: "<?php echo $_SERVER['PHP_SELF']; ?>",
@@ -162,8 +166,10 @@ usort($spielerListeDropdown, function($a, $b) {
                     location.reload();
                 }
             });
-        });
+        }
     });
+});
+
 </script>
 
 </body>
