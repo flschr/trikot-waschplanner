@@ -12,12 +12,9 @@ function leseSpieler() {
         }
         fclose($handle);
     }
-
-    // Sortiere die Spielerliste absteigend nach ihrer Waschstatistik
     usort($spielerListe, function($a, $b) {
         return $b['waschstatistik'] - $a['waschstatistik'];
     });
-
     return $spielerListe;
 }
 
@@ -37,10 +34,6 @@ function leseTermine() {
 // Schreibt aktualisierte Spielerdaten in spieler.csv
 function schreibeSpieler($spielerDaten) {
     $handle = fopen("spieler.csv", "w");
-    if (!$handle) {
-        error_log("Fehler beim Öffnen der Datei spieler.csv zum Schreiben");
-        return;
-    }
     foreach ($spielerDaten as $spieler) {
         fputcsv($handle, [$spieler['name'], $spieler['waschstatistik']]);
     }
@@ -50,64 +43,54 @@ function schreibeSpieler($spielerDaten) {
 // Schreibt aktualisierte Termindaten in termine.csv
 function schreibeTermine($termineDaten) {
     $handle = fopen("termine.csv", "w");
-    if (!$handle) {
-        error_log("Fehler beim Öffnen der Datei termine.csv zum Schreiben");
-        return;
-    }
     foreach ($termineDaten as $termin) {
-        $buchungsstatus = isset($termin['buchungsstatus']) ? $termin['buchungsstatus'] : '';
-        fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $buchungsstatus]);
+        fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $termin['spielerName']]);
     }
     fclose($handle);
 }
 
 function bucheTermin($datum, $spielerName) {
     $termine = leseTermine();
-
-    // Termin aktualisieren
+    $spieler = leseSpieler();
+    $found = false;
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum) {
-            $termin['buchungsstatus'] = $spielerName;
+            $termin['spielerName'] = $spielerName;
+            $found = true;
             break;
         }
     }
+    if (!$found) {
+        // Handle error or add new termin logic here if necessary
+    }
+    schreibeTermine($termine);
 
-    // Waschstatistik aktualisieren
     foreach ($spieler as &$spielerItem) {
         if ($spielerItem['name'] === $spielerName) {
             $spielerItem['waschstatistik'] += 1;
             break;
         }
     }
-
-    schreibeTermine($termine);
     schreibeSpieler($spieler);
 }
 
 function freigebenTermin($datum) {
     $termine = leseTermine();
     $spieler = leseSpieler();
-    $spielerName = "";
 
-    // Termin freigeben
     foreach ($termine as &$termin) {
-        if ($termin['datum'] === $datum && $termin['buchungsstatus'] != '') {
-            $spielerName = $termin['buchungsstatus'];
-            $termin['buchungsstatus'] = ''; // Entfernt den Spieler aus der vierten Spalte
+        if ($termin['datum'] === $datum) {
+            $spielerName = $termin['spielerName'];
+            $termin['spielerName'] = ''; // Clear the booking
+            foreach ($spieler as &$spielerItem) {
+                if ($spielerItem['name'] === $spielerName) {
+                    $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
+                    break;
+                }
+            }
             break;
         }
     }
-
-    // Waschstatistik aktualisieren
-    if ($spielerName !== "") {
-        foreach ($spieler as &$spielerItem) {
-            if ($spielerItem['name'] === $spielerName) {
-                $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
-                break;
-            }
-        }
-    }
-
     schreibeTermine($termine);
     schreibeSpieler($spieler);
 }
