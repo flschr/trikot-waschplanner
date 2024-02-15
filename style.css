@@ -20,7 +20,7 @@
 table {
     width: 100%;
     border-collapse: collapse;
-	padding: 10px;
+	margin: 50px;
 }
 
 table, th, td {
