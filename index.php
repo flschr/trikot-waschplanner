@@ -67,7 +67,7 @@ usort($spielerListeDropdown, function($a, $b) {
                             <tr>
                                 <td>
                                     <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
-									<span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span><br>
+                                    <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span><br>
                                 </td>
                                 <td>
                                     <?php if (empty($termin['spielerName'])): ?>
@@ -86,15 +86,9 @@ usort($spielerListeDropdown, function($a, $b) {
                                 </td>
                                 <td>
                                     <?php if (empty($termin['spielerName'])): ?>
-                                        <form class="buchung-form">
-                                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                                            <button type="submit" class="buchen-button">Buchen</button>
-                                        </form>
+                                        <button type="button" class="buchen-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Buchen</button>
                                     <?php else: ?>
-                                        <form class="freigabe-form">
-                                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                                            <button type="submit" class="freigabe-button">Freigeben</button>
-                                        </form>
+                                        <button type="button" class="freigabe-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Freigeben</button>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -138,26 +132,28 @@ usort($spielerListeDropdown, function($a, $b) {
 <script>
     $(document).ready(function() {
         // AJAX-Funktion für Buchung
-        $(".buchung-form").submit(function(e) {
-            e.preventDefault(); // Verhindern des Standardverhaltens des Formulars
-            var form = $(this);
-            var datum = form.find('input[name="datum"]').val();
-            var spieler = form.find('select[name="spieler"]').val();
-            $.ajax({
-                type: "POST",
-                url: "<?php echo $_SERVER['PHP_SELF']; ?>",
-                data: { buchung: true, datum: datum, spieler: spieler },
-                success: function() {
-                    location.reload();
-                }
-            });
+        $(".buchen-button").click(function() {
+            var button = $(this);
+            var datum = button.data('datum');
+            var spieler = button.closest('tr').find('select[name="spieler"]').val();
+            if (spieler !== "") {
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo $_SERVER['PHP_SELF']; ?>",
+                    data: { buchung: true, datum: datum, spieler: spieler },
+                    success: function() {
+                        location.reload();
+                    }
+                });
+            } else {
+                alert("Bitte einen Namen auswählen.");
+            }
         });
 
         // AJAX-Funktion für Freigabe
-        $(".freigabe-form").submit(function(e) {
-            e.preventDefault();
-            var form = $(this);
-            var datum = form.find('input[name="datum"]').val();
+        $(".freigabe-button").click(function() {
+            var button = $(this);
+            var datum = button.data('datum');
             $.ajax({
                 type: "POST",
                 url: "<?php echo $_SERVER['PHP_SELF']; ?>",
