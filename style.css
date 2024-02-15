@@ -1,9 +1,17 @@
 /* Grundlegende Styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: var(--bg);
+    margin: 5px;
+    padding: 0;
+    color: var(--text);
+}
+
 .container {
     max-width: 1200px;
     margin: auto;
     padding: 20px;
-	color: black;
 }
 
 .flex-container {
@@ -68,7 +76,7 @@ section {
 .statistik {
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    border-radius: 80px;
     padding: 20px;
     margin-top: 20px;
 }
