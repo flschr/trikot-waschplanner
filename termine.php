@@ -55,6 +55,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     }
+    // Überprüfen, ob das Formular zum Aktualisieren des Status gesendet wurde
+    elseif (isset($_POST["status_date"]) && isset($_POST["status_value"])) {
+        // Status aktualisieren
+        $date_to_update = $_POST["status_date"];
+        $status_value = $_POST["status_value"];
+        updateStatus($date_to_update, $status_value);
+
+        // Umleitung auf die gleiche Seite
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
 }
 
 // Termin speichern
@@ -106,6 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
             <tr>
                 <th>Termin</th>
                 <th>Spiel</th>
+                <th>Status</th>
                 <th>Gebucht</th>
                 <th>Ausgeblendet</th>
                 <th>Archivieren</th>
@@ -117,14 +129,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
                 <tr>
                     <td><?php echo $appointment[0];?></td> <!-- Datum -->
                     <td><?php echo $appointment[1];?></td> <!-- Spiel -->
+                    <td>
+                        <select class="status-dropdown" data-date="<?php echo $appointment[0]; ?>">
+                            <option value="1" <?php if ($appointment[2] == 1) echo "selected"; ?>>Aktiv</option>
+                            <option value="0" <?php if ($appointment[2] == 0) echo "selected"; ?>>Ausgeblendet</option>
+                            <option value="3" <?php if ($appointment[2] == 3) echo "selected"; ?>>Archiviert</option>
+                        </select>
+                    </td>
                     <td><?php echo $appointment[3];?></td> <!-- Gebucht von -->
                     <td>
                         <input type="checkbox" class="hide-checkbox" data-date="<?php echo $appointment[0]; ?>"
-                        <?php if ($appointment[2] == 1) echo "checked"; ?>>
+                        <?php if ($appointment[4] == 1) echo "checked"; ?>>
                     </td>
                     <td>
                         <input type="checkbox" class="archive-checkbox" data-date="<?php echo $appointment[0]; ?>"
-                        <?php if ($appointment[4] == 3) echo "checked"; ?>>
+                        <?php if ($appointment[5] == 3) echo "checked"; ?>>
                     </td>
                     <td>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
@@ -167,7 +186,7 @@ $(document).ready(function() {
         });
     });
 
-    // Event-Handler für die Änderung des Zustands der Archivierungs-Checkbox
+    // Event-Handler für die Änderung des Archivierungs-Status
     $(document).on('change', '.archive-checkbox', function() {
         var date = $(this).data('date'); // Datum des Termins
         var archive_value = $(this).is(':checked') ? 'true' : 'false'; // Archivierungsstatus basierend auf Checkbox-Zustand
@@ -180,6 +199,27 @@ $(document).ready(function() {
                 action: 'archive',
                 archive_date: date,
                 archive_checkbox: archive_value
+            },
+            success: function(response) {
+                console.log(response); // Response vom Server, für Debugging-Zwecke
+                // Optional: Feedback an den Benutzer oder Aktualisieren der Seite
+            }
+        });
+    });
+
+    // Event-Handler für die Änderung des Status-Dropdown-Menüs
+    $(document).on('change', '.status-dropdown', function() {
+        var date = $(this).data('date'); // Datum des Termins
+        var status_value = $(this).val(); // Statuswert aus dem Dropdown-Menü
+
+        // AJAX-Anfrage, um den Status zu aktualisieren
+        $.ajax({
+            type: "POST",
+            url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
+            data: {
+                action: 'status',
+                status_date: date,
+                status_value: status_value
             },
             success: function(response) {
                 console.log(response); // Response vom Server, für Debugging-Zwecke
