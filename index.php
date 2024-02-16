@@ -92,7 +92,11 @@ usort($spielerListeDropdown, function($a, $b) {
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-						<button type="button" id="archivierte-termine">Archivierte Termine</button>
+						
+							<tr id="toggleArchivedRow">
+								<td colspan="3"><button type="button" id="archivierte-termine">Archivierte Termine</button></td>
+							</tr>
+						
                         <!-- Archivierte Termine -->
                         <?php 
                         $archivierteTermineListe = leseTermine();
