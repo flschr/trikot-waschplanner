@@ -1,19 +1,21 @@
 /* Grundlegende Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     line-height: 1.6;
-    background-color: fff;
+    background-color: #fff;
     margin: 5px;
     padding: 0;
-    color: fff;
+    color: #333;
 }
 
 h1 {
 	font-size: 2em;
+	margin-bottom: 0.5em;
 }
 
 h2 {
 	font-size: 1.4em;
+    margin-bottom: 0.5em;
 }
 
 .container {
@@ -25,7 +27,7 @@ h2 {
 .flex-container {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Fügt einen Abstand zwischen Flex-Items hinzu */
+    gap: 20px;
 }
 
 .footer {
@@ -35,13 +37,12 @@ h2 {
 table {
     width: 100%;
     border-collapse: collapse;
-    border-spacing: 0;
     margin: 20px 0;
 }
 
 .table-responsive {
     overflow-x: auto;
-    margin-bottom: 20px; /* Stellt sicher, dass Abstand zwischen Tabellen hinzugefügt wird */
+    margin-bottom: 20px;
 }
 
 /* Stil für die Kopfzeile der Tabelle */
@@ -66,7 +67,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .buchen-button {
@@ -126,6 +127,19 @@ button {
 	text-decoration: underline;
 }
 
+/* Formularelemente Stil */
+select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px; /* Einheitlicher Abstand */
+    transition: border-color 0.3s ease; /* Sanfter Übergang */
+}
+
+select:hover {
+    border-color: #007bff; /* Hervorhebung beim Hover */
+}
+
 #archivedSection table {
     background-color: #f7f7f7;
 	margin-top: -8px;
@@ -137,7 +151,7 @@ section {
 
 .statistik {
     background-color: #e8eaed;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     border-radius: 8px;
     padding: 20px;
     margin-top: 20px;
