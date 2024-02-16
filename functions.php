@@ -157,6 +157,40 @@ function processForm() {
     }
 }
 
+// Termine Dropdown-Menü termine.php
+function updateStatus($date, $status_value) {
+    $appointments = loadAppointments();
+    $updated = false;
+    
+    foreach ($appointments as &$appointment) {
+        if ($appointment[0] === $date) {
+            switch ($status_value) {
+                case '1':
+                    $appointment[2] = "1"; // Aktiv
+                    break;
+                case '0':
+                    $appointment[2] = "0"; // Ausgeblendet
+                    break;
+                case '3':
+                    $appointment[2] = "3"; // Archiviert
+                    break;
+                default:
+                    // Handle unexpected status value
+                    break;
+            }
+            $updated = true;
+            break; // Termin gefunden und aktualisiert, Schleife verlassen
+        }
+    }
+    unset($appointment); // Referenz auf das letzte Element aufheben
+
+    if ($updated) {
+        overwriteAppointments($appointments); // Speichern der aktualisierten Termine
+    }
+    
+    return true; // Immer true zurückgeben, da ein Misserfolg nicht kritisch ist
+}
+
 // ICS Import
 $csvFilePath = 'termine.csv';
 
