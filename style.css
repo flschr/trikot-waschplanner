@@ -63,7 +63,8 @@ tbody tr td {
 
 button {
     padding: 10px 20px;
-    background-color: #e8eaed;
+    width: 100px;
+    background-color: #707c8f;
     border: none;
     border-radius: 5px;
     cursor: pointer;
