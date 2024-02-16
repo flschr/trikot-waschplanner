@@ -93,9 +93,9 @@ usort($spielerListeDropdown, function($a, $b) {
                             </tr>
                         <?php endforeach; ?>
 						
-							<tr id="toggleArchivedRow">
-								<td colspan="3"><button type="button" id="archivierte-termine">Archivierte Termine</button></td>
-							</tr>
+<tr id="toggleArchivedRow">
+    <td colspan="3"><button type="button" id="toggleArchivedButton" style="width: 100%;">Archivierte Termine</button></td>
+</tr>
 						
                         <!-- Archivierte Termine -->
                         <?php 
@@ -201,12 +201,14 @@ $(document).ready(function() {
     });
 });
 
-document.getElementById('archivierte-termine').addEventListener('click', function() {
-    var archivedSection = document.getElementById('archivedSection');
-    if (archivedSection.style.display === 'none') {
-        archivedSection.style.display = 'table-row-group';
-    } else {
-        archivedSection.style.display = 'none';
+document.getElementById('toggleArchivedButton').addEventListener('click', function() {
+    var archivedRows = document.getElementsByClassName('archived-row');
+    for (var i = 0; i < archivedRows.length; i++) {
+        if (archivedRows[i].style.display === 'none') {
+            archivedRows[i].style.display = 'table-row';
+        } else {
+            archivedRows[i].style.display = 'none';
+        }
     }
 });
 
