@@ -118,7 +118,7 @@ usort($spielerListeDropdown, function($a, $b) {
                     </tbody>
                 </table>
             </div>
-	<p>Alle Termine als <a href="webcal://ical.php">Kalender abonnieren</a></p>
+	<p>Alle Termine als <a href="webcal://trikots.gaehn.org/ical.php">Kalender abonnieren</a></p>
 
         </section>
 
