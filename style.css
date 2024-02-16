@@ -93,6 +93,12 @@ button:hover {
 	color: #000;
 }
 
+.toggleArchivedButton:hover {
+	box-shadow: none;
+}
+
+
+
 /*.buchen-button {
     background-color: #0056b3;
     color: white;
