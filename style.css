@@ -1,19 +1,15 @@
 /* Grundlegende Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     line-height: 1.6;
-    background-color: fff;
+    background-color: #fff; /* Korrektur */
     margin: 5px;
     padding: 0;
-    color: fff;
+    color: #333; /* Verbesserter Kontrast */
 }
 
-h1 {
-	font-size: 2em;
-}
-
-h2 {
-	font-size: 1.4em;
+h1, h2 {
+    margin-bottom: 0.5em;
 }
 
 .container {
@@ -25,146 +21,74 @@ h2 {
 .flex-container {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Fügt einen Abstand zwischen Flex-Items hinzu */
+    gap: 20px;
 }
 
 .footer {
-	text-align: center;
+    text-align: center;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    border-spacing: 0;
     margin: 20px 0;
 }
 
 .table-responsive {
     overflow-x: auto;
-    margin-bottom: 20px; /* Stellt sicher, dass Abstand zwischen Tabellen hinzugefügt wird */
+    margin-bottom: 20px;
 }
 
-/* Stil für die Kopfzeile der Tabelle */
+/* Verbesserungen für Tabellenkopf und -körper */
 thead th {
     border-bottom: 3px solid #ddd;
-	text-align: left;
+    text-align: left;
     padding: 8px;
-    background-color: transparent;
+    background-color: #f7f7f7; /* Leichter Hintergrund */
     color: #000;
 }
 
-/* Stil für die Zeilen im Körper der Tabelle */
 tbody tr td {
     border-bottom: 1px solid #ddd;
     text-align: left;
     padding: 8px;
-    margin: 2px;
 }
 
+/* Button-Stile mit Verbesserungen */
 button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease; /* Sanfte Übergänge hinzugefügt */
+}
+
+.buchen-button, .freigabe-button, .archivierte-termine {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Schatten für Tiefe */
 }
 
 .buchen-button:hover, .freigabe-button:hover, .archivierte-termine:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Verstärkter Schatten beim Hover */
+    text-decoration: none; /* Entfernt Unterstreichung */
 }
 
-.buchen-button {
-    background-color: #0056b3; /* Blau */
-    color: white;
-    padding: 10px 20px;
-    width: 100px;
-    height: 40px;
-    border: none;
+/* Formularelemente Stil */
+select {
+    padding: 10px;
     border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    line-height: 20px;
-    display: inline-block;
-    box-sizing: border-box;
+    border: 1px solid #ccc;
+    margin-bottom: 10px; /* Einheitlicher Abstand */
+    transition: border-color 0.3s ease; /* Sanfter Übergang */
 }
 
-.buchen-button:hover {
-    background-color: #007BFF;
+select:hover {
+    border-color: #007bff; /* Hervorhebung beim Hover */
 }
 
-.freigabe-button {
-    background-color: #FFA500; /* Orange */
-    color: white;
-    color: white;
-    padding: 10px 20px;
-    width: 100px;
-    height: 40px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    line-height: 20px;
-    display: inline-block;
-    box-sizing: border-box;	
-}
-
-.freigabe-button:hover {
-    background-color: #cc8400;
-}
-
-.archivierte-termine {
-    background-color: #f7f7f7;
-    padding: 10px 20px;
-    width: 100%;
-    height: 40px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    line-height: 20px;
-    display: inline-block;
-    box-sizing: border-box;
-}
-
-.archivierte-termine:hover {
-	text-decoration: underline;
-}
-
-#archivedSection table {
-    background-color: #f7f7f7;
-	margin-top: -8px;
-}
-
-section {
-    margin-bottom: 20px;
-}
-
-.statistik {
-    background-color: #e8eaed;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.matchtitle {
-    font-size: 0.8em;
-    display: block;
-}
-
-.matchdate {
-	font-weight: bolder;
-}
-
-/* Responsives Verhalten der Tabellen */
+/* Responsives Verhalten */
 @media (max-width: 768px) {
-    .table-responsive {
-        overflow-x: auto;
-        width: auto;
-        margin-bottom: 20px; /* Fügt einen unteren Abstand zwischen den Tabellen hinzu */
-    }
-	    tbody tr td {
-        padding: 8px; /* Reduziert den Innenabstand auf kleineren Bildschirmen */
+    .flex-container {
+        flex-direction: column;
     }
 }
 
@@ -172,6 +96,23 @@ section {
     .flex-container {
         flex-direction: row;
         justify-content: space-between;
-        gap: 20px; /* Stellt sicher, dass auch in horizontaler Ausrichtung ein Abstand besteht */
+        gap: 20px;
     }
+}
+
+/* Statistik-Sektion mit Schatten */
+.statistik {
+    background-color: #e8eaed;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Schatten hinzugefügt */
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.matchtitle, .matchdate {
+    display: block;
+}
+
+.matchdate {
+    font-weight: bold;
 }
