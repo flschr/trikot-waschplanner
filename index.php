@@ -113,9 +113,7 @@ usort($spielerListeDropdown, function($a, $b) {
                                     <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
                                 </td>
                                 <td>
-                                    <?php else: ?>
-                                        <?= htmlspecialchars($termin['spielerName']) ?>
-                                    <?php endif; ?>
+
                                 </td>
                                 <td>
                                 </td>
