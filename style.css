@@ -92,6 +92,7 @@ button:hover {
     transition: none;
 	color: #000;
 	font-weight: none;
+	font-size: 0.5em;
 }
 
 .toggleArchivedButton:hover {
