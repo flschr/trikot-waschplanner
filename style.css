@@ -160,13 +160,13 @@ select:hover {
 
 .archived-row {
     background-image: repeating-linear-gradient(
-        45deg, /* Winkel der Schraffur */
-        #f0f0f0, /* Farbe der Schraffur */
-        #f0f0f0 10px, /* Beginn der nächsten Farbe */
-        #fff 10px, /* Wechsel zu transparent (oder weiß für den nahtlosen Übergang) */
-        #fff 20px /* Breite der transparenten Streifen */
+        45deg,
+        #f0f0f0,
+        #f0f0f0 5px, /* Verkleinert die Breite der grauen Streifen */
+        #fff 5px, /* Beginn des weißen Streifens */
+        #fff 10px /* Ende des weißen Streifens, insgesamt feiner */
     );
-    color: #000; /* Stellt die Textfarbe sicher */
+    color: #000;
 }
 
 .booked-row {
