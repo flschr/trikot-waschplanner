@@ -166,7 +166,7 @@ section {
 
 /* Footer */
 .footer {
-    margin-top: 15px;
+    margin-top: 40px;
 	text-align: right;
     padding: 20px;
 }
@@ -177,6 +177,7 @@ section {
     margin: 0;
     display: inline-block;
     text-align: left;
+	margin-bottom: 60px;
 }
 
 .footer li {
@@ -188,11 +189,14 @@ section {
     margin-right: 0;
 }
 
-.footer a.github-logo {
+.footer a {
+	text-decoration: none;
+}
+
+.footer .github-logo {
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%)
-	text-decoration: none;
 }
 
 /* Responsives Verhalten der Tabellen */
