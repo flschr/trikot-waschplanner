@@ -61,38 +61,39 @@ usort($spielerListeDropdown, function($a, $b) {
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($termineListe as $termin): ?>
-                            <tr>
-                                <td>
-                                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
-                                    <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
-                                </td>
-                                <td>
-                                    <?php if (empty($termin['spielerName'])): ?>
-                                        <form class="buchung-form">
-                                            <select name="spieler">
-                                                <option value="">Termin frei</option>
-                                                <?php foreach ($spielerListeDropdown as $spieler): ?>
-                                                    <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                                        </form>
-                                    <?php else: ?>
-                                        <?= htmlspecialchars($termin['spielerName']) ?>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if (empty($termin['spielerName'])): ?>
-                                        <button type="button" class="buchen-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Buchen</button>
-                                    <?php else: ?>
-                                        <button type="button" class="freigabe-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Freigeben</button>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
+						<tbody>
+							<?php foreach ($termineListe as $termin): ?>
+								<tr <?php if (!empty($termin['spielerName'])) echo 'class="booked-row"'; ?>>
+									<td>
+										<span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
+										<span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
+									</td>
+									<td>
+										<?php if (empty($termin['spielerName'])): ?>
+											<form class="buchung-form">
+												<select name="spieler">
+													<option value="">Termin frei</option>
+													<?php foreach ($spielerListeDropdown as $spieler): ?>
+														<option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
+													<?php endforeach; ?>
+												</select>
+												<input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+											</form>
+										<?php else: ?>
+											<?= htmlspecialchars($termin['spielerName']) ?>
+										<?php endif; ?>
+									</td>
+									<td>
+										<?php if (empty($termin['spielerName'])): ?>
+											<button type="button" class="buchen-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Buchen</button>
+										<?php else: ?>
+											<button type="button" class="freigabe-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Freigeben</button>
+										<?php endif; ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+
                 </table>
         
 			<button type="button" class="archivierte-termine">Archivierte Termine</button>
