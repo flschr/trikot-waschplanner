@@ -92,7 +92,7 @@ usort($spielerListeDropdown, function($a, $b) {
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-                        
+                        <button type="button" id="archivierte-termine">Archivierte Termine</button>
                         <!-- Archivierte Termine -->
                         <?php 
                         $archivierteTermineListe = leseTermine();
@@ -197,7 +197,7 @@ $(document).ready(function() {
     });
 });
 
-document.getElementById('toggleArchived').addEventListener('click', function() {
+document.getElementById('archivierte-termine').addEventListener('click', function() {
         var archivedSection = document.getElementById('archivedSection');
         if (archivedSection.style.display === 'none') {
             archivedSection.style.display = 'table-row-group'; // Ändern Sie den Anzeigetyp entsprechend Ihrer HTML-Struktur
