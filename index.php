@@ -61,70 +61,61 @@ usort($spielerListeDropdown, function($a, $b) {
                             <th>Status</th>
                         </tr>
                     </thead>
-						<tbody>
-							<?php foreach ($termineListe as $termin): ?>
-								<tr <?php if (!empty($termin['spielerName'])) echo 'class="booked-row"'; ?>>
-									<td>
-										<span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
-										<span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
-									</td>
-									<td>
-										<?php if (empty($termin['spielerName'])): ?>
-											<form class="buchung-form">
-												<select name="spieler">
-													<option value="">Termin frei</option>
-													<?php foreach ($spielerListeDropdown as $spieler): ?>
-														<option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
-													<?php endforeach; ?>
-												</select>
-												<input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-											</form>
-										<?php else: ?>
-											<?= htmlspecialchars($termin['spielerName']) ?>
-										<?php endif; ?>
-									</td>
-									<td>
-										<?php if (empty($termin['spielerName'])): ?>
-											<button type="button" class="buchen-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Buchen</button>
-										<?php else: ?>
-											<button type="button" class="freigabe-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Freigeben</button>
-										<?php endif; ?>
-									</td>
-								</tr>
-							<?php endforeach; ?>
-						</tbody>
-
+                    <tbody>
+                        <?php foreach ($termineListe as $termin): ?>
+                            <tr <?php if (!empty($termin['spielerName'])) echo 'class="booked-row"'; ?>>
+                                <td>
+                                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
+                                    <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
+                                </td>
+                                <td>
+                                    <?php if (empty($termin['spielerName'])): ?>
+                                        <form class="buchung-form">
+                                            <select name="spieler">
+                                                <option value="">Termin frei</option>
+                                                <?php foreach ($spielerListeDropdown as $spieler): ?>
+                                                    <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+                                        </form>
+                                    <?php else: ?>
+                                        <?= htmlspecialchars($termin['spielerName']) ?>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if (empty($termin['spielerName'])): ?>
+                                        <button type="button" class="buchen-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Buchen</button>
+                                    <?php else: ?>
+                                        <button type="button" class="freigabe-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Freigeben</button>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        
+                        <!-- Archivierte Termine -->
+                        <?php 
+                        $archivierteTermineListe = leseTermine();
+                        foreach ($archivierteTermineListe as $termin):
+                            if ($termin['sichtbarkeit'] == 3):
+                        ?>
+                                <tr class="archived-row">
+                                    <td>
+                                        <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
+                                        <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
+                                    </td>
+                                    <td><?= htmlspecialchars($termin['spielerName']) ?></td>
+                                    <td>Archiviert</td>
+                                </tr>
+                        <?php 
+                            endif;
+                        endforeach; 
+                        ?>
+                    </tbody>
                 </table>
-        
-			<button type="button" class="archivierte-termine">Archivierte Termine</button>
-				<div id="archivedSection" style="display:none;">				
-					<table>
-						<thead>
-							<tr>
-								<th>Termin</th>
-								<th>Gebucht</th>
-								<th>Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php 
-							$archivierteTermineListe = leseArchivierteTermine();
-							foreach ($archivierteTermineListe as $termin): 
-							?>
-								<tr>
-									<td>
-										<span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
-										<span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
-									</td>
-									<td><?= htmlspecialchars($termin['spielerName']) ?></td>
-									<td>Archiviert</td>
-								</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
-				</div>
             </div>
         </section>
+
 
         <div class="statistik">
             <section id="statistik" aria-label="Waschstatistik">
@@ -206,15 +197,13 @@ $(document).ready(function() {
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('.archivierte-termine').addEventListener('click', function() {
+document.getElementById('toggleArchived').addEventListener('click', function() {
         var archivedSection = document.getElementById('archivedSection');
         if (archivedSection.style.display === 'none') {
-            archivedSection.style.display = 'block';
+            archivedSection.style.display = 'table-row-group'; // Ändern Sie den Anzeigetyp entsprechend Ihrer HTML-Struktur
         } else {
             archivedSection.style.display = 'none';
         }
-    });
 });
 
 </script>
