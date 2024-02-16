@@ -165,9 +165,9 @@ section {
 }
 
 /* Footer */
-.footer {
-    margin-top: 40px;
-	text-align: center;
+.nav {
+    margin-top: 15px;
+	text-align: right;
     padding: 20px;
 }
 
@@ -177,7 +177,6 @@ section {
     margin: 0;
     display: inline-block;
     text-align: left;
-	margin-bottom: 60px;
 }
 
 .footer li {

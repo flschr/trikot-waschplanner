@@ -45,7 +45,7 @@ usort($spielerListeDropdown, function($a, $b) {
 ?>
 
 <div class="container">
-<div class="footer">
+<div class="nav">
     <ul>
         <li><a href="#buchung">Login</a></li>
         <li><a href="#statistik">Kontakt</a></li>
