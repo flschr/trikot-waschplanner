@@ -91,13 +91,13 @@ button:hover {
     text-decoration: none;
     transition: none;
 	color: #000;
-	font-weight: normal;
+	font-weight: bold;
 	font-size: 0.8em;
 }
 
 .toggleArchivedButton:hover {
 	box-shadow: none;
-	font-weight: bold;
+	color: #575e75;
 }
 
 
