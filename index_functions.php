@@ -121,7 +121,7 @@ function leseArchivierteTermine() {
     $filePath = "archiv.csv";
     if (($handle = fopen($filePath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            $archivierteTermine[] = ['datum' => $data[0], 'name' => $data[1], 'spielerName' => $data[2]];
+            $archivierteTermine[] = ['datum' => $data[0], 'name' => $data[1], 'spielerName' => $data[3]];
         }
         fclose($handle);
     } else {
