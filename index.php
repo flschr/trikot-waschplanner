@@ -95,14 +95,6 @@ usort($spielerListeDropdown, function($a, $b) {
                     </tbody>
                 </table>
             </div>
-			
-			    <nav class="container-fluid">
-        <ul>
-            <li><a href="#buchung">Login</a></li>
-            <li><a href="#statistik">Impressum</a></li>
-        </ul>
-    </nav>
-			
         </section>
 
         <div class="statistik">
@@ -136,6 +128,12 @@ usort($spielerListeDropdown, function($a, $b) {
     </div>
 </div>
 
+<nav class="container-fluid">
+        <ul>
+            <li><a href="#buchung">Login</a></li>
+            <li><a href="#statistik">Impressum</a></li>
+        </ul>
+</nav>
 
 <script>
 $(document).ready(function() {
