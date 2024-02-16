@@ -153,15 +153,10 @@ select:hover {
     border-color: #000; /* Hervorhebung beim Hover */
 }
 
-/* Spezielle Styles für Tabellen
-
-#archivedSection table {
-    background-color: #f7f7f7;
-	margin-top: -8px;
-}*/
-
+/* Spezielle Styles für Tabellen */
 /* Anzahl Wäschen in der Statistik-Tabelle zentrieren */
-#statistik td:nth-child(2) {
+    #statistik th:nth-child(2),
+    #statistik td:nth-child(2) {
         text-align: center;
 }
 
@@ -177,6 +172,7 @@ select:hover {
     color: #626b84;
 }
 
+/* Gebuchte Termine */
 .booked-row {
     background-color: #f2f2f2; /* Hintergrundfarbe für die gebuchten Zeilen */
 }
