@@ -202,7 +202,7 @@ section {
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%)
-	margin-bottom: 20px;
+	padding-bottom: 20px;
 }
 
 /* Responsives Verhalten der Tabellen */
