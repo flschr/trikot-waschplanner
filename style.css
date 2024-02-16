@@ -71,6 +71,15 @@ button {
     transition: all 0.3s ease; /* Sanfte Übergänge hinzugefügt */
 }
 
+button {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/*.buchen-button:hover, .freigabe-button:hover, .archivierte-termine:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Verstärkter Schatten beim Hover 
+    text-decoration: none; /* Entfernt Unterstreichung
+}*/
+
 /*.buchen-button {
     background-color: #0056b3;
     color: white;
