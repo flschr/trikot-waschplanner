@@ -138,14 +138,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         </td>
         <td><?php echo $appointment[3] ?? '';?></td> <!-- Gebucht von -->
         <td>
-            <input type="checkbox" class="hide-checkbox" data-date="<?php echo $appointment[0] ?? ''; ?>"
-            <?php if (isset($appointment[4]) && $appointment[4] == 1) echo "checked"; ?>>
-        </td>
-        <td>
-            <input type="checkbox" class="archive-checkbox" data-date="<?php echo $appointment[0] ?? ''; ?>"
-            <?php if (isset($appointment[5]) && $appointment[5] == 3) echo "checked"; ?>>
-        </td>
-        <td>
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                 <input type="hidden" name="cancel_date" value="<?php echo $appointment[0] ?? '';?>">
                 <button name="cancel_button">Absagen</button>
