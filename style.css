@@ -189,10 +189,11 @@ section {
 }
 
 .footer a.github-logo {
-/*    position: absolute;*/
+	margin-top: 25px;
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%)
+	text-decoration: none;
 }
 
 /* Responsives Verhalten der Tabellen */
