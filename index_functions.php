@@ -115,3 +115,17 @@ function freigebenTermin($datum) {
     schreibeTermine($termine);
     schreibeSpieler($spieler);
 }
+
+function leseArchivierteTermine() {
+    $archivierteTermine = [];
+    $filePath = "archiv.csv";
+    if (($handle = fopen($filePath, "r")) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            $archivierteTermine[] = ['datum' => $data[0], 'name' => $data[1], 'spielerName' => $data[2]];
+        }
+        fclose($handle);
+    } else {
+        throw new Exception("Failed to open $filePath for reading.");
+    }
+    return $archivierteTermine;
+}
