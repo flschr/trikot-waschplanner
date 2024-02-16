@@ -159,9 +159,9 @@ usort($spielerListeDropdown, function($a, $b) {
         <li><a href="#statistik">Kontakt</a></li>
     </ul>
 
-<p><a href="https://github.com/flschr/trikot-waschplanner/" aria-label="GitHub" class="github-logo">
-    <img src="github-mark.png" alt="GitHub Logo" style="width: 30px; height: auto;"></p>
-</a>
+	<a href="https://github.com/flschr/trikot-waschplanner/" aria-label="GitHub" class="github-logo">
+		<img src="github-mark.png" alt="GitHub Logo" style="width: 30px; height: auto;">
+	</a>
 </div>
 
 <script>
