@@ -154,7 +154,7 @@ usort($spielerListeDropdown, function($a, $b) {
 
 <div class="footer">
     <ul>
-		<li><a href="ical.php">Kalender abonnieren</a></li>
+		<li><a href="webcal://ical.php">Kalender abonnieren</a></li>
         <li><a href="#buchung">Login</a></li>
         <li><a href="#statistik">Kontakt</a></li>
     </ul>
