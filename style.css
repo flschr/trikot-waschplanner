@@ -66,6 +66,11 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buchen-button:hover, .freigabe-button:hover, .archivierte-termine:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .buchen-button {
@@ -123,7 +128,6 @@ button {
 
 .archivierte-termine:hover {
 	text-decoration: underline;
-;
 }
 
 #archivedSection table {
