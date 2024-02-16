@@ -164,7 +164,7 @@ select:hover {
         #f0f1f4,
         #f0f1f4 4px, /* Verkleinert die Breite der grauen Streifen */
         #fff 5px, /* Beginn des weißen Streifens */
-        #fff 6px /* Ende des weißen Streifens, insgesamt feiner */
+        #fff 6.5px /* Ende des weißen Streifens, insgesamt feiner */
     );
     color: #000;
 }
