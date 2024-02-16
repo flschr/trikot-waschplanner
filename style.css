@@ -186,6 +186,13 @@ section {
     margin-right: 0;
 }
 
+.footer a.github-logo {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%)
+}
+
 /* Responsives Verhalten der Tabellen */
 @media (max-width: 768px) {
     .table-responsive {
