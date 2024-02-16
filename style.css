@@ -68,7 +68,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
 }
 
 button:hover {
@@ -82,7 +82,10 @@ button:hover {
     transition: none;
 }
 
-.archivierte-termine:hover {
+.toggleArchivedButton {
+    width: 100%;
+    height: 40px;
+	background-color: #fff;
     box-shadow: none;
     text-decoration: none;
     transition: none;
@@ -127,22 +130,6 @@ button:hover {
     background-color: #cc8400;
 }*/
 
-.toggleArchivedButton {
-    background-color: #fff;
-    padding: 10px 20px;
-    width: 100%;
-    height: 40px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    line-height: 20px;
-    display: inline-block;
-    box-sizing: border-box;
-}
-
-.archivierte-termine:hover {
-}
 
 /* Formularelemente Stil */
 select {
@@ -154,7 +141,7 @@ select {
 }
 
 select:hover {
-    border-color: #007bff; /* Hervorhebung beim Hover */
+    border-color: #b8bdc7; /* Hervorhebung beim Hover */
 }
 
 #archivedSection table {
