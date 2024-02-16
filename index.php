@@ -202,12 +202,12 @@ $(document).ready(function() {
 });
 
 document.getElementById('archivierte-termine').addEventListener('click', function() {
-        var archivedSection = document.getElementById('archivedSection');
-        if (archivedSection.style.display === 'none') {
-            archivedSection.style.display = 'table-row-group'; // Ändern Sie den Anzeigetyp entsprechend Ihrer HTML-Struktur
-        } else {
-            archivedSection.style.display = 'none';
-        }
+    var archivedSection = document.getElementById('archivedSection');
+    if (archivedSection.style.display === 'none') {
+        archivedSection.style.display = 'table-row-group';
+    } else {
+        archivedSection.style.display = 'none';
+    }
 });
 
 </script>
