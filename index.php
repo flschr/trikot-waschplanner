@@ -118,9 +118,9 @@ usort($spielerListeDropdown, function($a, $b) {
                     </tbody>
                 </table>
             </div>
-        </section>
+	<p>Alle Termine als <a href="webcal://ical.php">Kalender abonnieren</a></p>
 
-<p>Alle Termine als <a href="webcal://ical.php">Kalender abonnieren</a></p>
+        </section>
 
         <div class="statistik">
             <section id="statistik" aria-label="Waschstatistik">
