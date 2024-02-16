@@ -58,7 +58,7 @@ usort($spielerListeDropdown, function($a, $b) {
                         <tr>
                             <th>Termin</th>
                             <th>Gebucht</th>
-                            <th>Aktion</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,6 +94,37 @@ usort($spielerListeDropdown, function($a, $b) {
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+				
+				<h2>Archivierte Termine</h2>
+				
+				<table>
+                    <thead>
+                        <tr>
+                            <th>Termin</th>
+                            <th>Gebucht</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($termineListe as $termin): ?>
+                            <tr>
+                                <td>
+                                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
+                                    <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
+                                </td>
+                                <td>
+                                    <?php else: ?>
+                                        <?= htmlspecialchars($termin['spielerName']) ?>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+				
+				
             </div>
         </section>
 
