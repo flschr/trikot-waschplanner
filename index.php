@@ -158,9 +158,9 @@ usort($spielerListeDropdown, function($a, $b) {
         <li><a href="#buchung">Login</a></li>
         <li><a href="#statistik">Kontakt</a></li>
     </ul>
-		<a href="https://github.com/flschr/trikot-waschplanner/">
+<!--		<a href="https://github.com/flschr/trikot-waschplanner/">-->
 			<i class="fab fa-github"></i>
-		</a>	
+		<!--</a>	-->
 </div>
 
 <script>
