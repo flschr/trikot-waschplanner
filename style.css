@@ -65,12 +65,13 @@ button {
     padding: 10px 20px;
     height: 40px;
     width: 100px;
-    background-color: #c6cad2;
+    background-color: #383d47;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Schatten für Tiefe */
+	color: fff;
 }
 
 button:hover {
