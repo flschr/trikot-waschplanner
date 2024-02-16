@@ -2,13 +2,19 @@
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     line-height: 1.6;
-    background-color: #fff; /* Korrektur */
+    background-color: #fff;
     margin: 5px;
     padding: 0;
-    color: #333; /* Verbesserter Kontrast */
+    color: #333;
 }
 
-h1, h2 {
+h1 {
+	font-size: 2em;
+	margin-bottom: 0.5em;
+}
+
+h2 {
+	font-size: 1.4em;
     margin-bottom: 0.5em;
 }
 
@@ -25,13 +31,12 @@ h1, h2 {
 }
 
 .footer {
-    text-align: center;
+	text-align: center;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
 }
 
 .table-responsive {
@@ -39,37 +44,85 @@ table {
     margin-bottom: 20px;
 }
 
-/* Verbesserungen für Tabellenkopf und -körper */
+/* Stil für die Kopfzeile der Tabelle */
 thead th {
     border-bottom: 3px solid #ddd;
-    text-align: left;
+	text-align: left;
     padding: 8px;
-    background-color: #f7f7f7; /* Leichter Hintergrund */
+    background-color: transparent;
     color: #000;
 }
 
+/* Stil für die Zeilen im Körper der Tabelle */
 tbody tr td {
     border-bottom: 1px solid #ddd;
     text-align: left;
     padding: 8px;
+    margin: 2px;
 }
 
-/* Button-Stile mit Verbesserungen */
 button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.3s ease; /* Sanfte Übergänge hinzugefügt */
+    transition: all 0.3s ease;
 }
 
-.buchen-button, .freigabe-button, .archivierte-termine {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Schatten für Tiefe */
+.buchen-button {
+    background-color: #0056b3; /* Blau */
+    color: white;
+    padding: 10px 20px;
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 20px;
+    display: inline-block;
+    box-sizing: border-box;
 }
 
-.buchen-button:hover, .freigabe-button:hover, .archivierte-termine:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Verstärkter Schatten beim Hover */
-    text-decoration: none; /* Entfernt Unterstreichung */
+.buchen-button:hover {
+    background-color: #007BFF;
+}
+
+.freigabe-button {
+    background-color: #FFA500; /* Orange */
+    color: white;
+    color: white;
+    padding: 10px 20px;
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 20px;
+    display: inline-block;
+    box-sizing: border-box;	
+}
+
+.freigabe-button:hover {
+    background-color: #cc8400;
+}
+
+.toggleArchivedButton {
+    background-color: #fff;
+    padding: 10px 20px;
+    width: 100%;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 20px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.archivierte-termine:hover {
 }
 
 /* Formularelemente Stil */
@@ -85,10 +138,46 @@ select:hover {
     border-color: #007bff; /* Hervorhebung beim Hover */
 }
 
-/* Responsives Verhalten */
+#archivedSection table {
+    background-color: #f7f7f7;
+	margin-top: -8px;
+}
+
+.booked-row {
+    background-color: #f2f2f2; /* Hintergrundfarbe für die gebuchten Zeilen */
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+.statistik {
+    background-color: #e8eaed;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.matchtitle {
+    font-size: 0.8em;
+    display: block;
+	margin-top: 15px;
+}
+
+.matchdate {
+	font-weight: bolder;
+}
+
+/* Responsives Verhalten der Tabellen */
 @media (max-width: 768px) {
-    .flex-container {
-        flex-direction: column;
+    .table-responsive {
+        overflow-x: auto;
+        width: auto;
+        margin-bottom: 20px; /* Fügt einen unteren Abstand zwischen den Tabellen hinzu */
+    }
+	    tbody tr td {
+        padding: 8px; /* Reduziert den Innenabstand auf kleineren Bildschirmen */
     }
 }
 
@@ -96,23 +185,6 @@ select:hover {
     .flex-container {
         flex-direction: row;
         justify-content: space-between;
-        gap: 20px;
+        gap: 20px; /* Stellt sicher, dass auch in horizontaler Ausrichtung ein Abstand besteht */
     }
-}
-
-/* Statistik-Sektion mit Schatten */
-.statistik {
-    background-color: #e8eaed;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Schatten hinzugefügt */
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.matchtitle, .matchdate {
-    display: block;
-}
-
-.matchdate {
-    font-weight: bold;
 }
