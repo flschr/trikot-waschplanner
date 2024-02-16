@@ -107,6 +107,24 @@ button {
     background-color: #cc8400;
 }
 
+.archivierte-termine {
+    background-color: #e8eaed;
+    padding: 10px 20px;
+    width: 100%;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 20px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.archivierte-termine:hover {
+    background-color: #cc8400;
+}
+
 section {
     margin-bottom: 20px;
 }

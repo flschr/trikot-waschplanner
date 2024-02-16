@@ -95,7 +95,7 @@ usort($spielerListeDropdown, function($a, $b) {
                     </tbody>
                 </table>
         
-			<button id="toggleArchived">Archivierte Termine anzeigen</button>
+			<button type="button" class="archivierte-termine">Archivierte Termine anzeigen</button>
 				<div id="archivedSection" style="display:none;">				
 					<table>
 						<thead>
