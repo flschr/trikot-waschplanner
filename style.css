@@ -63,6 +63,7 @@ tbody tr td {
 
 button {
     padding: 10px 20px;
+    height: 40px;
     width: 100px;
     background-color: #b8bdc7;
     border: none;
@@ -73,13 +74,6 @@ button {
 
 button:hover {
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.archivierte-termine {
-	background-color: #fff;
-    box-shadow: none;
-    text-decoration: none;
-    transition: none;
 }
 
 .toggleArchivedButton {
@@ -141,7 +135,7 @@ select {
 }
 
 select:hover {
-    border-color: #b8bdc7; /* Hervorhebung beim Hover */
+    border-color: #000; /* Hervorhebung beim Hover */
 }
 
 #archivedSection table {
