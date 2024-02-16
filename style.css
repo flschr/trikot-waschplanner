@@ -161,9 +161,9 @@ select:hover {
 .archived-row {
     background-image: repeating-linear-gradient(
         45deg,
-        #f0f0f0,
-        #f0f0f0 5px, /* Verkleinert die Breite der grauen Streifen */
-        #fff 5px, /* Beginn des weißen Streifens */
+        #f0f1f4,
+        #f0f1f4 2px, /* Verkleinert die Breite der grauen Streifen */
+        #fff 2px, /* Beginn des weißen Streifens */
         #fff 10px /* Ende des weißen Streifens, insgesamt feiner */
     );
     color: #000;
