@@ -18,6 +18,14 @@ h2 {
     margin-bottom: 0.5em;
 }
 
+a {
+    color: #383d47;
+}
+
+a:hover {
+    color: #575e75;
+}	
+
 .container {
     max-width: 1200px;
     margin: auto;
@@ -28,10 +36,6 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 20px;
-}
-
-.footer {
-	text-align: center;
 }
 
 table {
@@ -53,7 +57,6 @@ thead th {
     color: #000;
 }
 
-/* Stil für die Zeilen im Körper der Tabelle */
 tbody tr td {
     border-bottom: 1px solid #ddd;
     text-align: left;
@@ -61,6 +64,7 @@ tbody tr td {
     margin: 2px;
 }
 
+/* Buttons */
 button {
     padding: 10px 20px;
     height: 40px;
@@ -100,48 +104,7 @@ button:hover {
 	color: #575e75;
 }
 
-
-
-/*.buchen-button {
-    background-color: #0056b3;
-    color: white;
-    padding: 10px 20px;
-    width: 100px;
-    height: 40px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    line-height: 20px;
-    display: inline-block;
-    box-sizing: border-box;
-}
-
-.buchen-button:hover {
-    background-color: #007BFF;
-}
-
-.freigabe-button {
-    background-color: #FFA500;
-    color: white;
-    padding: 10px 20px;
-    width: 100px;
-    height: 40px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    line-height: 20px;
-    display: inline-block;
-    box-sizing: border-box;	
-}
-
-.freigabe-button:hover {
-    background-color: #cc8400;
-}*/
-
-
-/* Formularelemente Stil */
+/* Auswahlmenüs */
 select {
     padding: 10px;
     border-radius: 5px;
@@ -198,6 +161,35 @@ section {
 .matchdate {
 	font-weight: bolder;
 }
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px;
+}
+
+.footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    text-align: left;
+}
+
+.footer li {
+    display: inline;
+    margin-right: 20px;
+}
+
+.footer li:last-child {
+    margin-right: 0;
+}
+
+.footer a {
+    text-decoration: none;
+    color: #000;
+}
+
 
 /* Responsives Verhalten der Tabellen */
 @media (max-width: 768px) {
