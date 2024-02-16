@@ -79,6 +79,10 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Verstärkter Schatten beim Hover */
 }
 
+.freigabe-button {
+    background-color: #656e81;
+}
+
 .toggleArchivedButton {
     width: 100%;
     height: 40px;
@@ -109,7 +113,6 @@ button:hover {
 
 .freigabe-button {
     background-color: #FFA500;
-    color: white;
     color: white;
     padding: 10px 20px;
     width: 100px;
