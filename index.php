@@ -94,9 +94,9 @@ usort($spielerListeDropdown, function($a, $b) {
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-				
-				<h2>Archivierte Termine</h2>
-				
+        
+			<button id="toggleArchived">Archivierte Termine anzeigen</button>
+				<div id="archivedSection" style="display:none;">				
 					<table>
 						<thead>
 							<tr>
@@ -121,8 +121,7 @@ usort($spielerListeDropdown, function($a, $b) {
 							<?php endforeach; ?>
 						</tbody>
 					</table>
-				
-				
+				</div>
             </div>
         </section>
 
@@ -205,6 +204,15 @@ $(document).ready(function() {
         }
     });
 });
+
+ document.getElementById('toggleArchived').addEventListener('click', function() {
+            var archivedSection = document.getElementById('archivedSection');
+            if (archivedSection.style.display === 'none') {
+                archivedSection.style.display = 'block';
+            } else {
+                archivedSection.style.display = 'none';
+            }
+        });
 </script>
 
 </body>
