@@ -161,6 +161,9 @@ usort($spielerListeDropdown, function($a, $b) {
 
 <script>
 $(document).ready(function() {
+    // Verstecke standardmäßig archivierte Zeilen
+    $(".archived-row").hide();
+
     // AJAX-Funktion für Buchung
     $(".buchen-button").click(function() {
         var button = $(this);
@@ -199,20 +202,14 @@ $(document).ready(function() {
             });
         }
     });
-});
 
-document.getElementById('toggleArchivedButton').addEventListener('click', function() {
-    var archivedRows = document.getElementsByClassName('archived-row');
-    for (var i = 0; i < archivedRows.length; i++) {
-        if (archivedRows[i].style.display === 'none') {
-            archivedRows[i].style.display = 'table-row';
-        } else {
-            archivedRows[i].style.display = 'none';
-        }
-    }
+    // Toggle-Funktion für archivierte Zeilen
+    $("#toggleArchivedButton").click(function() {
+        $(".archived-row").toggle();
+    });
 });
-
 </script>
+
 
 </body>
 </html>
