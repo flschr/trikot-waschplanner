@@ -28,6 +28,10 @@ h2 {
     gap: 20px; /* Fügt einen Abstand zwischen Flex-Items hinzu */
 }
 
+.footer {
+	text-align: center;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;

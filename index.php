@@ -128,12 +128,12 @@ usort($spielerListeDropdown, function($a, $b) {
     </div>
 </div>
 
-<nav class="container-fluid">
-        <ul>
-            <li><a href="#buchung">Login</a></li>
-            <li><a href="#statistik">Impressum</a></li>
-        </ul>
-</nav>
+<div class="footer">
+    <ul>
+        <li><a href="#buchung">Login</a></li>
+        <li><a href="#statistik">Kontakt</a></li>
+    </ul>
+</div>
 
 <script>
 $(document).ready(function() {
