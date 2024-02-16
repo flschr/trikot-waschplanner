@@ -130,7 +130,6 @@ select {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    margin-bottom: 10px; /* Einheitlicher Abstand */
     transition: border-color 0.3s ease; /* Sanfter Übergang */
 }
 
