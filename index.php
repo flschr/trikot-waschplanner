@@ -154,9 +154,6 @@ usort($spielerListeDropdown, function($a, $b) {
 </div>
 
 <div class="footer">
-
-<p>Login   |   Kalender abonnieren   |   Kontakt</p>
-
     <ul>
         <li><a href="#buchung">Login</a></li>
         <li><a href="#statistik">Kontakt</a></li>
