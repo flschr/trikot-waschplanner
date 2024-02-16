@@ -44,6 +44,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     }
+    // Überprüfen, ob das Formular zum Archivieren eines Termins gesendet wurde
+    elseif (isset($_POST["archive_date"]) && isset($_POST["archive_checkbox"])) {
+        // Archivierungsstatus aktualisieren
+        $date_to_archive = $_POST["archive_date"];
+        $archive_checkbox_value = $_POST["archive_checkbox"] == "true" ? 3 : 0;
+        updateArchiveStatus($date_to_archive, $archive_checkbox_value);
+
+        // Umleitung auf die gleiche Seite
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
 }
 
 // Termin speichern
@@ -112,7 +123,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
                         <?php if ($appointment[2] == 1) echo "checked"; ?>>
                     </td>
                     <td>
-                        <input type="checkbox" class="archive-checkbox" data-date="<?php echo $appointment[0]; ?>">
+                        <input type="checkbox" class="archive-checkbox" data-date="<?php echo $appointment[0]; ?>"
+                        <?php if ($appointment[4] == 3) echo "checked"; ?>>
                     </td>
                     <td>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
@@ -166,7 +178,7 @@ $(document).ready(function() {
             url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
             data: {
                 action: 'archive',
-                date: date,
+                archive_date: date,
                 archive_checkbox: archive_value
             },
             success: function(response) {
