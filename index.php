@@ -44,13 +44,6 @@ usort($spielerListeDropdown, function($a, $b) {
 });
 ?>
 
-    <nav class="container-fluid">
-        <ul>
-            <li><a href="#buchung">Login</a></li>
-            <li><a href="#statistik">Impressum</a></li>
-        </ul>
-    </nav>
-
 <div class="container">
     <div class="flex-container">
         <section id="buchung">
@@ -134,6 +127,13 @@ usort($spielerListeDropdown, function($a, $b) {
         </div>
     </div>
 </div>
+
+    <nav class="container-fluid">
+        <ul>
+            <li><a href="#buchung">Login</a></li>
+            <li><a href="#statistik">Impressum</a></li>
+        </ul>
+    </nav>
 
 <script>
 $(document).ready(function() {
