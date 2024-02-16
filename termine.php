@@ -95,9 +95,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
             <tr>
                 <th>Termin</th>
                 <th>Spiel</th>
-                <th>Gebucht von</th>
-                <th>Termin ausgeblendet</th>
-                <th>Termin archivieren</th>
+                <th>Gebucht</th>
+                <th>Ausgeblendet</th>
+                <th>Archivieren</th>
+                <th>Absagen</th>
             </tr>
         </thead>
         <tbody>
@@ -111,9 +112,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
                         <?php if ($appointment[2] == 1) echo "checked"; ?>>
                     </td>
                     <td>
+                        <input type="checkbox" class="archive-checkbox" data-date="<?php echo $appointment[0]; ?>">
+                    </td>
+                    <td>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                             <input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
-                            <button>Termin archivieren</button>
+                            <button name="cancel_button">Absagen</button>
                         </form>
                     </td>
                 </tr>
@@ -143,6 +147,27 @@ $(document).ready(function() {
                 action: 'hide',
                 date: date,
                 hide_checkbox: hide_value
+            },
+            success: function(response) {
+                console.log(response); // Response vom Server, für Debugging-Zwecke
+                // Optional: Feedback an den Benutzer oder Aktualisieren der Seite
+            }
+        });
+    });
+
+    // Event-Handler für die Änderung des Zustands der Archivierungs-Checkbox
+    $(document).on('change', '.archive-checkbox', function() {
+        var date = $(this).data('date'); // Datum des Termins
+        var archive_value = $(this).is(':checked') ? 'true' : 'false'; // Archivierungsstatus basierend auf Checkbox-Zustand
+
+        // AJAX-Anfrage, um den Archivierungsstatus zu aktualisieren
+        $.ajax({
+            type: "POST",
+            url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
+            data: {
+                action: 'archive',
+                date: date,
+                archive_checkbox: archive_value
             },
             success: function(response) {
                 console.log(response); // Response vom Server, für Debugging-Zwecke
