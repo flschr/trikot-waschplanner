@@ -121,6 +121,7 @@ button {
     line-height: 20px;
     display: inline-block;
     box-sizing: border-box;
+	margin-top: -20px;
 }
 
 .archivierte-termine:hover {
