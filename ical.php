@@ -37,7 +37,7 @@ echo "X-WR-CALNAME:$calName\r\n"; // Hier wird der Kalendername gesetzt
 // Iteration über alle Termine
 foreach ($termine as $termin) {
     $event = "BEGIN:VEVENT\r\n";
-    $summary = (!empty($termin[1])) ? "Trikotwäscher " . $termin[1] : "NOCH KEIN TRIKOTWÄSCHER";
+    $summary = (!empty($termin[3])) ? "Trikotwäscher " . $termin[3] : "NOCH KEIN TRIKOTWÄSCHER";
     $event .= "SUMMARY:$summary\r\n";
     $event .= "URL:https://trikots.gaehn.org/\r\n"; // Eintrag der URL im URL-Feld
     $event .= "DTSTART;VALUE=DATE:" . date('Ymd', strtotime($termin[0])) . "\r\n";
