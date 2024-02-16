@@ -121,11 +121,10 @@ button {
     line-height: 20px;
     display: inline-block;
     box-sizing: border-box;
-	margin-top: -50px;
+	padding-top: -20px;
 }
 
 .archivierte-termine:hover {
-	font-weight: bold;
 }
 
 /* Formularelemente Stil */
