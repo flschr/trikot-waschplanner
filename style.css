@@ -124,7 +124,7 @@ button {
 }
 
 .archivierte-termine:hover {
-	text-decoration: underline;
+	font-weight: bold;
 }
 
 /* Formularelemente Stil */
