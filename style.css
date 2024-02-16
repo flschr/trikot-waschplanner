@@ -189,7 +189,7 @@ section {
 }
 
 .footer a.github-logo {
-    position: absolute;
+/*    position: absolute;*/
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%)
