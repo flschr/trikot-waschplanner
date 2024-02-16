@@ -45,13 +45,6 @@ usort($spielerListeDropdown, function($a, $b) {
 ?>
 
 <div class="container">
-<div class="nav">
-    <ul>
-        <li><a href="#buchung">Login</a></li>
-        <li><a href="#statistik">Kontakt</a></li>
-    </ul>
-</div>
-
     <div class="flex-container">
         <section id="buchung">
             <hgroup>
