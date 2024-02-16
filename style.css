@@ -90,6 +90,7 @@ button:hover {
     box-shadow: none;
     text-decoration: none;
     transition: none;
+	color: #000;
 }
 
 /*.buchen-button {
