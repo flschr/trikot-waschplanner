@@ -158,6 +158,17 @@ select:hover {
 	margin-top: -8px;
 }
 
+.archived-row {
+    background-image: repeating-linear-gradient(
+        45deg, /* Winkel der Schraffur */
+        #f0f0f0, /* Farbe der Schraffur */
+        #f0f0f0 10px, /* Beginn der nächsten Farbe */
+        #fff 10px, /* Wechsel zu transparent (oder weiß für den nahtlosen Übergang) */
+        #fff 20px /* Breite der transparenten Streifen */
+    );
+    color: #000; /* Stellt die Textfarbe sicher */
+}
+
 .booked-row {
     background-color: #f2f2f2; /* Hintergrundfarbe für die gebuchten Zeilen */
 }
