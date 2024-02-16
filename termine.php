@@ -24,7 +24,7 @@ $appointments = loadAppointments();
 
 // Nach dem Absenden des Formulars und dem erfolgreichen Löschen des Termins
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Überprüfen, ob das Formular zum Archivieren oder Absagen eines Termins gesendet wurde
+    // Überprüfen, ob das Formular zum Archivieren eines Termins gesendet wurde
     if (isset($_POST["cancel_date"])) {
         // Termin archivieren oder absagen
         cancelAppointment($_POST["cancel_date"]);
@@ -94,31 +94,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         <thead>
             <tr>
                 <th>Termin</th>
-                <th>Termin ausgeblendet</th>
+                <th>Spiel</th>
                 <th>Gebucht von</th>
+                <th>Termin ausgeblendet</th>
                 <th>Termin archivieren</th>
-                <th>Termin löschen</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($appointments as $appointment) {?>
                 <tr>
                     <td><?php echo $appointment[0];?></td> <!-- Datum -->
+                    <td><?php echo $appointment[1];?></td> <!-- Spiel -->
+                    <td><?php echo $appointment[3];?></td> <!-- Gebucht von -->
                     <td>
                         <input type="checkbox" class="hide-checkbox" data-date="<?php echo $appointment[0]; ?>"
                         <?php if ($appointment[2] == 1) echo "checked"; ?>>
                     </td>
-                    <td><?php echo $appointment[3];?></td> <!-- Gebucht von -->
                     <td>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                             <input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
                             <button>Termin archivieren</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-                            <input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
-                            <button>Termin löschen</button>
                         </form>
                     </td>
                 </tr>
