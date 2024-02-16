@@ -66,11 +66,11 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Sanfte Übergänge hinzugefügt */
 }
 
-.buchen-button {
-    background-color: #0056b3; /* Blau */
+/*.buchen-button {
+    background-color: #0056b3;
     color: white;
     padding: 10px 20px;
     width: 100px;
@@ -89,7 +89,7 @@ button {
 }
 
 .freigabe-button {
-    background-color: #FFA500; /* Orange */
+    background-color: #FFA500;
     color: white;
     color: white;
     padding: 10px 20px;
@@ -106,7 +106,7 @@ button {
 
 .freigabe-button:hover {
     background-color: #cc8400;
-}
+}*/
 
 .toggleArchivedButton {
     background-color: #fff;
