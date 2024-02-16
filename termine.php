@@ -125,37 +125,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($appointments as $appointment) {?>
-                <tr>
-                    <td><?php echo $appointment[0];?></td> <!-- Datum -->
-                    <td><?php echo $appointment[1];?></td> <!-- Spiel -->
-                    <td>
-                        <select class="status-dropdown" data-date="<?php echo $appointment[0]; ?>">
-                            <option value="1" <?php if ($appointment[2] == 1) echo "selected"; ?>>Aktiv</option>
-                            <option value="0" <?php if ($appointment[2] == 0) echo "selected"; ?>>Ausgeblendet</option>
-                            <option value="3" <?php if ($appointment[2] == 3) echo "selected"; ?>>Archiviert</option>
-                        </select>
-                    </td>
-                    <td><?php echo $appointment[3];?></td> <!-- Gebucht von -->
-                    <td>
-                        <input type="checkbox" class="hide-checkbox" data-date="<?php echo $appointment[0]; ?>"
-                        <?php if ($appointment[4] == 1) echo "checked"; ?>>
-                    </td>
-                    <td>
-                        <input type="checkbox" class="archive-checkbox" data-date="<?php echo $appointment[0]; ?>"
-                        <?php if ($appointment[5] == 3) echo "checked"; ?>>
-                    </td>
-                    <td>
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-                            <input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
-                            <button name="cancel_button">Absagen</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php }?>
-        </tbody>
-    </table>
-    <?php } ?>
+<?php foreach ($appointments as $appointment) {?>
+    <tr>
+        <td><?php echo $appointment[0] ?? '';?></td> <!-- Datum -->
+        <td><?php echo $appointment[1] ?? '';?></td> <!-- Spiel -->
+        <td>
+            <select class="status-dropdown" data-date="<?php echo $appointment[0] ?? ''; ?>">
+                <option value="1" <?php if (isset($appointment[2]) && $appointment[2] == 1) echo "selected"; ?>>Aktiv</option>
+                <option value="0" <?php if (isset($appointment[2]) && $appointment[2] == 0) echo "selected"; ?>>Ausgeblendet</option>
+                <option value="3" <?php if (isset($appointment[2]) && $appointment[2] == 3) echo "selected"; ?>>Archiviert</option>
+            </select>
+        </td>
+        <td><?php echo $appointment[3] ?? '';?></td> <!-- Gebucht von -->
+        <td>
+            <input type="checkbox" class="hide-checkbox" data-date="<?php echo $appointment[0] ?? ''; ?>"
+            <?php if (isset($appointment[4]) && $appointment[4] == 1) echo "checked"; ?>>
+        </td>
+        <td>
+            <input type="checkbox" class="archive-checkbox" data-date="<?php echo $appointment[0] ?? ''; ?>"
+            <?php if (isset($appointment[5]) && $appointment[5] == 3) echo "checked"; ?>>
+        </td>
+        <td>
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                <input type="hidden" name="cancel_date" value="<?php echo $appointment[0] ?? '';?>">
+                <button name="cancel_button">Absagen</button>
+            </form>
+        </td>
+    </tr>
+<?php }?>
 
 <script>
 $(document).ready(function() {
