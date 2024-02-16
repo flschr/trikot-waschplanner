@@ -163,8 +163,8 @@ select:hover {
         45deg,
         #f0f1f4,
         #f0f1f4 4px, /* Verkleinert die Breite der grauen Streifen */
-        #fff 50px, /* Beginn des weißen Streifens */
-        #fff 10px /* Ende des weißen Streifens, insgesamt feiner */
+        #fff 5px, /* Beginn des weißen Streifens */
+        #fff 5px /* Ende des weißen Streifens, insgesamt feiner */
     );
     color: #000;
 }
