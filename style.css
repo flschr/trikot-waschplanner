@@ -166,7 +166,7 @@ section {
 
 /* Footer */
 .footer {
-    margin-top: 40px;
+    margin-top: 50px;
 	text-align: center;
     padding: 20px;
 }
@@ -177,7 +177,7 @@ section {
     margin: 0;
     display: inline-block;
     text-align: left;
-	margin-bottom: 60px;
+	margin-bottom: 50px;
 }
 
 .footer li {
