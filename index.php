@@ -205,7 +205,7 @@ $(document).ready(function() {
     });
 });
 
- document.getElementById('toggleArchived').addEventListener('click', function() {
+ document.getElementById('archivierte-termine').addEventListener('click', function() {
             var archivedSection = document.getElementById('archivedSection');
             if (archivedSection.style.display === 'none') {
                 archivedSection.style.display = 'block';
