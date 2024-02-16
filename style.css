@@ -153,11 +153,19 @@ select:hover {
     border-color: #000; /* Hervorhebung beim Hover */
 }
 
+/* Spezielle Styles für Tabellen
+
 #archivedSection table {
     background-color: #f7f7f7;
 	margin-top: -8px;
+}*/
+
+/* Anzahl Wäschen in der Statistik-Tabelle zentrieren */
+#statistik td:nth-child(2) {
+        text-align: center;
 }
 
+/* Archivierte Termine */
 .archived-row {
     background-image: repeating-linear-gradient(
         45deg,
