@@ -97,6 +97,7 @@ button:hover {
 
 .toggleArchivedButton:hover {
 	box-shadow: none;
+    background-color: #e2e4e9;
 }
 
 
