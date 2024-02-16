@@ -74,10 +74,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
 </head>
 <body>
 
-	<?php if (isset($_SESSION['feedback'])) { ?>
-		<p class="hinweis"><?php echo $_SESSION['feedback']; ?></p>
-		<?php unset($_SESSION['feedback']); // Wichtig: Feedback-Nachricht aus der Session entfernen ?>
-	<?php } ?>
+    <?php if (isset($_SESSION['feedback'])) { ?>
+        <p class="hinweis"><?php echo $_SESSION['feedback']; ?></p>
+        <?php unset($_SESSION['feedback']); // Wichtig: Feedback-Nachricht aus der Session entfernen ?>
+    <?php } ?>
 
 
     <h2>Neuen Termin anlegen</h2>
@@ -86,44 +86,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["new_date"])) {
         <button>Termin anlegen</button>
     </form>
 
-	<?php if (empty($appointments)) { ?>
-		<p class="hinweis">Es sind noch keine Termine vorhanden.</p>
-	<?php } else { ?>    
+    <?php if (empty($appointments)) { ?>
+        <p class="hinweis">Es sind noch keine Termine vorhanden.</p>
+    <?php } else { ?>    
     <h2>Termine</h2>
     <table>
         <thead>
             <tr>
                 <th>Termin</th>
-				<th>Termin ausgeblendet</th>
+                <th>Termin ausgeblendet</th>
                 <th>Gebucht von</th>
                 <th>Termin archivieren</th>
-				<th>Termin löschen</th>
+                <th>Termin löschen</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($appointments as $appointment) {?>
                 <tr>
-					<td><?php echo $appointment[0];?></td> <!-- Datum -->
-					<td>
-						<input type="checkbox" class="hide-checkbox" data-date="<?php echo $appointment[0]; ?>"
-						<?php if ($appointment[2] == 1) echo "checked"; ?>>
-					</td>
-					<td><?php echo $appointment[1];?></td> <!-- Name -->
+                    <td><?php echo $appointment[0];?></td> <!-- Datum -->
                     <td>
-						<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-							<input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
-							<button>Termin archivieren</button>
-						</form>
+                        <input type="checkbox" class="hide-checkbox" data-date="<?php echo $appointment[0]; ?>"
+                        <?php if ($appointment[2] == 1) echo "checked"; ?>>
                     </td>
-					<td>
-						<input type="checkbox" class="confirm-checkbox" id="confirm_<?php echo $appointment[0]; ?>">
-						<button class="cancel-button" data-date="<?php echo $appointment[0]; ?>" disabled>Termin absagen</button>
-					</td>
+                    <td><?php echo $appointment[3];?></td> <!-- Gebucht von -->
+                    <td>
+                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                            <input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
+                            <button>Termin archivieren</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                            <input type="hidden" name="cancel_date" value="<?php echo $appointment[0];?>">
+                            <button>Termin löschen</button>
+                        </form>
+                    </td>
                 </tr>
             <?php }?>
         </tbody>
     </table>
-	<?php } ?>
+    <?php } ?>
 
 <script>
 $(document).ready(function() {
@@ -133,51 +135,25 @@ $(document).ready(function() {
         firstDay: 1
     });
 
-    // Event-Handler für die Änderung des Zustands der Bestätigungs-Checkbox
-    $(document).on('change', '.confirm-checkbox', function() {
-        // Aktiviert oder deaktiviert den zugehörigen "Termin absagen"-Button basierend auf dem Zustand der Checkbox
-        $(this).closest('td').find('.cancel-button').prop('disabled', !this.checked);
-    });
+    // Event-Handler für die Änderung des Zustands der Sichtbarkeits-Checkbox
+    $(document).on('change', '.hide-checkbox', function() {
+        var date = $(this).data('date'); // Datum des Termins
+        var hide_value = $(this).is(':checked') ? 'true' : 'false'; // Sichtbarkeitsstatus basierend auf Checkbox-Zustand
 
-    // Event-Handler für den Klick auf den "Termin absagen"-Button
-    $(document).on('click', '.cancel-button', function() {
-        if (!$(this).prop('disabled')) {
-            var date = $(this).data('date');
-            // Hier können Sie eine AJAX-Anfrage einfügen, um den Termin serverseitig abzusagen
-            // Beispiel für eine AJAX-Anfrage:
-            $.ajax({
-                type: "POST",
-                url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
-                data: {
-                    action: 'cancel',
-                    date: date
-                },
-                success: function(response) {
-                    location.reload(); // Lädt die Seite neu, um die aktualisierte Terminliste anzuzeigen
-                }
-            });
-        }
-    });
-});
-
-// Event-Handler für die Änderung des Zustands der Sichtbarkeits-Checkbox
-$(document).on('change', '.hide-checkbox', function() {
-    var date = $(this).data('date'); // Datum des Termins
-    var hide_value = $(this).is(':checked') ? 'true' : 'false'; // Sichtbarkeitsstatus basierend auf Checkbox-Zustand
-
-    // AJAX-Anfrage, um den Sichtbarkeitsstatus zu aktualisieren
-    $.ajax({
-        type: "POST",
-        url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
-        data: {
-            action: 'hide',
-            date: date,
-            hide_checkbox: hide_value
-        },
-        success: function(response) {
-            console.log(response); // Response vom Server, für Debugging-Zwecke
-            // Optional: Feedback an den Benutzer oder Aktualisieren der Seite
-        }
+        // AJAX-Anfrage, um den Sichtbarkeitsstatus zu aktualisieren
+        $.ajax({
+            type: "POST",
+            url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
+            data: {
+                action: 'hide',
+                date: date,
+                hide_checkbox: hide_value
+            },
+            success: function(response) {
+                console.log(response); // Response vom Server, für Debugging-Zwecke
+                // Optional: Feedback an den Benutzer oder Aktualisieren der Seite
+            }
+        });
     });
 });
 </script>
