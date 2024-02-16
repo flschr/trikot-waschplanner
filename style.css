@@ -44,6 +44,19 @@ table {
     margin-bottom: 20px;
 }
 
+/* Definiere die Breite der Spalten */
+th:nth-child(1), td:nth-child(1) {
+    width: 40%; /* Erste Spalte auf 40% Breite festlegen */
+}
+
+th:nth-child(2), td:nth-child(2) {
+    width: 30%; /* Zweite Spalte auf 30% Breite festlegen */
+}
+
+th:nth-child(3), td:nth-child(3) {
+    width: 30%; /* Dritte Spalte auf 30% Breite festlegen */
+}
+
 /* Stil für die Kopfzeile der Tabelle */
 thead th {
     border-bottom: 3px solid #ddd;
