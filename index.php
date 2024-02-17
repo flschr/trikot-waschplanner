@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $spielerListe = leseSpieler();
-$termineListe = leseTermine(true);
-$archivierteTermineListe = leseTermine(false);
+$termineListe = leseTermine(true); // Nur sichtbare Termine
+$archivierteTermineListe = leseTermine(false); // Alle Termine einschließlich archivierter
 
 // Sortieren der Spielerliste
 $spielerListeDropdown = $spielerListe;
@@ -94,59 +94,23 @@ usort($spielerListeDropdown, function($a, $b) {
                             </tr>
                         <?php endforeach; ?>
 						
-						<tr id="toggleArchivedRow">
-							<td colspan="3"><button class="toggleArchivedButton" id="toggleArchivedButton">⇅ Archivierte Termine</button></td>
-						</tr>
-						
                         <!-- Archivierte Termine -->
                         <?php foreach ($archivierteTermineListe as $termin): ?>
-                                <tr class="archived-row">
-                                    <td>
-                                        <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
-                                        <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
-                                    </td>
-                                    <td><?= htmlspecialchars($termin['spielerName']) ?></td>
-                                    <td>Archiviert</td>
-                                </tr>
-                        <?php 
-                            endif;
-                        endforeach; 
-                        ?>
+                            <tr class="archived-row">
+                                <td>
+                                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
+                                    <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
+                                </td>
+                                <td><?= htmlspecialchars($termin['spielerName']) ?></td>
+                                <td>Archiviert</td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-	<p>Alle Termine als <a href="webcal://trikots.gaehn.org/ical.php">Kalender abonnieren</a></p>
-
+            <!-- ... -->
         </section>
-
-        <div class="statistik">
-            <section id="statistik" aria-label="Waschstatistik">
-                <article>
-                    <hgroup>
-                        <h2>Waschstatistik</h2>
-                        <p>Ehre wem Ehre gebührt! Hier ist die Rangliste unserer Waschhelden in der aktuellen Saison.</p>
-                    </hgroup>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Wäschen</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($spielerListe as $spieler): ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($spieler['name']) ?></td>
-                                        <td><?= htmlspecialchars($spieler['waschstatistik']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </article>
-            </section>
-        </div>
+        <!-- ... -->
     </div>
 </div>
 
@@ -213,7 +177,6 @@ $(document).ready(function() {
     });
 });
 </script>
-
 
 </body>
 </html>
