@@ -1,7 +1,8 @@
 <?php
 
-// Pfad zur termine.csv Datei
+// Pfad zur termine.csv und spieler.csv Datei
 define('TERMINE_CSV', 'termine.csv');
+define('SPIELER_CSV', 'spieler.csv');
 
 // Liest alle Termine aus der termine.csv Datei
 function leseTermine() {
@@ -11,8 +12,8 @@ function leseTermine() {
             $termine[] = [
                 'datum' => $data[0],
                 'name' => $data[1],
-                'spielerName' => $data[2],
-                'status' => $data[3] ?? '', // Im Fall, dass keine Statusinformation vorhanden ist
+                'status' => $data[2], // Status des Spiels
+                'spielerName' => $data[3], // Buchungsstatus
             ];
         }
         fclose($handle);
@@ -20,36 +21,38 @@ function leseTermine() {
     return $termine;
 }
 
-// Liest die Liste der Spieler
+// Liest die Liste der Spieler aus der spieler.csv Datei
 function leseSpieler() {
-    // Beispiel: Einfache statische Liste. In der Praxis könnten diese Daten aus einer Datenbank gelesen werden.
-    return [
-        ['name' => 'Spieler 1'],
-        ['name' => 'Spieler 2'],
-        // Fügen Sie hier weitere Spieler hinzu
-    ];
+    $spieler = [];
+    if (($handle = fopen(SPIELER_CSV, 'r')) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            $spieler[] = ['name' => $data[0]];
+        }
+        fclose($handle);
+    }
+    return $spieler;
 }
 
 // Aktualisiert oder fügt einen Termin in der termine.csv Datei hinzu
 function updateTermin($datum, $spieler, $status) {
     $termine = leseTermine();
-    $update = false;
+    $gefunden = false;
 
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum) {
             $termin['spielerName'] = $spieler;
             $termin['status'] = $status;
-            $update = true;
+            $gefunden = true;
             break;
         }
     }
 
-    if (!$update) { // Falls kein existierender Termin gefunden wurde, füge einen neuen hinzu
+    if (!$gefunden) {
         $termine[] = [
             'datum' => $datum,
-            'name' => '', // Hier könnte ein Mechanismus zur Ermittlung des Spielnamens basierend auf dem Datum implementiert werden
-            'spielerName' => $spieler,
+            'name' => '', // Spielname könnte hier ergänzt werden, falls nötig
             'status' => $status,
+            'spielerName' => $spieler,
         ];
     }
 
@@ -70,7 +73,7 @@ function loescheTermin($datum) {
 function schreibeTermine($termine) {
     if (($handle = fopen(TERMINE_CSV, 'w')) !== FALSE) {
         foreach ($termine as $termin) {
-            fputcsv($handle, [$termin['datum'], $termin['name'], $termin['spielerName'], $termin['status']]);
+            fputcsv($handle, [$termin['datum'], $termin['name'], $termin['status'], $termin['spielerName']]);
         }
         fclose($handle);
     }
