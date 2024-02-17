@@ -20,15 +20,13 @@ function leseSpieler() {
     return $spielerListe;
 }
 
-function leseTermine($nurSichtbare = false) {
+function leseTermine() {
     $termineListe = [];
     $filePath = "termine.csv";
     if (($handle = fopen($filePath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $spielerName = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
-            if (!$nurSichtbare || $data[2] != 3) { // Wenn nur sichtbare Termine angefordert werden, berücksichtige den Sichtbarkeitsstatus
-                $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
-            }
+            $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
         }
         fclose($handle);
     } else {
@@ -68,6 +66,7 @@ function schreibeTermine($termineDaten) {
 }
 
 function bucheTermin($datum, $spielerName) {
+	header('Content-Type: application/json');
     $termine = leseTermine();
     $spieler = leseSpieler();
     $found = false;
@@ -79,43 +78,47 @@ function bucheTermin($datum, $spielerName) {
         }
     }
     if (!$found) {
-        throw new Exception("Termin nicht gefunden.");
+        echo json_encode(['success' => false, 'message' => 'Termin nicht gefunden.']);
+        exit;
     }
     schreibeTermine($termine);
 
+    $spielerUpdated = false;
     foreach ($spieler as &$spielerItem) {
         if ($spielerItem['name'] === $spielerName) {
             $spielerItem['waschstatistik'] += 1;
+            $spielerUpdated = true;
             break;
         }
     }
-    schreibeSpieler($spieler);
+    if ($spielerUpdated) {
+        schreibeSpieler($spieler);
+        echo json_encode(['success' => true, 'spielerName' => $spielerName]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Spieler nicht gefunden.']);
+    }
+    exit;
 }
 
 function freigebenTermin($datum) {
+	header('Content-Type: application/json');
     $termine = leseTermine();
     $spieler = leseSpieler();
-    $spielerName = "";
-
+    $found = false;
     foreach ($termine as &$termin) {
-        if ($termin['datum'] === $datum) {
-            $spielerName = $termin['spielerName'];
-            $termin['spielerName'] = ''; // Termin freigeben
+        if ($termin['datum'] === $datum && !empty($termin['spielerName'])) {
+            $termin['spielerName'] = '';
+            $found = true;
             break;
         }
     }
-    if ($spielerName === "") {
-        throw new Exception("Termin nicht gefunden oder bereits frei.");
-    }
-
-    foreach ($spieler as &$spielerItem) {
-        if ($spielerItem['name'] === $spielerName) {
-            $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
-            break;
-        }
+    if (!$found) {
+        echo json_encode(['success' => false, 'message' => 'Termin nicht gefunden oder bereits frei.']);
+        exit;
     }
     schreibeTermine($termine);
-    schreibeSpieler($spieler);
+    echo json_encode(['success' => true]);
+    exit;
 }
 
 function leseArchivierteTermine() {

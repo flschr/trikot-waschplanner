@@ -35,8 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $spielerListe = leseSpieler();
-$termineListe = leseTermine(true); // Nur sichtbare Termine
-$archivierteTermineListe = leseTermine(false); // Alle Termine einschließlich archivierter
+$termineListe = leseTermine();
 
 // Sortieren der Spielerliste
 $spielerListeDropdown = $spielerListe;
@@ -94,23 +93,63 @@ usort($spielerListeDropdown, function($a, $b) {
                             </tr>
                         <?php endforeach; ?>
 						
+						<tr id="toggleArchivedRow">
+							<td colspan="3"><button class="toggleArchivedButton" id="toggleArchivedButton">⇅ Archivierte Termine</button></td>
+						</tr>
+						
                         <!-- Archivierte Termine -->
-                        <?php foreach ($archivierteTermineListe as $termin): ?>
-                            <tr class="archived-row">
-                                <td>
-                                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
-                                    <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
-                                </td>
-                                <td><?= htmlspecialchars($termin['spielerName']) ?></td>
-                                <td>Archiviert</td>
-                            </tr>
-                        <?php endforeach; ?>
+                        <?php 
+                        $archivierteTermineListe = leseTermine();
+                        foreach ($archivierteTermineListe as $termin):
+                            if ($termin['sichtbarkeit'] == 3):
+                        ?>
+                                <tr class="archived-row">
+                                    <td>
+                                        <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
+                                        <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
+                                    </td>
+                                    <td><?= htmlspecialchars($termin['spielerName']) ?></td>
+                                    <td>Archiviert</td>
+                                </tr>
+                        <?php 
+                            endif;
+                        endforeach; 
+                        ?>
                     </tbody>
                 </table>
             </div>
-            <!-- ... -->
+	<p>Alle Termine als <a href="webcal://trikots.gaehn.org/ical.php">Kalender abonnieren</a></p>
+
         </section>
-        <!-- ... -->
+
+        <div class="statistik">
+            <section id="statistik" aria-label="Waschstatistik">
+                <article>
+                    <hgroup>
+                        <h2>Waschstatistik</h2>
+                        <p>Ehre wem Ehre gebührt! Hier ist die Rangliste unserer Waschhelden in der aktuellen Saison.</p>
+                    </hgroup>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Wäschen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($spielerListe as $spieler): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($spieler['name']) ?></td>
+                                        <td><?= htmlspecialchars($spieler['waschstatistik']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+        </div>
     </div>
 </div>
 
@@ -131,25 +170,6 @@ usort($spielerListeDropdown, function($a, $b) {
 $(document).ready(function() {
     // Verstecke standardmäßig archivierte Zeilen
     $(".archived-row").hide();
-
-    // AJAX-Funktion für Buchung
-    $(".buchen-button").click(function() {
-        var button = $(this);
-        var datum = button.data('datum');
-        var spieler = button.closest('tr').find('select[name="spieler"]').val();
-        if (spieler !== "") {
-            $.ajax({
-                type: "POST",
-                url: "<?php echo $_SERVER['PHP_SELF']; ?>",
-                data: { buchung: true, datum: datum, spieler: spieler },
-                success: function() {
-                    location.reload();
-                }
-            });
-        } else {
-            alert("Bitte einen Namen auswählen.");
-        }
-    });
 
     // Angepasste AJAX-Funktion für Freigabe mit Sicherheitsabfrage
     $(".freigabe-button").click(function() {
@@ -176,7 +196,40 @@ $(document).ready(function() {
         $(".archived-row").toggle();
     });
 });
+
+$(".buchen-button").click(function() {
+    var button = $(this);
+    var datum = button.data('datum');
+    var spieler = button.closest('tr').find('select[name="spieler"]').val();
+    if (spieler !== "") {
+        $.ajax({
+            type: "POST",
+            url: "index.php", // Pfad zu Ihrer PHP-Datei
+            data: { buchung: true, datum: datum, spieler: spieler },
+            dataType: "json", // Erwarteter Rückgabetyp
+            success: function(response) {
+                if (response.success) {
+                    // Beispiel: Aktualisieren des Buchungsstatus im DOM
+                    alert("Buchung erfolgreich!");
+                    var row = button.closest('tr');
+                    row.find('td:nth-child(2)').text(response.spielerName); // Spielername aktualisieren
+                    button.replaceWith('<button type="button" class="freigabe-button" data-datum="' + datum + '">Freigeben</button>');
+                    // Aktualisieren Sie die Ereignisbindung für die neue Freigabe-Schaltfläche
+                } else {
+                    alert("Buchung fehlgeschlagen.");
+                }
+            },
+            error: function() {
+                alert("Ein Fehler ist aufgetreten.");
+            }
+        });
+    } else {
+        alert("Bitte einen Namen auswählen.");
+    }
+});
+
 </script>
+
 
 </body>
 </html>
