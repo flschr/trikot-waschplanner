@@ -74,3 +74,47 @@ function schreibeTermine($termine) {
     }
 }
 
+function bucheTermin($datum, $neuerSpielerName) {
+    $termine = leseTermine();
+    $spieler = leseSpieler();
+    $alterSpielerName = "";
+    
+    // Finde den Termin, der aktualisiert werden soll
+    foreach ($termine as &$termin) {
+        if ($termin['datum'] === $datum) {
+            // Speichere den Namen des alten Spielers
+            $alterSpielerName = $termin['spielerName'];
+            // Aktualisiere den Spielername für den Termin
+            $termin['spielerName'] = $neuerSpielerName;
+            break;
+        }
+    }
+    
+    // Reduziere die Waschstatistik des alten Spielers (wenn vorhanden)
+    if (!empty($alterSpielerName)) {
+        foreach ($spieler as &$spielerItem) {
+            if ($spielerItem['name'] === $alterSpielerName) {
+                $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
+                break;
+            }
+        }
+    }
+    
+    // Erhöhe die Waschstatistik des neuen Spielers
+    $found = false;
+    foreach ($spieler as &$spielerItem) {
+        if ($spielerItem['name'] === $neuerSpielerName) {
+            $spielerItem['waschstatistik'] += 1;
+            $found = true;
+            break;
+        }
+    }
+    
+    // Schreibe die aktualisierten Daten zurück in die CSV-Dateien
+    schreibeTermine($termine);
+    schreibeSpieler($spieler);
+
+    if (!$found) {
+        throw new Exception("Neuer Spieler nicht gefunden.");
+    }
+}
