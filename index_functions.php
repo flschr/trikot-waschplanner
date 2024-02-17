@@ -20,13 +20,15 @@ function leseSpieler() {
     return $spielerListe;
 }
 
-function leseTermine() {
+function leseTermine($nurSichtbare = false) {
     $termineListe = [];
     $filePath = "termine.csv";
     if (($handle = fopen($filePath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $spielerName = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
-            $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
+            if (!$nurSichtbare || $data[2] != 3) { // Wenn nur sichtbare Termine angefordert werden, berücksichtige den Sichtbarkeitsstatus
+                $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
+            }
         }
         fclose($handle);
     } else {

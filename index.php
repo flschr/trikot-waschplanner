@@ -35,7 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $spielerListe = leseSpieler();
-$termineListe = leseTermine();
+$termineListe = leseTermine(true);
+$archivierteTermineListe = leseTermine(false);
 
 // Sortieren der Spielerliste
 $spielerListeDropdown = $spielerListe;
@@ -98,11 +99,7 @@ usort($spielerListeDropdown, function($a, $b) {
 						</tr>
 						
                         <!-- Archivierte Termine -->
-                        <?php 
-                        $archivierteTermineListe = leseTermine();
-                        foreach ($archivierteTermineListe as $termin):
-                            if ($termin['sichtbarkeit'] == 3):
-                        ?>
+                        <?php foreach ($archivierteTermineListe as $termin): ?>
                                 <tr class="archived-row">
                                     <td>
                                         <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
