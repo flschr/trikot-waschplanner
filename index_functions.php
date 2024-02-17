@@ -25,8 +25,8 @@ function leseTermine() {
     $filePath = "termine.csv";
     if (($handle = fopen($filePath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            // Überprüfen, ob der Wert in der dritten Spalte nicht 0 ist
-            if ($data[2] != 0) {
+            // Überprüfen, ob der Wert in der dritten Spalte gleich 1 ist
+            if ($data[2] == 1) {
                 $spielerName = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
                 $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
             }
@@ -120,15 +120,19 @@ function freigebenTermin($datum) {
 }
 
 function leseArchivierteTermine() {
-    $archivierteTermine = [];
-    $filePath = "archiv.csv";
+    $archivierteTermineListe = [];
+    $filePath = "termine.csv"; // Pfad kann angepasst werden, falls archivierte Termine in einer separaten Datei gespeichert werden
     if (($handle = fopen($filePath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            $archivierteTermine[] = ['datum' => $data[0], 'name' => $data[1], 'spielerName' => $data[3]];
+            // Überprüfen, ob der Wert in der dritten Spalte gleich 3 ist
+            if ($data[2] == 3) {
+                $spielerName = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
+                $archivierteTermineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
+            }
         }
         fclose($handle);
     } else {
         throw new Exception("Failed to open $filePath for reading.");
     }
-    return $archivierteTermine;
+    return $archivierteTermineListe;
 }

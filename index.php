@@ -99,7 +99,7 @@ usort($spielerListeDropdown, function($a, $b) {
 						
                         <!-- Archivierte Termine -->
                         <?php 
-                        $archivierteTermineListe = leseTermine();
+                        $archivierteTermineListe = leseArchivierteTermine();
                         foreach ($archivierteTermineListe as $termin):
                             if ($termin['sichtbarkeit'] == 3):
                         ?>
