@@ -1,38 +1,40 @@
 <?php
-require 'termine_functions.php'; // Annahme, dass die benötigten Funktionen hier definiert sind
+require 'termine_functions.php'; // Stellen Sie sicher, dass dieser Pfad zu Ihrer termine_functions.php passt
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Verarbeitung von Formulareingaben
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Logik für das Hinzufügen/Ändern von Spielern und Status
-    if (isset($_POST['spieler_update']) && isset($_POST['datum']) && isset($_POST['spieler'])) {
-        updateTermin($_POST['datum'], $_POST['spieler'], $_POST['status']);
-    } elseif (isset($_POST['termin_loeschen']) && isset($_POST['datum'])) {
+    if (isset($_POST['spieler_update'], $_POST['datum'], $_POST['spieler'])) {
+        // Standardwert für 'status', falls nicht gesetzt
+        $status = $_POST['status'] ?? '1'; // Standardwert '1', passen Sie dies ggf. an
+        updateTermin($_POST['datum'], $_POST['spieler'], $status);
+    } elseif (isset($_POST['termin_loeschen'], $_POST['datum'])) {
         loescheTermin($_POST['datum']);
     }
+
+    // Seite neu laden, um die Änderungen sofort anzuzeigen
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
 $spielerListe = leseSpieler();
 $termineListe = leseTermine();
-
 ?>
 
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Termin Buchung</title>
+    <title>Spieltermine Buchung</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
 <div class="container">
     <section id="buchung">
-        <h1>Spieltermine</h1>
+        <h1>Spieltermine Buchung</h1>
         <div class="table-responsive">
             <table>
                 <thead>
@@ -50,30 +52,25 @@ $termineListe = leseTermine();
                             <td><?= htmlspecialchars($termin['datum']) ?></td>
                             <td><?= htmlspecialchars($termin['name']) ?></td>
                             <td>
-                                <form class="spieler-update-form" action="termine.php" method="POST">
+                                <form action="" method="POST">
                                     <select name="spieler" onchange="this.form.submit()">
                                         <option value="">Termin frei</option>
                                         <?php foreach ($spielerListe as $spieler): ?>
-                                            <option value="<?= htmlspecialchars($spieler['name']) ?>" <?= $termin['spielerName'] === $spieler['name'] ? 'selected' : '' ?>><?= htmlspecialchars($spieler['name']) ?></option>
+                                            <option value="<?= htmlspecialchars($spieler['name']) ?>" <?= $spieler['name'] === $termin['spielerName'] ? 'selected' : '' ?>><?= htmlspecialchars($spieler['name']) ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                     <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                                     <input type="hidden" name="spieler_update" value="1">
-                                </form>
-                            </td>
-                            <td>
-                                <form class="status-update-form" action="termine.php" method="POST">
-                                    <select name="status" onchange="this.form.submit()">
-                                        <option value="1" <?= $termin['status'] === 1 ? 'selected' : '' ?>>Aktiv</option>
-                                        <option value="0" <?= $termin['status'] === 0 ? 'selected' : '' ?>>Ausgeblendet</option>
-                                        <option value="3" <?= $termin['status'] === 3 ? 'selected' : '' ?>>Archiviert</option>
+                                    <select name="status" style="display:none;">
+                                        <option value="1" <?= $termin['status'] === '1' ? 'selected' : '' ?>>Aktiv</option>
+                                        <option value="0" <?= $termin['status'] === '0' ? 'selected' : '' ?>>Ausgeblendet</option>
+                                        <option value="3" <?= $termin['status'] === '3' ? 'selected' : '' ?>>Archiviert</option>
                                     </select>
-                                    <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                                    <input type="hidden" name="spieler_update" value="1">
                                 </form>
                             </td>
+                            <td><?= htmlspecialchars($termin['status']) ?></td>
                             <td>
-                                <form class="termin-loeschen-form" action="termine.php" method="POST" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Termin löschen möchten?');">
+                                <form action="" method="POST" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Termin löschen möchten?');">
                                     <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                                     <input type="hidden" name="termin_loeschen" value="1">
                                     <button type="submit">Löschen</button>
@@ -86,12 +83,6 @@ $termineListe = leseTermine();
         </div>
     </section>
 </div>
-
-<script>
-$(document).ready(function() {
-    // Hier könnte zusätzlicher JavaScript-Code stehen, z.B. für AJAX-Anfragen
-});
-</script>
 
 </body>
 </html>
