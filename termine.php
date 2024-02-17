@@ -42,11 +42,11 @@ $termineListe = leseTermine();
             <table>
                 <thead>
                     <tr>
-                        <th>Termin des Spiels</th>
-                        <th>Spielname</th>
-                        <th>Spieler</th>
-                        <th>Status</th>
-                        <th>Aktion</th>
+                        <th>Termin</th>
+                        <th>Partie</th>
+                        <th>Gebucht</th>
+                        <th>Sichtbarkeit</th>
+                        <th>Löschen</th>
                     </tr>
                 </thead>
                 <tbody>
