@@ -171,6 +171,25 @@ $(document).ready(function() {
     // Verstecke standardmäßig archivierte Zeilen
     $(".archived-row").hide();
 
+    // AJAX-Funktion für Buchung
+    $(".buchen-button").click(function() {
+        var button = $(this);
+        var datum = button.data('datum');
+        var spieler = button.closest('tr').find('select[name="spieler"]').val();
+        if (spieler !== "") {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $_SERVER['PHP_SELF']; ?>",
+                data: { buchung: true, datum: datum, spieler: spieler },
+                success: function() {
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Bitte einen Namen auswählen.");
+        }
+    });
+
     // Angepasste AJAX-Funktion für Freigabe mit Sicherheitsabfrage
     $(".freigabe-button").click(function() {
         var button = $(this);
@@ -194,37 +213,6 @@ $(document).ready(function() {
     // Toggle-Funktion für archivierte Zeilen
     $("#toggleArchivedButton").click(function() {
         $(".archived-row").toggle();
-    });
-});
-
-    $(".buchen-button").unbind('click').click(function() {
-        var button = $(this);
-        var datum = button.data('datum');
-        var spielerSelect = button.closest('tr').find('select[name="spieler"]');
-        var spieler = spielerSelect.val();
-        if (spieler !== "") {
-            $.ajax({
-                type: "POST",
-                url: "index.php",
-                data: { buchung: true, datum: datum, spieler: spieler },
-                dataType: "json",
-                success: function(response) {
-                    if (response.success) {
-                        alert(response.message);
-                        button.closest('tr').find('td:nth-child(2)').text(spieler);
-                        button.replaceWith('<button type="button" class="freigabe-button" data-datum="' + datum + '">Freigeben</button>');
-                        // Sie müssen den Event-Listener für die neu erstellten Freigabe-Buttons erneut binden.
-                    } else {
-                        alert(response.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert("Ein Fehler ist aufgetreten: " + xhr.responseText);
-                }
-            });
-        } else {
-            alert("Bitte einen Namen auswählen.");
-        }
     });
 });
 </script>

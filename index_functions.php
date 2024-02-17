@@ -66,43 +66,54 @@ function schreibeTermine($termineDaten) {
 }
 
 function bucheTermin($datum, $spielerName) {
-    header('Content-Type: application/json');
     $termine = leseTermine();
+    $spieler = leseSpieler();
     $found = false;
     foreach ($termine as &$termin) {
-        if ($termin['datum'] === $datum && empty($termin['spielerName'])) {
+        if ($termin['datum'] === $datum) {
             $termin['spielerName'] = $spielerName;
             $found = true;
             break;
         }
     }
-    if ($found) {
-        schreibeTermine($termine);
-        echo json_encode(['success' => true, 'message' => 'Termin erfolgreich gebucht.', 'spielerName' => $spielerName]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Termin nicht gefunden oder bereits gebucht.']);
+    if (!$found) {
+        throw new Exception("Termin nicht gefunden.");
     }
-    exit;
-}
+    schreibeTermine($termine);
 
-function freigebenTermin($datum) {
-    header('Content-Type: application/json');
-    $termine = leseTermine();
-    $found = false;
-    foreach ($termine as &$termin) {
-        if ($termin['datum'] === $datum && !empty($termin['spielerName'])) {
-            $termin['spielerName'] = '';
-            $found = true;
+    foreach ($spieler as &$spielerItem) {
+        if ($spielerItem['name'] === $spielerName) {
+            $spielerItem['waschstatistik'] += 1;
             break;
         }
     }
-    if ($found) {
-        schreibeTermine($termine);
-        echo json_encode(['success' => true, 'message' => 'Termin erfolgreich freigegeben.']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Termin nicht gefunden oder bereits frei.']);
+    schreibeSpieler($spieler);
+}
+
+function freigebenTermin($datum) {
+    $termine = leseTermine();
+    $spieler = leseSpieler();
+    $spielerName = "";
+
+    foreach ($termine as &$termin) {
+        if ($termin['datum'] === $datum) {
+            $spielerName = $termin['spielerName'];
+            $termin['spielerName'] = ''; // Termin freigeben
+            break;
+        }
     }
-    exit;
+    if ($spielerName === "") {
+        throw new Exception("Termin nicht gefunden oder bereits frei.");
+    }
+
+    foreach ($spieler as &$spielerItem) {
+        if ($spielerItem['name'] === $spielerName) {
+            $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
+            break;
+        }
+    }
+    schreibeTermine($termine);
+    schreibeSpieler($spieler);
 }
 
 function leseArchivierteTermine() {
