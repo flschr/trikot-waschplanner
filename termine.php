@@ -5,10 +5,9 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['spieler_update'], $_POST['datum'], $_POST['spieler'], $_POST['status'])) {
-        // Extrahiere Status direkt aus dem Post-Array
-        $status = $_POST['status'];
-        updateTermin($_POST['datum'], $_POST['spieler'], $status);
+    if (isset($_POST['update'], $_POST['datum'], $_POST['spieler'], $_POST['status'])) {
+        // Extrahiere und verarbeite die Daten
+        updateTermin($_POST['datum'], $_POST['spieler'], $_POST['status']);
 
         // Seite neu laden, um die Änderungen sofort anzuzeigen
         header("Location: " . $_SERVER['PHP_SELF']);
@@ -64,16 +63,21 @@ $termineListe = leseTermine();
                                         <?php endforeach; ?>
                                     </select>
                                     <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                                    <input type="hidden" name="spieler_update" value="1">
-                                    <!-- Status Dropdown innerhalb des Spielers Update Formular -->
+                                    <input type="hidden" name="update" value="1">
+                                </form>
+                            </td>
+                            <td>
+                                <form action="" method="POST">
                                     <select name="status" onchange="this.form.submit()">
                                         <option value="1" <?= $termin['status'] === '1' ? 'selected' : '' ?>>Aktiv</option>
                                         <option value="0" <?= $termin['status'] === '0' ? 'selected' : '' ?>>Ausgeblendet</option>
                                         <option value="3" <?= $termin['status'] === '3' ? 'selected' : '' ?>>Archiviert</option>
                                     </select>
+                                    <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+                                    <input type="hidden" name="spieler" value="<?= htmlspecialchars($termin['spielerName']) ?>">
+                                    <input type="hidden" name="update" value="1">
                                 </form>
                             </td>
-                            <td><?= htmlspecialchars($termin['status']) ?></td>
                             <td>
                                 <form action="" method="POST" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Termin löschen möchten?');">
                                     <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
