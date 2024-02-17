@@ -5,17 +5,21 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['spieler_update'], $_POST['datum'], $_POST['spieler'])) {
-        // Standardwert für 'status', falls nicht gesetzt
-        $status = $_POST['status'] ?? '1'; // Standardwert '1', passen Sie dies ggf. an
+    if (isset($_POST['spieler_update'], $_POST['datum'], $_POST['spieler'], $_POST['status'])) {
+        // Extrahiere Status direkt aus dem Post-Array
+        $status = $_POST['status'];
         updateTermin($_POST['datum'], $_POST['spieler'], $status);
+
+        // Seite neu laden, um die Änderungen sofort anzuzeigen
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
     } elseif (isset($_POST['termin_loeschen'], $_POST['datum'])) {
         loescheTermin($_POST['datum']);
-    }
 
-    // Seite neu laden, um die Änderungen sofort anzuzeigen
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
+        // Seite neu laden, um die Änderung sofort anzuzeigen
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+    }
 }
 
 $spielerListe = leseSpieler();
@@ -61,7 +65,8 @@ $termineListe = leseTermine();
                                     </select>
                                     <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                                     <input type="hidden" name="spieler_update" value="1">
-                                    <select name="status" style="display:none;">
+                                    <!-- Status Dropdown innerhalb des Spielers Update Formular -->
+                                    <select name="status" onchange="this.form.submit()">
                                         <option value="1" <?= $termin['status'] === '1' ? 'selected' : '' ?>>Aktiv</option>
                                         <option value="0" <?= $termin['status'] === '0' ? 'selected' : '' ?>>Ausgeblendet</option>
                                         <option value="3" <?= $termin['status'] === '3' ? 'selected' : '' ?>>Archiviert</option>
