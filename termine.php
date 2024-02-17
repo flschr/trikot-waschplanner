@@ -64,6 +64,7 @@ $termineListe = leseTermine();
                                     </select>
                                     <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
                                     <input type="hidden" name="update" value="1">
+                                    <input type="hidden" name="status" value="<?= htmlspecialchars($termin['status']) ?>">
                                 </form>
                             </td>
                             <td>

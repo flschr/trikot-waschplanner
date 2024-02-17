@@ -37,27 +37,20 @@ function updateTermin($datum, $spieler, $status) {
     $termine = leseTermine();
     $gefunden = false;
 
-    // Durchlaufe alle Termine und suche den zu aktualisierenden Termin
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum) {
-            $termin['spielerName'] = $spieler; // Aktualisiere den Spieler
-            $termin['status'] = $status; // Aktualisiere den Status, falls mitgesendet
+            $termin['spielerName'] = $spieler;
+            $termin['status'] = $status;
             $gefunden = true;
             break;
         }
     }
 
-    // Wenn der Termin nicht gefunden wurde (neuer Termin), füge ihn hinzu
     if (!$gefunden) {
-        $termine[] = [
-            'datum' => $datum,
-            'name' => 'Spielname Unbekannt', // Hier ggf. Anpassen
-            'status' => $status,
-            'spielerName' => $spieler,
-        ];
+        // Füge neuen Termin hinzu, falls nicht gefunden
+        $termine[] = ['datum' => $datum, 'name' => 'Unbekannt', 'status' => $status, 'spielerName' => $spieler];
     }
 
-    // Schreibe die aktualisierten Termine zurück in die CSV-Datei
     schreibeTermine($termine);
 }
 
