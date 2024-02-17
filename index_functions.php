@@ -66,44 +66,28 @@ function schreibeTermine($termineDaten) {
 }
 
 function bucheTermin($datum, $spielerName) {
-	header('Content-Type: application/json');
+    header('Content-Type: application/json');
     $termine = leseTermine();
-    $spieler = leseSpieler();
     $found = false;
     foreach ($termine as &$termin) {
-        if ($termin['datum'] === $datum) {
+        if ($termin['datum'] === $datum && empty($termin['spielerName'])) {
             $termin['spielerName'] = $spielerName;
             $found = true;
             break;
         }
     }
-    if (!$found) {
-        echo json_encode(['success' => false, 'message' => 'Termin nicht gefunden.']);
-        exit;
-    }
-    schreibeTermine($termine);
-
-    $spielerUpdated = false;
-    foreach ($spieler as &$spielerItem) {
-        if ($spielerItem['name'] === $spielerName) {
-            $spielerItem['waschstatistik'] += 1;
-            $spielerUpdated = true;
-            break;
-        }
-    }
-    if ($spielerUpdated) {
-        schreibeSpieler($spieler);
-        echo json_encode(['success' => true, 'spielerName' => $spielerName]);
+    if ($found) {
+        schreibeTermine($termine);
+        echo json_encode(['success' => true, 'message' => 'Termin erfolgreich gebucht.', 'spielerName' => $spielerName]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Spieler nicht gefunden.']);
+        echo json_encode(['success' => false, 'message' => 'Termin nicht gefunden oder bereits gebucht.']);
     }
     exit;
 }
 
 function freigebenTermin($datum) {
-	header('Content-Type: application/json');
+    header('Content-Type: application/json');
     $termine = leseTermine();
-    $spieler = leseSpieler();
     $found = false;
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum && !empty($termin['spielerName'])) {
@@ -112,12 +96,12 @@ function freigebenTermin($datum) {
             break;
         }
     }
-    if (!$found) {
+    if ($found) {
+        schreibeTermine($termine);
+        echo json_encode(['success' => true, 'message' => 'Termin erfolgreich freigegeben.']);
+    } else {
         echo json_encode(['success' => false, 'message' => 'Termin nicht gefunden oder bereits frei.']);
-        exit;
     }
-    schreibeTermine($termine);
-    echo json_encode(['success' => true]);
     exit;
 }
 

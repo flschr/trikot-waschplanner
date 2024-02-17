@@ -197,37 +197,36 @@ $(document).ready(function() {
     });
 });
 
-$(".buchen-button").click(function() {
-    var button = $(this);
-    var datum = button.data('datum');
-    var spieler = button.closest('tr').find('select[name="spieler"]').val();
-    if (spieler !== "") {
-        $.ajax({
-            type: "POST",
-            url: "index.php", // Pfad zu Ihrer PHP-Datei
-            data: { buchung: true, datum: datum, spieler: spieler },
-            dataType: "json", // Erwarteter Rückgabetyp
-            success: function(response) {
-                if (response.success) {
-                    // Beispiel: Aktualisieren des Buchungsstatus im DOM
-                    alert("Buchung erfolgreich!");
-                    var row = button.closest('tr');
-                    row.find('td:nth-child(2)').text(response.spielerName); // Spielername aktualisieren
-                    button.replaceWith('<button type="button" class="freigabe-button" data-datum="' + datum + '">Freigeben</button>');
-                    // Aktualisieren Sie die Ereignisbindung für die neue Freigabe-Schaltfläche
-                } else {
-                    alert("Buchung fehlgeschlagen.");
+    $(".buchen-button").unbind('click').click(function() {
+        var button = $(this);
+        var datum = button.data('datum');
+        var spielerSelect = button.closest('tr').find('select[name="spieler"]');
+        var spieler = spielerSelect.val();
+        if (spieler !== "") {
+            $.ajax({
+                type: "POST",
+                url: "index.php",
+                data: { buchung: true, datum: datum, spieler: spieler },
+                dataType: "json",
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        button.closest('tr').find('td:nth-child(2)').text(spieler);
+                        button.replaceWith('<button type="button" class="freigabe-button" data-datum="' + datum + '">Freigeben</button>');
+                        // Sie müssen den Event-Listener für die neu erstellten Freigabe-Buttons erneut binden.
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Ein Fehler ist aufgetreten: " + xhr.responseText);
                 }
-            },
-            error: function() {
-                alert("Ein Fehler ist aufgetreten.");
-            }
-        });
-    } else {
-        alert("Bitte einen Namen auswählen.");
-    }
+            });
+        } else {
+            alert("Bitte einen Namen auswählen.");
+        }
+    });
 });
-
 </script>
 
 
