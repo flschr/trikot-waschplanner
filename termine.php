@@ -150,7 +150,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: "pfad_zur_ajax_verarbeitung.php", // Pfad zur PHP-Datei, die die Logik zur Aktualisierung des Status enthält
+            url: "termine.php", // Pfad zur PHP-Datei, die die Logik zur Aktualisierung des Status enthält
             data: {
                 aktion: 'statusUpdate',
                 status: neuerStatus,
