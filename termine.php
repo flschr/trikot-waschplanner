@@ -118,7 +118,6 @@ function aktualisiereStatus($datum, $neuerStatus) {
 								<select name="status" class="status-dropdown" data-datum="<?= htmlspecialchars($termin['datum']) ?>">
 									<option value="1" <?= $termin['sichtbarkeit'] == 1 ? 'selected' : '' ?>>Aktiv</option>
 									<option value="3" <?= $termin['sichtbarkeit'] == 3 ? 'selected' : '' ?>>Archiviert</option>
-									<option value="0" <?= $termin['sichtbarkeit'] == 0 ? 'selected' : '' ?>>Ausgeblendet</option>
 								</select>
 							</td>
                             <td>
