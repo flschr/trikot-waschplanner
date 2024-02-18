@@ -172,4 +172,3 @@ function aktualisiereTerminUndStatistik($datum, $neuerSpieler) {
     schreibeTermine($termine);
     schreibeSpieler($spieler);
 }
-

@@ -50,7 +50,6 @@ function leseTermineVerwaltung() {
     return $termineListe;
 }
 
-
 // Verarbeitung von Änderungen in der Terminverwaltung
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['aktion'] == 'update') {
     $datum = $_POST['datum'];
