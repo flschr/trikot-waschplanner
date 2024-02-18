@@ -15,6 +15,8 @@ require 'index_functions.php';
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+$spielerListe = leseSpieler();
+
 if (is_array($spielerListe)) {
     usort($spielerListe, function($a, $b) {
         return strcmp($a['name'], $b['name']);
