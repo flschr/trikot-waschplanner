@@ -142,29 +142,34 @@ function leseArchivierteTermine() {
 function aktualisiereTerminUndStatistik($datum, $neuerSpieler) {
     $termine = leseTermine();
     $spieler = leseSpieler();
-    $alterSpieler = "";
+    $gefunden = false;
 
-    // Finden und Aktualisieren des Termins
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum) {
             $alterSpieler = $termin['spielerName'];
             $termin['spielerName'] = $neuerSpieler;
+            $gefunden = true;
             break;
         }
     }
-    if (!$alterSpieler) {
-        throw new Exception("Termin nicht gefunden.");
-    }
 
-    // Aktualisieren der Waschstatistik
-    foreach ($spieler as &$spielerItem) {
-        if ($spielerItem['name'] === $neuerSpieler) {
-            $spielerItem['waschstatistik'] += 1;
-        } elseif ($spielerItem['name'] === $alterSpieler) {
-            $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
+    if (!$gefunden) {
+        throw new Exception("Termin nicht gefunden.");
+    } else {
+        // Aktualisieren der Waschstatistik nur, wenn der Spieler gewechselt hat
+        if ($alterSpieler != $neuerSpieler) {
+            foreach ($spieler as &$spielerItem) {
+                if ($spielerItem['name'] === $neuerSpieler) {
+                    $spielerItem['waschstatistik'] += 1;
+                }
+                if ($alterSpieler && $spielerItem['name'] === $alterSpieler) {
+                    $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
+                }
+            }
         }
     }
 
     schreibeTermine($termine);
     schreibeSpieler($spieler);
 }
+
