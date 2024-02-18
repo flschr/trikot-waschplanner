@@ -15,6 +15,15 @@ require 'index_functions.php';
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+if (is_array($spielerListe)) {
+    usort($spielerListe, function($a, $b) {
+        return strcmp($a['name'], $b['name']);
+    });
+} else {
+    // Behandlung des Fehlers oder Initialisierung von $spielerListe als leeres Array, wenn nicht bereits geschehen
+    $spielerListe = [];
+}
+
 // Alphabetische Sortierung der Spielerliste für das Dropdown-Menü
 usort($spielerListe, function($a, $b) {
     return strcmp($a['name'], $b['name']);
@@ -32,15 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
     // Für AJAX-Anfragen, senden Sie eine JSON-Antwort
     echo json_encode(['status' => 'success', 'message' => 'Spieler aktualisiert']);
     exit;
-}
-
-if (is_array($spielerListe)) {
-    usort($spielerListe, function($a, $b) {
-        return strcmp($a['name'], $b['name']);
-    });
-} else {
-    // Behandlung des Fehlers oder Initialisierung von $spielerListe als leeres Array, wenn nicht bereits geschehen
-    $spielerListe = [];
 }
 
 ?>
