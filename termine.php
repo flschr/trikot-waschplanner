@@ -34,6 +34,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
     exit;
 }
 
+if (is_array($spielerListe)) {
+    usort($spielerListe, function($a, $b) {
+        return strcmp($a['name'], $b['name']);
+    });
+} else {
+    // Behandlung des Fehlers oder Initialisierung von $spielerListe als leeres Array, wenn nicht bereits geschehen
+    $spielerListe = [];
+}
+
 ?>
 
 <div class="container">
