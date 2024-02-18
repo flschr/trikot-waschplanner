@@ -60,8 +60,9 @@ function schreibeTermine($termineDaten) {
         throw new Exception("Failed to open $filePath for writing.");
     }
     foreach ($termineDaten as $termin) {
+        // Stellen Sie sicher, dass alle Felder des Termins korrekt zurückgeschrieben werden
         if (!fputcsv($handle, [$termin['datum'], $termin['name'], $termin['sichtbarkeit'], $termin['spielerName']])) {
-            fclose($handle); // Ensure file is closed before throwing exception
+            fclose($handle); // Stellen Sie sicher, dass die Datei geschlossen wird, bevor eine Ausnahme geworfen wird
             throw new Exception("Failed to write to $filePath.");
         }
     }
