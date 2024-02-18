@@ -25,11 +25,8 @@ function leseTermine() {
     $filePath = "termine.csv";
     if (($handle = fopen($filePath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            // Überprüfen, ob der Wert in der dritten Spalte gleich 1 ist
-            if ($data[2] == 1) {
-                $spielerName = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
-                $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
-            }
+            $spielerName = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
+            $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
         }
         fclose($handle);
     } else {
