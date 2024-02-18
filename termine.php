@@ -45,6 +45,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['aktion'] == 'statusUpdate') {
+    $datum = $_POST['datum'];
+    $neuerStatus = $_POST['status'];
+    aktualisiereStatus($datum, $neuerStatus);
+
+    echo json_encode(['status' => 'success', 'message' => 'Status aktualisiert']);
+    exit;
+}
+
+// Funktion zur Aktualisierung des Status
+function aktualisiereStatus($datum, $neuerStatus) {
+    $termine = leseTermine();
+    foreach ($termine as &$termin) {
+        if ($termin['datum'] === $datum) {
+            $termin['sichtbarkeit'] = $neuerStatus;
+            break;
+        }
+    }
+    schreibeTermine($termine);
+}
+
 ?>
 
 <div class="container">
@@ -77,10 +98,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
 									<?php endforeach; ?>
 								</select>
 							</td>
-
-                            <td>
-                                <?= $termin['sichtbarkeit'] == 1 ? 'Aktiv' : ($termin['sichtbarkeit'] == 3 ? 'Archiviert' : 'Ausgeblendet') ?>
-                            </td>
+							<td>
+								<select name="status" class="status-dropdown" data-datum="<?= htmlspecialchars($termin['datum']) ?>">
+									<option value="1" <?= $termin['sichtbarkeit'] == 1 ? 'selected' : '' ?>>Aktiv</option>
+									<option value="3" <?= $termin['sichtbarkeit'] == 3 ? 'selected' : '' ?>>Archiviert</option>
+									<option value="0" <?= $termin['sichtbarkeit'] == 0 ? 'selected' : '' ?>>Ausgeblendet</option>
+								</select>
+							</td>
                             <td>
                                 <button type="button" class="loeschen-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Löschen</button>
                             </td>
@@ -118,6 +142,29 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+    $('.status-dropdown').change(function() {
+        var dropdown = $(this);
+        var neuerStatus = dropdown.val();
+        var datum = dropdown.data('datum');
+
+        $.ajax({
+            type: "POST",
+            url: "pfad_zur_ajax_verarbeitung.php", // Pfad zur PHP-Datei, die die Logik zur Aktualisierung des Status enthält
+            data: {
+                aktion: 'statusUpdate',
+                status: neuerStatus,
+                datum: datum
+            },
+            success: function(response) {
+                alert('Status erfolgreich aktualisiert.');
+            },
+            error: function() {
+                alert('Fehler beim Aktualisieren des Status.');
+            }
+        });
+    });
+});
 </script>
 
 </body>
