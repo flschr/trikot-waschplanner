@@ -19,18 +19,16 @@ $spielerListe = leseSpieler();
 $termineListe = leseTermine();
 
 // Verarbeitung von Änderungen in der Terminverwaltung
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['aktion'] == 'update') {
     $datum = $_POST['datum'];
-    if ($_POST['aktion'] == 'update') {
-        $neuerSpieler = $_POST['spieler'];
-        aktualisiereTerminUndStatistik($datum, $neuerSpieler);
-    } elseif ($_POST['aktion'] == 'loeschen') {
-        // Fügen Sie hier die Logik zum Löschen des Termins hinzu
-        loescheTermin($datum);
-    }
-    header("Location: termine.php"); // Verhindern von Formular-Neusendungen
+    $neuerSpieler = $_POST['spieler'];
+    aktualisiereTerminUndStatistik($datum, $neuerSpieler);
+
+    // Für AJAX-Anfragen, senden Sie eine JSON-Antwort
+    echo json_encode(['status' => 'success', 'message' => 'Spieler aktualisiert']);
     exit;
 }
+
 ?>
 
 <div class="container">
@@ -53,20 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion'])) {
                         <tr>
                             <td><?= htmlspecialchars($termin['datum']) ?></td>
                             <td><?= htmlspecialchars($termin['name']) ?></td>
-                            <td>
-                                <form method="POST" action="admin_verwaltung.php">
-                                    <input type="hidden" name="aktion" value="update">
-                                    <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                                    <select name="spieler">
-                                        <?php foreach ($spielerListe as $spieler): ?>
-                                        <option value="<?= htmlspecialchars($spieler['name']) ?>" <?= $spieler['name'] == $termin['spielerName'] ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($spieler['name']) ?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <button type="submit">Aktualisieren</button>
-                                </form>
-                            </td>
+							<td>
+								<select name="spieler" class="spieler-dropdown" data-datum="<?= htmlspecialchars($termin['datum']) ?>">
+									<?php foreach ($spielerListe as $spieler): ?>
+									<option value="<?= htmlspecialchars($spieler['name']) ?>" <?= $spieler['name'] == $termin['spielerName'] ? 'selected' : '' ?>>
+										<?= htmlspecialchars($spieler['name']) ?>
+									</option>
+									<?php endforeach; ?>
+								</select>
+							</td>
                             <td>
                                 <?= $termin['sichtbarkeit'] == 1 ? 'Aktiv' : ($termin['sichtbarkeit'] == 3 ? 'Archiviert' : 'Ausgeblendet') ?>
                             </td>
@@ -84,29 +77,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion'])) {
 
 <script>
 $(document).ready(function() {
-    $('.loeschen-button').click(function() {
-        var button = $(this);
-        var datum = button.data('datum');
+    $('.spieler-dropdown').change(function() {
+        var dropdown = $(this);
+        var neuerSpieler = dropdown.val();
+        var datum = dropdown.data('datum');
 
-        if (confirm('Sind Sie sicher, dass Sie diesen Termin löschen möchten?')) {
-            $.ajax({
-                type: "POST",
-                url: "admin_verwaltung.php", // Hier könnte eine dedizierte serverseitige Logik zum Löschen des Termins stehen
-                data: {
-                    aktion: 'loeschen',
-                    datum: datum
-                },
-                success: function(response) {
-                    button.closest('tr').remove();
-                    alert('Termin erfolgreich gelöscht.');
-                },
-                error: function() {
-                    alert('Fehler beim Löschen des Termins.');
-                }
-            });
-        }
+        $.ajax({
+            type: "POST",
+            url: "admin_verwaltung.php", // oder eine spezielle PHP-Datei für die AJAX-Verarbeitung
+            data: {
+                aktion: 'update',
+                spieler: neuerSpieler,
+                datum: datum
+            },
+            success: function(response) {
+                alert('Spieler erfolgreich aktualisiert.');
+            },
+            error: function() {
+                alert('Fehler beim Aktualisieren des Spielers.');
+            }
+        });
     });
 });
+
 </script>
 
 </body>
