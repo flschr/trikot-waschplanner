@@ -53,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
                             <td><?= htmlspecialchars($termin['name']) ?></td>
 							<td>
 								<select name="spieler" class="spieler-dropdown" data-datum="<?= htmlspecialchars($termin['datum']) ?>">
+									<option value="" <?= empty($termin['spielerName']) ? 'selected' : '' ?>>Termin frei</option>
 									<?php foreach ($spielerListe as $spieler): ?>
 									<option value="<?= htmlspecialchars($spieler['name']) ?>" <?= $spieler['name'] == $termin['spielerName'] ? 'selected' : '' ?>>
 										<?= htmlspecialchars($spieler['name']) ?>
@@ -60,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
 									<?php endforeach; ?>
 								</select>
 							</td>
+
                             <td>
                                 <?= $termin['sichtbarkeit'] == 1 ? 'Aktiv' : ($termin['sichtbarkeit'] == 3 ? 'Archiviert' : 'Ausgeblendet') ?>
                             </td>
