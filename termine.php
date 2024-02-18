@@ -76,11 +76,11 @@ function aktualisiereStatus($datum, $neuerStatus) {
                 <table>
                     <thead>
                         <tr>
-                            <th>Termin des Spiels</th>
-                            <th>Name des Spiels</th>
-                            <th>Spieler</th>
+                            <th>Termin</th>
+                            <th>Spiel</th>
+                            <th>Gebucht</th>
                             <th>Status</th>
-                            <th>Aktion</th>
+                            <th>Löschen</th>
                         </tr>
                     </thead>
                     <tbody>
