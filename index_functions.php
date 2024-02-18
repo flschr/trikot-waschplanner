@@ -136,3 +136,35 @@ function leseArchivierteTermine() {
     }
     return $archivierteTermineListe;
 }
+
+// Terminverwaltung
+
+function aktualisiereTerminUndStatistik($datum, $neuerSpieler) {
+    $termine = leseTermine();
+    $spieler = leseSpieler();
+    $alterSpieler = "";
+
+    // Finden und Aktualisieren des Termins
+    foreach ($termine as &$termin) {
+        if ($termin['datum'] === $datum) {
+            $alterSpieler = $termin['spielerName'];
+            $termin['spielerName'] = $neuerSpieler;
+            break;
+        }
+    }
+    if (!$alterSpieler) {
+        throw new Exception("Termin nicht gefunden.");
+    }
+
+    // Aktualisieren der Waschstatistik
+    foreach ($spieler as &$spielerItem) {
+        if ($spielerItem['name'] === $neuerSpieler) {
+            $spielerItem['waschstatistik'] += 1;
+        } elseif ($spielerItem['name'] === $alterSpieler) {
+            $spielerItem['waschstatistik'] = max(0, $spielerItem['waschstatistik'] - 1);
+        }
+    }
+
+    schreibeTermine($termine);
+    schreibeSpieler($spieler);
+}
