@@ -63,63 +63,60 @@ usort($spielerListeDropdown, function($a, $b) {
                     </thead>
                     <tbody>
                         <?php foreach ($termineListe as $termin): ?>
-                            <tr <?php if (!empty($termin['spielerName'])) echo 'class="booked-row"'; ?>>
-                                <td>
-                                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
-                                    <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
-                                </td>
-                                <td>
-                                    <?php if (empty($termin['spielerName'])): ?>
-                                        <form class="buchung-form">
-                                            <select name="spieler">
-                                                <option value="">Termin frei</option>
-                                                <?php foreach ($spielerListeDropdown as $spieler): ?>
-                                                    <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
-                                        </form>
-                                    <?php else: ?>
-                                        <?= htmlspecialchars($termin['spielerName']) ?>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if (empty($termin['spielerName'])): ?>
-                                        <button type="button" class="buchen-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Buchen</button>
-                                    <?php else: ?>
-                                        <button type="button" class="freigabe-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Freigeben</button>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
+                            <?php if ($termin['sichtbarkeit'] != 3): // Archivierte Termine ausblenden ?>
+                                <tr <?php if (!empty($termin['spielerName'])) echo 'class="booked-row"'; ?>>
+                                    <td>
+                                        <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
+                                        <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
+                                    </td>
+                                    <td>
+                                        <?php if (empty($termin['spielerName'])): ?>
+                                            <form class="buchung-form">
+                                                <select name="spieler">
+                                                    <option value="">Termin frei</option>
+                                                    <?php foreach ($spielerListeDropdown as $spieler): ?>
+                                                        <option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <input type="hidden" name="datum" value="<?= htmlspecialchars($termin['datum']) ?>">
+                                            </form>
+                                        <?php else: ?>
+                                            <?= htmlspecialchars($termin['spielerName']) ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if (empty($termin['spielerName'])): ?>
+                                            <button type="button" class="buchen-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Buchen</button>
+                                        <?php else: ?>
+                                            <button type="button" class="freigabe-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Freigeben</button>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         <?php endforeach; ?>
 						
 						<tr id="toggleArchivedRow">
-							<td colspan="3"><button class="toggleArchivedButton" id="toggleArchivedButton">⇅ Archivierte Termine</button></td>
+							<td colspan="3"><button class="toggleArchivedButton" id="toggleArchivedButton">⇅ Archivierte Termine anzeigen</button></td>
 						</tr>
 						
                         <!-- Archivierte Termine -->
                         <?php 
                         $archivierteTermineListe = leseArchivierteTermine();
                         foreach ($archivierteTermineListe as $termin):
-                            if ($termin['sichtbarkeit'] == 3):
                         ?>
-                                <tr class="archived-row">
-                                    <td>
-                                        <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
-                                        <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
-                                    </td>
-                                    <td><?= htmlspecialchars($termin['spielerName']) ?></td>
-                                    <td>Archiviert</td>
-                                </tr>
-                        <?php 
-                            endif;
-                        endforeach; 
-                        ?>
+                            <tr class="archived-row">
+                                <td>
+                                    <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
+                                    <span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
+                                </td>
+                                <td><?= htmlspecialchars($termin['spielerName']) ?></td>
+                                <td>Archiviert</td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-	<p>Alle Termine als <a href="webcal://trikots.gaehn.org/ical.php">Kalender abonnieren</a></p>
-
+            <p>Alle Termine als <a href="webcal://trikots.gaehn.org/ical.php">Kalender abonnieren</a></p>
         </section>
 
         <div class="statistik">
@@ -159,11 +156,11 @@ usort($spielerListeDropdown, function($a, $b) {
         <li><a href="#statistik">Kontakt</a></li>
     </ul>
 
-	<p>
-		<a href="https://github.com/flschr/trikot-waschplanner/" aria-label="GitHub" class="github-logo">
-			<img src="github-mark.png" alt="GitHub Logo" style="width: 30px; height: auto;">
-		</a>
-	</p>
+    <p>
+        <a href="https://github.com/flschr/trikot-waschplanner/" aria-label="GitHub" class="github-logo">
+            <img src="github-mark.png" alt="GitHub Logo" style="width: 30px; height: auto;">
+        </a>
+    </p>
 </div>
 
 <script>
@@ -194,10 +191,8 @@ $(document).ready(function() {
     $(".freigabe-button").click(function() {
         var button = $(this);
         var datum = button.data('datum');
-        // Hier wird angenommen, dass der Spielername im gleichen <td> wie der Freigabe-Button, aber in einem anderen Element angezeigt wird
-        var spielerName = button.closest('tr').find('td:nth-child(2)').text().trim(); // Sucht den Text im zweiten <td> der Reihe
+        var spielerName = button.closest('tr').find('td:nth-child(2)').text().trim();
         var message = "Soll der " + datum + ", gebucht von " + spielerName + " freigegeben werden?";
-        // Sicherheitsabfrage, bevor die Aktion durchgeführt wird
         if (confirm(message)) {
             $.ajax({
                 type: "POST",
