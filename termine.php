@@ -32,7 +32,24 @@ usort($spielerListe, function($a, $b) {
 });
 
 $spielerListe = leseSpieler();
-$termineListe = leseTermine();
+$termineListe = leseTermineVerwaltung();
+
+function leseTermineVerwaltung() {
+    $termineListe = [];
+    $filePath = "termine.csv";
+    if (($handle = fopen($filePath, "r")) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            // Entfernen Sie die Bedingung, um alle Termine unabhängig vom Status zu lesen
+            $spielerName = isset($data[3]) && !empty($data[3]) ? $data[3] : '';
+            $termineListe[] = ['datum' => $data[0], 'name' => $data[1], 'sichtbarkeit' => $data[2], 'spielerName' => $spielerName];
+        }
+        fclose($handle);
+    } else {
+        throw new Exception("Failed to open $filePath for reading.");
+    }
+    return $termineListe;
+}
+
 
 // Verarbeitung von Änderungen in der Terminverwaltung
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['aktion'] == 'update') {
@@ -56,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
 
 // Funktion zur Aktualisierung des Status
 function aktualisiereStatus($datum, $neuerStatus) {
-    $termine = leseTermine();
+    $termine = leseTermineVerwaltung();
     foreach ($termine as &$termin) {
         if ($termin['datum'] === $datum) {
             $termin['sichtbarkeit'] = $neuerStatus;
