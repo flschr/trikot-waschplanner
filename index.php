@@ -15,14 +15,22 @@ require 'index_functions.php';
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Sortieren der Termine und archivierten Termine
-usort($termineListe, function($a, $b) {
-    return strtotime($a['datum']) - strtotime($b['datum']);
-});
+$termineListe = leseTermine();
+$archivierteTermineListe = leseArchivierteTermine();
+$spielerListe = leseSpieler();
 
-usort($archivierteTermineListe, function($a, $b) {
-    return strtotime($a['datum']) - strtotime($b['datum']);
-});
+// Sortieren der Termine und archivierten Termine, wenn sie nicht leer sind
+if (!empty($termineListe)) {
+    usort($termineListe, function($a, $b) {
+        return strtotime($a['datum']) - strtotime($b['datum']);
+    });
+}
+
+if (!empty($archivierteTermineListe)) {
+    usort($archivierteTermineListe, function($a, $b) {
+        return strtotime($a['datum']) - strtotime($b['datum']);
+    });
+}
 
 // Logik zum Verarbeiten von Buchungs- und Freigabeanfragen
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -42,9 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 }
-
-$spielerListe = leseSpieler();
-$termineListe = leseTermine();
 
 // Sortieren der Spielerliste
 $spielerListeDropdown = $spielerListe;
