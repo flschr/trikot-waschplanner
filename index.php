@@ -17,25 +17,24 @@ error_reporting(E_ALL);
 
 // Logik zum Verarbeiten von Buchungs- und Freigabeanfragen
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['buchung']) && isset($_POST['spieler']) && isset($_POST['datum'])) {
-        $spieler = $_POST['spieler'];
-        $datum = $_POST['datum'];
-        if ($spieler !== "") {
-            bucheTermin($datum, $spieler);
-            exit;
-        } else {
-            echo "Bitte einen Namen auswählen.";
-            exit;
-        }
-    } elseif (isset($_POST['freigabe']) && isset($_POST['datum'])) {
-        $datum = $_POST['datum'];
-        freigebenTermin($datum);
-        exit;
-    }
+    // POST-Anfragen Verarbeitung
 }
 
 $spielerListe = leseSpieler();
 $termineListe = leseTermine();
+
+// Termine chronologisch sortieren
+usort($termineListe, function($a, $b) {
+    return strtotime($a['datum']) - strtotime($b['datum']);
+});
+
+// Archivierte Termine getrennt verarbeiten
+$archivierteTermineListe = leseArchivierteTermine();
+
+// Archivierte Termine chronologisch sortieren
+usort($archivierteTermineListe, function($a, $b) {
+    return strtotime($a['datum']) - strtotime($b['datum']);
+});
 
 // Sortieren der Spielerliste
 $spielerListeDropdown = $spielerListe;
@@ -100,10 +99,7 @@ usort($spielerListeDropdown, function($a, $b) {
 						</tr>
 						
                         <!-- Archivierte Termine -->
-                        <?php 
-                        $archivierteTermineListe = leseArchivierteTermine();
-                        foreach ($archivierteTermineListe as $termin):
-                        ?>
+                        <?php foreach ($archivierteTermineListe as $termin): ?>
                             <tr class="archived-row">
                                 <td>
                                     <span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
@@ -211,7 +207,6 @@ $(document).ready(function() {
     });
 });
 </script>
-
 
 </body>
 </html>
