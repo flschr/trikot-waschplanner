@@ -171,21 +171,10 @@ function aktualisiereTerminUndStatistik($datum, $neuerSpieler) {
     schreibeSpieler($spieler);
 }
 
-function terminLoeschen($datum) {
-    $termine = leseTermine(); // Annahme, dass diese Funktion Ihre Termine als Array zurückgibt
-    $gefunden = false;
-    foreach ($termine as $index => $termin) {
-        if ($termin['datum'] === $datum) {
-            unset($termine[$index]);
-            $gefunden = true;
-            break;
-        }
-    }
-
-    if ($gefunden) {
-        schreibeTermine(array_values($termine)); // Stellen Sie sicher, dass die Liste neu indiziert wird
-        return true;
-    } else {
-        return false; // Kein Termin mit dem gegebenen Datum gefunden
-    }
+function loescheTermin($datum) {
+    $termine = leseTermine();
+    $termine = array_filter($termine, function($termin) use ($datum) {
+        return $termin['datum'] !== $datum;
+    });
+    schreibeTermine(array_values($termine));
 }
