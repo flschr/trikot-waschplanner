@@ -99,33 +99,22 @@ function aktualisiereStatus($datum, $neuerStatus) {
                             <th>Löschen</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($termineListe as $termin): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($termin['datum']) ?></td>
-                            <td><?= htmlspecialchars($termin['name']) ?></td>
-							<td>
-								<select name="spieler" class="spieler-dropdown" data-datum="<?= htmlspecialchars($termin['datum']) ?>">
-									<option value="" <?= empty($termin['spielerName']) ? 'selected' : '' ?>>Termin frei</option>
-									<?php foreach ($spielerListe as $spieler): ?>
-									<option value="<?= htmlspecialchars($spieler['name']) ?>" <?= $spieler['name'] == $termin['spielerName'] ? 'selected' : '' ?>>
-										<?= htmlspecialchars($spieler['name']) ?>
-									</option>
-									<?php endforeach; ?>
-								</select>
-							</td>
-							<td>
-								<select name="status" class="status-dropdown" data-datum="<?= htmlspecialchars($termin['datum']) ?>">
-									<option value="1" <?= $termin['sichtbarkeit'] == 1 ? 'selected' : '' ?>>Aktiv</option>
-									<option value="3" <?= $termin['sichtbarkeit'] == 3 ? 'selected' : '' ?>>Archiviert</option>
-								</select>
-							</td>
-                            <td>
-                                <button type="button" class="loeschen-button" data-datum="<?= htmlspecialchars($termin['datum']) ?>">Löschen</button>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
+					<tbody>
+						<?php foreach ($termineListe as $termin): ?>
+							<tr <?php if ($termin['sichtbarkeit'] == 3) echo 'class="archived-row"'; elseif (!empty($termin['spielerName'])) echo 'class="booked-row"'; ?>>
+								<td>
+									<span class="matchdate"><?= htmlspecialchars($termin['datum']) ?></span><br>
+									<span class="matchtitle"><?= htmlspecialchars($termin['name']) ?></span>
+								</td>
+								<td>
+									<?= htmlspecialchars($termin['spielerName']) ? htmlspecialchars($termin['spielerName']) : 'Frei' ?>
+								</td>
+								<td>
+									<?= $termin['sichtbarkeit'] == 3 ? 'Archiviert' : 'Aktiv' ?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
                 </table>
             </div>
         </section>
