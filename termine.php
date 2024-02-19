@@ -107,6 +107,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
                         </tr>
                     </thead>
                     <tbody>
+						<tr id="neuer-termin-row">
+							<td><input type="text" id="neues_datum" name="neues_datum" placeholder="dd.mm.yyyy"></td>
+							<td><input type="text" id="neuer_name" name="neuer_name" placeholder="Name"></td>
+							<td>
+								<select id="neuer_spieler" name="neuer_spieler">
+									<option value="">Termin frei</option>
+									<?php foreach ($spielerListe as $spieler): ?>
+										<option value="<?= htmlspecialchars($spieler['name']) ?>"><?= htmlspecialchars($spieler['name']) ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+							<td>
+								<select id="neuer_status" name="neuer_status">
+									<option value="1" selected>Aktiv</option>
+									<option value="3">Archiviert</option>
+								</select>
+							</td>
+							<td><button type="button" id="speichern_button">Speichern</button></td>
+						</tr>
                         <?php foreach ($termineListe as $termin): ?>
 							<tr <?php if ($termin['sichtbarkeit'] == 3) echo 'class="archived-row"'; elseif (!empty($termin['spielerName'])) echo 'class="booked-row"'; ?>>
                             <td><?= htmlspecialchars($termin['datum']) ?></td>
