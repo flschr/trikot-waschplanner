@@ -253,9 +253,9 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: "admin_verwaltung.php", // oder eine spezielle PHP-Datei für die AJAX-Verarbeitung
+            url: "admin_verwaltung.php",
             data: {
-                aktion: 'speichern',
+                aktion: 'speichern', // korrigiert von 'speichern_button'
                 datum: neuesDatum,
                 name: neuerName,
                 spieler: neuerSpieler,
@@ -263,7 +263,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 alert('Neuer Termin erfolgreich gespeichert.');
-                location.reload(); // Seite neu laden, um die neuen Termin anzuzeigen
+                location.reload(); // Seite neu laden, um die neuen Termine anzuzeigen
             },
             error: function() {
                 alert('Fehler beim Speichern des neuen Termins.');
