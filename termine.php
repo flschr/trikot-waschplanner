@@ -70,6 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['aktion'] == 'delete') {
+    $datum = $_POST['datum'];
+    function terminLoeschen($datum);
+
+    echo json_encode(['status' => 'success', 'message' => 'Termin gelöscht']);
+    exit;
+}
+
 // Funktion zur Aktualisierung des Status
 function aktualisiereStatus($datum, $neuerStatus) {
     $termine = leseTermineVerwaltung();
@@ -176,6 +184,39 @@ $(document).ready(function() {
             },
             error: function() {
                 alert('Fehler beim Aktualisieren des Status.');
+            }
+        });
+    });
+});
+
+$(document).ready(function() {
+    $('.loeschen-button').click(function() {
+        if (!confirm('Sind Sie sicher, dass Sie diesen Termin löschen möchten?')) {
+            return; // Benutzer hat das Löschen abgebrochen
+        }
+
+        var button = $(this);
+        var datum = button.data('datum');
+
+        $.ajax({
+            type: "POST",
+            url: "termine.php", // Pfad zur PHP-Datei, die die Logik zur Verarbeitung des Löschens enthält
+            dataType: "json",
+            data: {
+                aktion: 'delete',
+                datum: datum
+            },
+            success: function(response) {
+                if(response.status === 'success') {
+                    alert('Termin erfolgreich gelöscht.');
+                    // Entfernen Sie die Zeile des gelöschten Termins aus der Tabelle
+                    button.closest('tr').remove();
+                } else {
+                    alert('Fehler beim Löschen des Termins: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Fehler beim Senden der Anfrage zum Löschen des Termins.');
             }
         });
     });
