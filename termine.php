@@ -90,6 +90,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['aktion'] == 'speichern') {
+    $neuesDatum = $_POST['datum'];
+    $neuerName = $_POST['name'];
+    $neuerSpieler = $_POST['spieler'];
+    $neuerStatus = $_POST['status'];
+
+    // Speichern des neuen Termins
+    speichereNeuenTermin($neuesDatum, $neuerName, $neuerSpieler, $neuerStatus);
+
+    echo json_encode(['status' => 'success', 'message' => 'Neuer Termin erfolgreich gespeichert']);
+    exit;
+}
 ?>
 
 <div class="container">
@@ -229,6 +241,34 @@ $(document).ready(function() {
                 }
             });
         }
+    });
+});
+
+$(document).ready(function() {
+    $('#speichern_button').click(function() {
+        var neuesDatum = $('#neues_datum').val();
+        var neuerName = $('#neuer_name').val();
+        var neuerSpieler = $('#neuer_spieler').val();
+        var neuerStatus = $('#neuer_status').val();
+
+        $.ajax({
+            type: "POST",
+            url: "admin_verwaltung.php", // oder eine spezielle PHP-Datei für die AJAX-Verarbeitung
+            data: {
+                aktion: 'speichern',
+                datum: neuesDatum,
+                name: neuerName,
+                spieler: neuerSpieler,
+                status: neuerStatus
+            },
+            success: function(response) {
+                alert('Neuer Termin erfolgreich gespeichert.');
+                location.reload(); // Seite neu laden, um die neuen Termin anzuzeigen
+            },
+            error: function() {
+                alert('Fehler beim Speichern des neuen Termins.');
+            }
+        });
     });
 });
 </script>

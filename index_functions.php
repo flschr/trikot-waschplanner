@@ -178,3 +178,22 @@ function loescheTermin($datum) {
     });
     schreibeTermine(array_values($termine));
 }
+
+function speichereNeuenTermin($datum, $name, $spieler, $status) {
+    $filePath = "termine.csv";
+    $handle = fopen($filePath, "a"); // Öffnen der Datei zum Anhängen
+
+    // Überprüfen, ob der Dateizugriff erfolgreich war
+    if ($handle === FALSE) {
+        throw new Exception("Failed to open $filePath for appending.");
+    }
+
+    // Schreiben der neuen Terminzeile in die CSV-Datei
+    $neuerEintrag = [$datum, $name, $status, $spieler];
+    if (fputcsv($handle, $neuerEintrag) === FALSE) {
+        throw new Exception("Failed to write data to $filePath.");
+    }
+
+    // Schließen der Datei nach dem Schreiben
+    fclose($handle);
+}
