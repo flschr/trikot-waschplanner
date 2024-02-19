@@ -93,7 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['aktion']) && $_POST['a
 ?>
 
 <div class="container">
-    <div class="flex-container">
         <section id="verwaltung">
             <h1>Administrator Terminverwaltung</h1>
             <div class="table-responsive">
