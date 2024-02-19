@@ -15,9 +15,20 @@ require 'index_functions.php';
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Logik zum Verarbeiten von Buchungs- und Freigabeanfragen
+// Verarbeiten von POST-Anfragen
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // POST-Anfragen Verarbeitung
+    if (isset($_POST['action']) && $_POST['action'] == 'buchen' && isset($_POST['spieler']) && isset($_POST['datum'])) {
+        $spieler = $_POST['spieler'];
+        $datum = $_POST['datum'];
+        bucheTermin($datum, $spieler);
+        echo "Termin erfolgreich gebucht.";
+        exit;
+    } elseif (isset($_POST['action']) && $_POST['action'] == 'freigeben' && isset($_POST['datum'])) {
+        $datum = $_POST['datum'];
+        freigebenTermin($datum);
+        echo "Termin erfolgreich freigegeben.";
+        exit;
+    }
 }
 
 $spielerListe = leseSpieler();
@@ -28,9 +39,7 @@ usort($termineListe, function($a, $b) {
     return strtotime($a['datum']) - strtotime($b['datum']);
 });
 
-// Archivierte Termine getrennt verarbeiten
 $archivierteTermineListe = leseArchivierteTermine();
-
 // Archivierte Termine chronologisch sortieren
 usort($archivierteTermineListe, function($a, $b) {
     return strtotime($a['datum']) - strtotime($b['datum']);
@@ -161,49 +170,34 @@ usort($spielerListeDropdown, function($a, $b) {
 
 <script>
 $(document).ready(function() {
-    // Verstecke standardmäßig archivierte Zeilen
-    $(".archived-row").hide();
-
-    // AJAX-Funktion für Buchung
-    $(".buchen-button").click(function() {
-        var button = $(this);
-        var datum = button.data('datum');
-        var spieler = button.closest('tr').find('select[name="spieler"]').val();
-        if (spieler !== "") {
-            $.ajax({
-                type: "POST",
-                url: "<?php echo $_SERVER['PHP_SELF']; ?>",
-                data: { buchung: true, datum: datum, spieler: spieler },
-                success: function() {
-                    location.reload();
-                }
-            });
-        } else {
-            alert("Bitte einen Namen auswählen.");
-        }
+    // Buchen-Formular senden
+    $('.buchung-form').submit(function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize() + "&action=buchen";
+        $.ajax({
+            type: "POST",
+            url: $(this).attr('action'),
+            data: formData,
+            success: function(response) {
+                alert(response);
+                location.reload();
+            }
+        });
     });
 
-    // Angepasste AJAX-Funktion für Freigabe mit Sicherheitsabfrage
-    $(".freigabe-button").click(function() {
-        var button = $(this);
-        var datum = button.data('datum');
-        var spielerName = button.closest('tr').find('td:nth-child(2)').text().trim();
-        var message = "Soll der " + datum + ", gebucht von " + spielerName + " freigegeben werden?";
-        if (confirm(message)) {
-            $.ajax({
-                type: "POST",
-                url: "<?php echo $_SERVER['PHP_SELF']; ?>",
-                data: { freigabe: true, datum: datum },
-                success: function() {
-                    location.reload();
-                }
-            });
-        }
-    });
-
-    // Toggle-Funktion für archivierte Zeilen
-    $("#toggleArchivedButton").click(function() {
-        $(".archived-row").toggle();
+    // Freigabe-Formular senden
+    $('.freigabe-form').submit(function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize() + "&action=freigeben";
+        $.ajax({
+            type: "POST",
+            url: $(this).attr('action'),
+            data: formData,
+            success: function(response) {
+                alert(response);
+                location.reload();
+            }
+        });
     });
 });
 </script>
